@@ -1260,7 +1260,13 @@ body.escaner-abierto { overflow: hidden; }
 .estado-chip,
 .search-input input { border-width: 1.5px; }
 
-.item-list { gap: 8px; }
+/* minmax(0, 1fr): sin esto, una línea larga ensancha la columna y la tarjeta se sale de la pantalla. */
+.item-list { gap: 8px; grid-template-columns: minmax(0, 1fr); }
+.item-list > * { min-width: 0; }
+
+/* Filtros deslizables sin barra de desplazamiento visible. */
+.filtro-pills { scrollbar-width: none; }
+.filtro-pills::-webkit-scrollbar { display: none; }
 
 .item-card {
     min-height: 60px;
