@@ -92,6 +92,7 @@ $router->get('/admin/configuracion', [ConfiguracionController::class, 'index'], 
 $router->post('/admin/configuracion', [ConfiguracionController::class, 'guardar'], $admin);
 
 $router->get('/admin/locales', [LocalController::class, 'index'], $admin);
+$router->post('/admin/locales/ubicacion', [LocalController::class, 'ubicacion'], $admin);
 $router->get('/admin/locales/crear', [LocalController::class, 'create'], $admin);
 $router->post('/admin/locales', [LocalController::class, 'store'], $admin);
 $router->get('/admin/locales/{id}/editar', [LocalController::class, 'edit'], $admin);

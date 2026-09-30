@@ -34,9 +34,6 @@ use App\Models\Relevamiento;
                         <?php if ($v['fotos'] > 0): ?><span><i class="bi bi-camera"></i> <?= (int) $v['fotos'] ?></span><?php endif; ?>
                     </div>
                 </div>
-                <?php if ($v['estado'] !== 'finalizado'): ?>
-                    <span class="badge <?= Relevamiento::ESTADOS[$v['estado']][1] ?>"><?= Relevamiento::ESTADOS[$v['estado']][0] ?></span>
-                <?php endif; ?>
             </a>
         <?php endforeach; ?>
     </div>

@@ -1,13 +1,11 @@
 <?php
 use App\Models\Local;
 use App\Models\Producto;
-use App\Models\Relevamiento;
 use App\Models\RelevamientoProducto;
 
-$abierta = $visita['estado'] === 'en_proceso';
-$editable = $abierta && $propia;
+// Las visitas de hoy siempre se pueden tocar (si se cerró sola al irte, se reabre al cargar algo).
+$editable = $propia && ($visita['estado'] === 'en_proceso' || ($visita['estado'] === 'finalizado' && $visita['fecha'] === date('Y-m-d')));
 $vid = (int) $visita['id'];
-[$estadoTexto, $estadoClase] = Relevamiento::ESTADOS[$visita['estado']];
 ?>
 
 <a class="back-link" href="<?= url(is_admin() && !$propia ? '/admin/relevamientos' : '/') ?>" data-volver><i class="bi bi-arrow-left"></i> Volver</a>
@@ -19,7 +17,6 @@ $vid = (int) $visita['id'];
             <h1 class="h4 fw-bold mb-0 text-truncate"><?= e($visita['local']) ?></h1>
             <?php if ($visita['direccion']): ?><div class="small text-body-secondary text-truncate"><?= e($visita['direccion']) ?></div><?php endif; ?>
         </div>
-        <span class="badge <?= $estadoClase ?>"><?= $estadoTexto ?></span>
     </div>
 
     <?php if (!$propia): ?>
@@ -119,18 +116,8 @@ $vid = (int) $visita['id'];
     <div id="observaciones-lista"><?= partial('observaciones-lista', ['observaciones' => $observaciones, 'editable' => $editable, 'mostrarProducto' => true, 'productoId' => null]) ?></div>
 <?php endif; ?>
 
-<?php if ($editable): ?>
-    <form method="post" action="<?= url("/visitas/{$vid}/finalizar") ?>" class="mt-4"
-          data-confirm="¿Finalizar la visita a <?= e($visita['local']) ?>?">
-        <?= csrf_field() ?>
-        <button class="btn btn-primary btn-xl w-100" type="submit"><i class="bi bi-flag-fill me-1"></i> Finalizar visita</button>
-    </form>
-
-<?php elseif ($visita['estado'] === 'finalizado' && $propia): ?>
-    <div class="d-grid gap-2 mt-4">
-        <a class="btn btn-primary btn-xl" href="<?= url('/mensaje?fecha=' . $visita['fecha']) ?>"><i class="bi bi-chat-square-text me-1"></i> Mensaje del día para el supervisor</a>
-        <a class="btn btn-outline-primary" href="<?= url('/') ?>"><i class="bi bi-house-door me-1"></i> Volver al inicio</a>
-    </div>
+<?php if ($propia): ?>
+    <a class="btn btn-outline-primary w-100 mt-4" href="<?= url('/mensaje?fecha=' . $visita['fecha']) ?>"><i class="bi bi-chat-square-text me-1"></i> Mensaje del día para el supervisor</a>
 <?php endif; ?>
 
 <form method="post" action="<?= url("/visitas/{$vid}/eliminar") ?>" class="mt-3 text-center"

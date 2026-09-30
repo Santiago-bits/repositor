@@ -11,32 +11,59 @@ use RuntimeException;
 final class VisitaService
 {
     /**
-     * Inicia una visita (o continúa la que ya está abierta en ese mismo local hoy).
+     * Entra a un local sin trámites: cierra la visita que haya quedado abierta en otro lado
+     * y, si ya estuvo hoy en este local, sigue con esa misma visita en vez de crear otra.
      *
      * @throws RuntimeException con un mensaje para mostrar al usuario
      */
-    public static function iniciar(array $user, int $localId, ?float $lat, ?float $lng, bool $cerrarAnterior): int
+    public static function iniciar(array $user, int $localId, ?float $lat, ?float $lng): int
     {
-        $local = Local::accesible($user, $localId);
-        if ($local === null) {
+        if (Local::accesible($user, $localId) === null) {
             throw new RuntimeException('Ese local no está disponible para vos.');
         }
 
-        return Database::transaction(function () use ($user, $localId, $lat, $lng, $cerrarAnterior, $local): int {
-            $abierta = Relevamiento::abiertaDeUsuario((int) $user['id']);
+        return Database::transaction(function () use ($user, $localId, $lat, $lng): int {
+            $userId = (int) $user['id'];
+            $abierta = Relevamiento::abiertaDeUsuario($userId);
 
             if ($abierta !== null) {
                 if ((int) $abierta['local_id'] === $localId && $abierta['fecha'] === date('Y-m-d')) {
                     return (int) $abierta['id'];
                 }
-                if (!$cerrarAnterior) {
-                    throw new RuntimeException("Tenés una visita abierta en {$abierta['local']}. Finalizala antes de ingresar a {$local['nombre']}.");
-                }
                 self::finalizar($abierta);
             }
 
-            return Relevamiento::create((int) $user['id'], $localId, $lat, $lng);
+            $deHoy = Relevamiento::deHoyEnLocal($userId, $localId);
+            if ($deHoy !== null) {
+                Relevamiento::reabrir((int) $deHoy['id']);
+                return (int) $deHoy['id'];
+            }
+            return Relevamiento::create($userId, $localId, $lat, $lng);
         });
+    }
+
+    /** La visita abierta del usuario; si quedó abierta de otro día, la cierra y devuelve null. */
+    public static function abierta(int $userId): ?array
+    {
+        $abierta = Relevamiento::abiertaDeUsuario($userId);
+        if ($abierta !== null && $abierta['fecha'] !== date('Y-m-d')) {
+            self::finalizar($abierta);
+            return null;
+        }
+        return $abierta;
+    }
+
+    /** Volver a cargar datos en una visita de hoy ya cerrada: se reabre (y se cierra cualquier otra). */
+    public static function reabrir(array $visita): array
+    {
+        Database::transaction(function () use ($visita): void {
+            $abierta = Relevamiento::abiertaDeUsuario((int) $visita['user_id']);
+            if ($abierta !== null && (int) $abierta['id'] !== (int) $visita['id']) {
+                self::finalizar($abierta);
+            }
+            Relevamiento::reabrir((int) $visita['id']);
+        });
+        return Relevamiento::find((int) $visita['id']);
     }
 
     /**

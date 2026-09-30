@@ -61,6 +61,11 @@ final class DeteccionLocalService
             'precision'       => (int) round($precision),
             'precision_baja'  => $precision > self::PRECISION_BAJA,
             'sin_coordenadas' => $sinCoordenadas,
+            // Locales de los que seguro estás afuera: si la visita abierta es de uno de estos, se cierra sola.
+            'fuera'           => $precision > self::PRECISION_BAJA ? [] : array_values(array_map(
+                fn ($c) => $c['id'],
+                array_filter($candidatos, fn ($c) => !$c['dentro'])
+            )),
         ];
     }
 

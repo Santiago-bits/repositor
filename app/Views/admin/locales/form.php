@@ -42,6 +42,13 @@ $tipoActual = $v('tipo', 'supermercado');
             <span class="fw-semibold"><i class="bi bi-geo-alt"></i> Ubicación del local</span>
             <a class="small" href="#" target="_blank" rel="noopener" data-map-link data-lat="latitud" data-lng="longitud" hidden>Ver en mapa <i class="bi bi-box-arrow-up-right"></i></a>
         </div>
+        <label class="form-label small" for="maps_link">Link de Google Maps (o Plus Code, o coordenadas)</label>
+        <div class="input-group mb-2">
+            <input class="form-control" id="maps_link" name="maps_link" value="<?= e(old('maps_link', '')) ?>" inputmode="url"
+                   placeholder="https://maps.app.goo.gl/…" autocomplete="off">
+            <button class="btn btn-outline-primary" type="button" data-maps-buscar="maps_link" data-lat="latitud" data-lng="longitud"
+                    data-status="geo-status" data-endpoint="<?= url('/admin/locales/ubicacion') ?>">Buscar</button>
+        </div>
         <button type="button" class="btn btn-primary w-100 mb-2" data-geo-fill data-lat="latitud" data-lng="longitud" data-status="geo-status">
             <i class="bi bi-crosshair"></i> Usar mi ubicación actual
         </button>
@@ -58,7 +65,7 @@ $tipoActual = $v('tipo', 'supermercado');
                 <?= field_error('longitud') ?>
             </div>
         </div>
-        <p class="form-text mb-0">Tip: en Google Maps mantené apretado el punto, copiá las coordenadas y pegalas en «Latitud».</p>
+        <p class="form-text mb-0">En Google Maps: tocá el local → <strong>Compartir</strong> → copiar link, y pegalo arriba. Si te olvidás de tocar «Buscar», se completa sola al guardar.</p>
     </div>
 
     <div class="mb-3">

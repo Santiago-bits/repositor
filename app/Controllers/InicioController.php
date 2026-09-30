@@ -8,6 +8,7 @@ use App\Core\Request;
 use App\Models\Local;
 use App\Models\Relevamiento;
 use App\Services\DeteccionLocalService;
+use App\Services\VisitaService;
 
 final class InicioController extends Controller
 {
@@ -18,7 +19,7 @@ final class InicioController extends Controller
         $this->view('app/inicio', [
             'title'   => 'Inicio',
             'user'    => $user,
-            'abierta' => Relevamiento::abiertaDeUsuario((int) $user['id']),
+            'abierta' => VisitaService::abierta((int) $user['id']),
             'hoy'     => Relevamiento::finalizadasHoy((int) $user['id']),
             'locales' => Local::paraUsuario($user),
             'scripts' => ['assets/js/inicio.js'],

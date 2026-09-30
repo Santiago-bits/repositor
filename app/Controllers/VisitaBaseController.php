@@ -8,6 +8,7 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Core\View;
 use App\Models\Relevamiento;
+use App\Services\VisitaService;
 
 /** Permisos y respuestas comunes a todo lo que se hace dentro de una visita. */
 abstract class VisitaBaseController extends Controller
@@ -22,17 +23,23 @@ abstract class VisitaBaseController extends Controller
         return $visita;
     }
 
-    /** Solo quien hace la visita puede cargar datos, y solo mientras está en proceso. */
+    /**
+     * Solo quien hace la visita puede cargar datos. Las de hoy siempre se pueden tocar:
+     * si se había cerrado sola (por irse del local), se vuelve a abrir sin preguntar.
+     */
     protected function visitaEditable(int $id): array
     {
         $visita = $this->notFoundUnless(Relevamiento::find($id));
         if ((int) $visita['user_id'] !== Auth::id()) {
             View::error(403);
         }
-        if ($visita['estado'] !== 'en_proceso') {
-            $this->fallar('La visita ya está cerrada: no se pueden cargar más datos.', 409, '/visitas/' . $id);
+        if ($visita['estado'] === 'en_proceso') {
+            return $visita;
         }
-        return $visita;
+        if ($visita['estado'] === 'finalizado' && $visita['fecha'] === date('Y-m-d')) {
+            return VisitaService::reabrir($visita);
+        }
+        $this->fallar('Esta visita es de otro día: ya no se pueden cargar datos.', 409, '/visitas/' . $id);
     }
 
     /** Éxito: JSON para las acciones hechas con fetch, redirección para formularios comunes. */

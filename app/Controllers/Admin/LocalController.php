@@ -7,6 +7,7 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Models\Local;
 use App\Requests\LocalRequest;
+use App\Services\UbicacionService;
 
 final class LocalController extends Controller
 {
@@ -28,9 +29,9 @@ final class LocalController extends Controller
 
     public function store(): void
     {
-        [$data, $errors] = LocalRequest::validate($_POST);
+        [$data, $errors] = LocalRequest::validate($post = self::completarUbicacion($_POST));
         if ($errors) {
-            $this->backWithErrors($errors, $_POST, '/admin/locales/crear');
+            $this->backWithErrors($errors, $post, '/admin/locales/crear');
         }
 
         Local::create($data);
@@ -48,9 +49,9 @@ final class LocalController extends Controller
     {
         $this->notFoundUnless(Local::find($id));
 
-        [$data, $errors] = LocalRequest::validate($_POST);
+        [$data, $errors] = LocalRequest::validate($post = self::completarUbicacion($_POST));
         if ($errors) {
-            $this->backWithErrors($errors, $_POST, "/admin/locales/{$id}/editar");
+            $this->backWithErrors($errors, $post, "/admin/locales/{$id}/editar");
         }
 
         Local::update($id, $data);
@@ -64,6 +65,45 @@ final class LocalController extends Controller
         Local::eliminar($id);
         flash('success', "Local «{$local['nombre']}» borrado.");
         redirect('/admin/locales');
+    }
+
+    /** Link de Google Maps / Plus Code / coordenadas → {lat, lng} (para el botón "Buscar" del formulario). */
+    public function ubicacion(): never
+    {
+        $coords = UbicacionService::resolver((string) Request::input('texto', ''));
+        if ($coords === null) {
+            $this->json(['ok' => false, 'message' => 'No encontré la ubicación en ese texto. Copiá el link desde "Compartir" en Google Maps.'], 422);
+        }
+        $this->json(['ok' => true] + $coords);
+    }
+
+    /**
+     * Si no se cargó la ubicación a mano, se saca del link de Maps, de lo pegado en «Latitud»
+     * o del Plus Code de la dirección. Un link pegado en la dirección no queda como dirección.
+     */
+    private static function completarUbicacion(array $post): array
+    {
+        $lat = trim((string) ($post['latitud'] ?? ''));
+        $lng = trim((string) ($post['longitud'] ?? ''));
+        $direccion = trim((string) ($post['direccion'] ?? ''));
+        $esLink = (bool) preg_match('~^https?://~i', $direccion);
+
+        if ($lng !== '' && is_numeric($lat) && !$esLink && trim((string) ($post['maps_link'] ?? '')) === '') {
+            return $post;
+        }
+
+        foreach ([$post['maps_link'] ?? '', $lng === '' ? $lat : '', $direccion] as $texto) {
+            $coords = UbicacionService::resolver((string) $texto);
+            if ($coords !== null) {
+                $post['latitud'] = (string) $coords['lat'];
+                $post['longitud'] = (string) $coords['lng'];
+                break;
+            }
+        }
+        if ($esLink) {
+            $post['direccion'] = '';
+        }
+        return $post;
     }
 
     public function toggle(int $id): void

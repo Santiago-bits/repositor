@@ -24,7 +24,7 @@ final class VisitaController extends VisitaBaseController
         $lng = self::coordenada(Request::input('lng_inicio'), 180);
 
         try {
-            $id = VisitaService::iniciar(auth(), $localId, $lat, $lng, Request::input('cerrar_anterior') === '1');
+            $id = VisitaService::iniciar(auth(), $localId, $lat, $lng);
         } catch (RuntimeException $e) {
             flash('error', $e->getMessage());
             redirect('/');
@@ -50,12 +50,14 @@ final class VisitaController extends VisitaBaseController
         ]);
     }
 
+    /** Cierre sin preguntar: lo usa el GPS cuando detecta que te fuiste del local. */
     public function finalizar(int $id): void
     {
-        $visita = $this->visitaEditable($id);
-        VisitaService::finalizar($visita);
-        flash('success', 'Visita finalizada.');
-        redirect('/visitas/' . $id);
+        $visita = $this->visitaVisible($id);
+        if ((int) $visita['user_id'] === Auth::id() && $visita['estado'] === 'en_proceso') {
+            VisitaService::finalizar($visita);
+        }
+        $this->responder('Visita cerrada.', [], '/');
     }
 
     /** Borra la visita con todo lo cargado. Puede hacerlo quien la hizo o el admin. */

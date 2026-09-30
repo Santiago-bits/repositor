@@ -32,10 +32,13 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 - **Productos:** el catálogo es único y vale para todos los locales (una Quilmes es la misma en cualquier súper o chino). Se cargan de a uno, escaneando, o todos juntos desde un Excel.
 - **Subir Excel:** Gestión → Productos → **Excel** (o el botón Excel en Productos). Acepta `.xlsx` o `.csv` con los títulos *Nombre, Marca, Presentación, Código, Categoría, Subcategoría* (solo Nombre es obligatorio). Si el producto ya existe se actualiza, no se duplica; las celdas vacías no borran nada; las categorías se crean solas y la unidad (ml, cc, L) se saca de la presentación. Hay una plantilla para descargar.
+- **Visitas:** no hay que finalizarlas. Entrás al local, cargás lo que quieras y listo: se cierra sola cuando el GPS ve que te fuiste, cuando entrás a otro local o al día siguiente. Si volvés el mismo día, seguís en la misma visita.
+- **Ubicación de un local:** en Gestión → Locales, pegá el link de Google Maps (Compartir → copiar link), un Plus Code (ej: JX3M+PF) o las coordenadas. Se completa al tocar «Buscar» o al guardar.
 - **Promos del finde:** en la visita, escribís en el buscador, tocás el producto y queda abajo en "En promo". Sin buscar no se muestra la lista completa. El stock es opcional. Después, "Guardar y armar mensaje".
 
 ## Cambios
 
+- **2026-09-30** · Visitas sin "en proceso": se cierran solas cuando el GPS detecta que te fuiste del local (o al entrar a otro, o al día siguiente); si volvés el mismo día sigue la misma visita · Locales: se puede pegar el link de Google Maps (también los cortos), un Plus Code o coordenadas y la ubicación se completa sola.
 - **2026-09-30** · Promos del finde: la lista completa ya no se muestra; los productos aparecen solo al buscar y abajo quedan los marcados · Se sacó el aviso rojo "Conteo de promociones" de la visita.
 - **2026-09-30** · Productos universales (ya no se asignan por local) · Importar productos desde Excel/CSV · Promos del finde con buscador y los marcados arriba · La app ya no muestra diseño viejo después de actualizar (se recarga sola una vez).
 - Promos del finde sin fechas · temática de bebidas (ml, cc, L).

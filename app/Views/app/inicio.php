@@ -10,24 +10,15 @@ $abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
 </section>
 
 <?php if ($abierta): ?>
-    <div class="card-soft visita-activa mb-4">
-        <div class="d-flex align-items-center gap-3">
-            <div class="item-icon"><i class="bi <?= Local::ICONOS[$abierta['tipo']] ?>"></i></div>
-            <div class="min-w-0 flex-grow-1">
-                <div class="small fw-semibold text-primary"><span class="pulse-dot"></span> Visita en curso</div>
-                <div class="fw-bold fs-5 text-truncate"><?= e($abierta['local']) ?></div>
-                <div class="small text-body-secondary">
-                    <?= $abiertaHoy ? 'Estás trabajando en este local' : 'Quedó abierta del ' . fecha($abierta['fecha'], 'd/m') ?>
-                </div>
-            </div>
+    <a class="card-soft visita-activa mb-4 d-flex align-items-center gap-3 text-reset text-decoration-none" id="visita-activa"
+       href="<?= url('/visitas/' . $abierta['id']) ?>">
+        <div class="item-icon"><i class="bi <?= Local::ICONOS[$abierta['tipo']] ?>"></i></div>
+        <div class="min-w-0 flex-grow-1">
+            <div class="small text-body-secondary">Estás en</div>
+            <div class="fw-bold fs-5 text-truncate"><?= e($abierta['local']) ?></div>
         </div>
-        <?php if (!$abiertaHoy): ?>
-            <p class="small text-warning-emphasis mt-3 mb-0"><i class="bi bi-exclamation-triangle"></i> Quedó abierta de un día anterior. Finalizala para empezar la de hoy.</p>
-        <?php endif; ?>
-        <a class="btn btn-primary btn-xl w-100 mt-3" href="<?= url('/visitas/' . $abierta['id']) ?>">
-            <?= $abiertaHoy ? 'Continuar visita' : 'Ver y finalizar' ?> <i class="bi bi-arrow-right ms-1"></i>
-        </a>
-    </div>
+        <i class="bi bi-chevron-right text-body-secondary"></i>
+    </a>
 <?php endif; ?>
 
 <section id="deteccion" class="card-soft deteccion mb-4"
@@ -37,6 +28,7 @@ $abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
          data-abierta-hoy="<?= $abiertaHoy ? '1' : '' ?>"
          data-abierta-nombre="<?= $abierta ? e($abierta['local']) : '' ?>"
          data-abierta-url="<?= $abierta ? url('/visitas/' . $abierta['id']) : '' ?>"
+         data-abierta-cerrar="<?= $abierta ? url('/visitas/' . $abierta['id'] . '/finalizar') : '' ?>"
          aria-live="polite">
     <div class="deteccion-cargando">
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>

@@ -79,10 +79,6 @@
             campos.lat_inicio = ultimaPosicion.latitude.toFixed(7);
             campos.lng_inicio = ultimaPosicion.longitude.toFixed(7);
         }
-        if (abierta.localId && (abierta.localId !== local.id || !abierta.hoy)) {
-            campos.cerrar_anterior = '1';
-            form.dataset.confirm = 'Tenés una visita abierta en ' + abierta.nombre + '. Se va a finalizar para ingresar a este local.';
-        }
         Object.keys(campos).forEach(function (k) {
             var i = el('input');
             i.type = 'hidden';
@@ -218,10 +214,40 @@
             if (r.status === 401 || r.status === 403) { window.location.reload(); throw new Error('sesion'); }
             if (!r.ok) throw new Error('http');
             return r.json();
-        }).then(resultado).catch(function (err) {
+        }).then(function (data) {
+            cerrarSiTeFuiste(data);
+            resultado(data);
+        }).catch(function (err) {
             if (err.message === 'sesion') return;
             aviso('No se pudo consultar el servidor. Revisá la conexión.', true);
         });
+    }
+
+    /**
+     * Si la visita abierta es de un local del que ya estás afuera, se cierra sola.
+     * No hay nada que perder: si volvés hoy a ese local, sigue la misma visita.
+     */
+    function cerrarSiTeFuiste(data) {
+        if (!abierta.localId || !data.fuera || data.fuera.indexOf(abierta.localId) === -1) return;
+
+        var nombre = abierta.nombre;
+        fetch(box.dataset.abiertaCerrar, {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' },
+            body: new URLSearchParams({ _token: csrf })
+        }).then(function (r) {
+            if (!r.ok) return;
+            var tarjeta = document.getElementById('visita-activa');
+            if (tarjeta) {
+                var nota = el('div', 'small text-body-secondary mb-3');
+                nota.append(icono('bi-check-circle text-success'), ' Saliste de ' + nombre + ': la visita quedó guardada.');
+                tarjeta.replaceWith(nota);
+            }
+        }).catch(function () { /* sin conexión: se cierra sola al entrar a otro local */ });
+
+        // Desde ya, los botones muestran "Ingresar" (no "Continuar").
+        abierta.localId = null;
+        abierta.hoy = false;
     }
 
     /** Los botones "Ingresar" de la lista también guardan dónde empezó la visita. */

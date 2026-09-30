@@ -5,9 +5,9 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\Local;
-use App\Models\Relevamiento;
 use App\Services\ConteoService;
 use App\Services\TareaService;
+use App\Services\VisitaService;
 
 /** Tareas de hoy en todos los locales del usuario. */
 final class TareaController extends Controller
@@ -30,7 +30,7 @@ final class TareaController extends Controller
         $this->view('app/tareas', [
             'title'   => 'Tareas',
             'locales' => $locales,
-            'abierta' => Relevamiento::abiertaDeUsuario((int) $user['id']),
+            'abierta' => VisitaService::abierta((int) $user['id']),
         ]);
     }
 }

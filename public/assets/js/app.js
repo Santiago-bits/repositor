@@ -206,6 +206,44 @@
         });
     });
 
+    // ---------- Link de Google Maps / Plus Code → latitud / longitud ----------
+    document.querySelectorAll('[data-maps-buscar]').forEach(function (btn) {
+        var campo = document.getElementById(btn.dataset.mapsBuscar);
+        var lat = document.getElementById(btn.dataset.lat);
+        var lng = document.getElementById(btn.dataset.lng);
+        var status = document.getElementById(btn.dataset.status);
+        var token = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
+
+        function buscar() {
+            if (campo.value.trim() === '') return;
+            btn.disabled = true;
+            setStatus(status, 'info', 'Buscando la ubicación…');
+            fetch(btn.dataset.endpoint, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' },
+                body: new URLSearchParams({ _token: token, texto: campo.value })
+            }).then(function (r) { return r.json(); }).then(function (d) {
+                if (!d.ok) {
+                    setStatus(status, 'warn', d.message || 'No encontré la ubicación.');
+                    return;
+                }
+                lat.value = d.lat;
+                lng.value = d.lng;
+                lat.dispatchEvent(new Event('input', { bubbles: true }));
+                setStatus(status, 'ok', 'Ubicación cargada. Tocá «Ver en mapa» para confirmar.');
+            }).catch(function () {
+                setStatus(status, 'warn', 'No se pudo buscar (¿sin conexión?). Igual se completa al guardar.');
+            }).then(function () { btn.disabled = false; });
+        }
+
+        btn.addEventListener('click', buscar);
+        // Al pegar el link se busca solo.
+        campo.addEventListener('paste', function () { setTimeout(buscar, 0); });
+        campo.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); buscar(); }
+        });
+    });
+
     // ---------- Link "Ver en mapa" ----------
     document.querySelectorAll('[data-map-link]').forEach(function (link) {
         var lat = document.getElementById(link.dataset.lat);

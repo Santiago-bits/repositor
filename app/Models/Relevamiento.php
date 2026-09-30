@@ -95,6 +95,21 @@ final class Relevamiento extends Model
         );
     }
 
+    /** La visita de hoy del usuario en ese local (abierta o cerrada), si ya hubo una. */
+    public static function deHoyEnLocal(int $userId, int $localId): ?array
+    {
+        return self::fetch(
+            self::SELECT . " WHERE r.user_id = ? AND r.local_id = ? AND r.fecha = CURDATE() AND r.estado <> 'cancelado'
+             ORDER BY r.inicio_at DESC LIMIT 1",
+            [$userId, $localId]
+        );
+    }
+
+    public static function reabrir(int $id): void
+    {
+        self::execute("UPDATE relevamientos SET estado = 'en_proceso', fin_at = NULL WHERE id = ?", [$id]);
+    }
+
     public static function cerrar(int $id, string $estado, string $fin): void
     {
         self::execute(

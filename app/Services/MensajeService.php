@@ -108,9 +108,7 @@ final class MensajeService
             return $titulo . "\n\nNo hay datos registrados" . ($soloPromos ? ' de promociones' : '') . ' para esta fecha.';
         }
 
-        $abierta = array_filter($visitas, fn ($v) => $v['estado'] === 'en_proceso') !== [];
-        return $titulo . "\n\nLocales relevados:\n\n" . implode("\n\n", $bloques)
-            . "\n\n" . ($abierta ? 'Relevamiento en curso.' : 'Relevamiento finalizado.');
+        return $titulo . "\n\nLocales relevados:\n\n" . implode("\n\n", $bloques);
     }
 
     private static function productos(int $relevamientoId): array
