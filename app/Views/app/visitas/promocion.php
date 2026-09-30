@@ -58,13 +58,13 @@ foreach ($productos as $i => $p) {
                    aria-label="Buscar producto" data-promo-buscar>
         </div>
 
+        <?php // Resultados: solo aparecen mientras se escribe en el buscador. ?>
+        <div class="card-soft promo-grupo mb-3" data-promo-lista hidden><?= $resto ?></div>
+        <p class="small text-body-secondary" data-promo-sin-resultados hidden>No hay productos con ese nombre.</p>
+
         <h2 class="section-title mt-0">En promo (<span data-promo-contador><?= $cantidad ?></span>)</h2>
         <div class="card-soft promo-grupo" data-promo-marcados><?= $marcados ?></div>
-        <p class="small text-body-secondary mb-0" data-promo-vacio <?= $cantidad ? 'hidden' : '' ?>>Todavía no marcaste ninguno. Tocá un producto de abajo.</p>
-
-        <h2 class="section-title">Todos los productos</h2>
-        <div class="card-soft promo-grupo" data-promo-lista><?= $resto ?></div>
-        <p class="small text-body-secondary mb-0" data-promo-sin-resultados hidden>No hay productos con ese nombre.</p>
+        <p class="small text-body-secondary mb-0" data-promo-vacio <?= $cantidad ? 'hidden' : '' ?>>Todavía no marcaste ninguno. Buscá el producto arriba y tocalo.</p>
 
         <a class="small d-inline-block mt-2" href="<?= url("/visitas/{$vid}/productos") ?>"><i class="bi bi-upc-scan"></i> ¿Falta un producto? Buscalo o escanealo</a>
 

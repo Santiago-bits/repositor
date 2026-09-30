@@ -95,7 +95,8 @@
                 fila.hidden = !ok;
                 if (ok) visibles++;
             });
-            lista.hidden = visibles === 0;
+            // Sin texto en el buscador no se muestra la lista: solo los marcados.
+            lista.hidden = q === '' || visibles === 0;
             promos.querySelector('[data-promo-sin-resultados]').hidden = visibles > 0 || q === '';
         };
 

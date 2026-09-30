@@ -59,21 +59,6 @@ $vid = (int) $visita['id'];
 <?php if ($editable || $promos !== [] || $conteo !== []): ?>
     <h2 class="section-title" id="promociones">Promociones</h2>
 
-    <?php if ($editable && $sinContar > 0): ?>
-        <a class="conteo-cta mb-2" href="<?= url("/visitas/{$vid}/conteo") ?>">
-            <i class="bi bi-megaphone-fill"></i>
-            <span class="flex-grow-1">
-                <strong>Conteo de promociones</strong><br>
-                <span class="small"><?= $sinContar ?> producto<?= $sinContar > 1 ? 's' : '' ?> para contar</span>
-            </span>
-            <span class="btn btn-light btn-sm fw-bold">CONTAR</span>
-        </a>
-    <?php elseif ($conteo !== []): ?>
-        <a class="conteo-hecho mb-2" href="<?= url("/visitas/{$vid}/conteo") ?>">
-            <i class="bi bi-check-circle-fill text-success"></i> Conteo completado (<?= count($conteo) ?>/<?= count($conteo) ?>)
-        </a>
-    <?php endif; ?>
-
     <?php if ($promos !== []): ?>
         <div class="card-soft mb-2">
             <?php foreach ($promos as $p): ?>

@@ -32,10 +32,11 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 - **Productos:** el catálogo es único y vale para todos los locales (una Quilmes es la misma en cualquier súper o chino). Se cargan de a uno, escaneando, o todos juntos desde un Excel.
 - **Subir Excel:** Gestión → Productos → **Excel** (o el botón Excel en Productos). Acepta `.xlsx` o `.csv` con los títulos *Nombre, Marca, Presentación, Código, Categoría, Subcategoría* (solo Nombre es obligatorio). Si el producto ya existe se actualiza, no se duplica; las celdas vacías no borran nada; las categorías se crean solas y la unidad (ml, cc, L) se saca de la presentación. Hay una plantilla para descargar.
-- **Promos del finde:** en la visita, buscás el producto, lo tocás y queda arriba en "En promo". El stock es opcional. Después, "Guardar y armar mensaje".
+- **Promos del finde:** en la visita, escribís en el buscador, tocás el producto y queda abajo en "En promo". Sin buscar no se muestra la lista completa. El stock es opcional. Después, "Guardar y armar mensaje".
 
 ## Cambios
 
+- **2026-09-30** · Promos del finde: la lista completa ya no se muestra; los productos aparecen solo al buscar y abajo quedan los marcados · Se sacó el aviso rojo "Conteo de promociones" de la visita.
 - **2026-09-30** · Productos universales (ya no se asignan por local) · Importar productos desde Excel/CSV · Promos del finde con buscador y los marcados arriba · La app ya no muestra diseño viejo después de actualizar (se recarga sola una vez).
 - Promos del finde sin fechas · temática de bebidas (ml, cc, L).
 - Todo se puede borrar · visitas sin tiempo · tarjetas más compactas.
