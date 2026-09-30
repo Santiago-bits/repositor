@@ -1328,3 +1328,8 @@ body.escaner-abierto { overflow: hidden; }
 .promo-fila .form-check-input { width: 1.5em; height: 1.5em; margin: 0; flex-shrink: 0; }
 .promo-fila:has(.form-check-input:checked) { background: var(--bs-primary-bg-subtle); }
 .promo-stock { width: 84px; min-height: 42px; flex-shrink: 0; text-align: center; }
+.promo-fila[hidden], .promo-grupo[hidden] { display: none !important; }
+.promo-grupo { padding: 0; overflow: hidden; }
+.promo-grupo .promo-fila { width: 100%; }
+.promo-grupo .promo-fila:not([hidden]) ~ .promo-fila:not([hidden]) { border-top: 1px solid var(--app-border); }
+.promo-grupo .promo-fila + .promo-fila { border-top: 0; }

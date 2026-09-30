@@ -64,12 +64,86 @@
         if (navigator.vibrate) navigator.vibrate(8);
     });
 
-    // ---------- Promos del finde: anotar el stock marca el producto ----------
-    document.addEventListener('input', function (e) {
-        if (!e.target.matches('[data-auto-marcar]') || e.target.value === '') return;
-        var check = e.target.closest('.promo-fila').querySelector('input[type=checkbox]');
-        if (check) check.checked = true;
-    });
+    // ---------- Promos del finde: buscador + los marcados arriba ----------
+    var promos = document.querySelector('[data-promos]');
+    if (promos) {
+        var marcados = promos.querySelector('[data-promo-marcados]');
+        var lista = promos.querySelector('[data-promo-lista]');
+        var buscador = promos.querySelector('[data-promo-buscar]');
+
+        var normalizar = function (s) {
+            return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        };
+
+        // Inserta la fila respetando el orden original de la lista.
+        var ubicar = function (fila, destino) {
+            var orden = +fila.dataset.orden;
+            var siguiente = Array.prototype.find.call(destino.children, function (f) { return +f.dataset.orden > orden; });
+            destino.insertBefore(fila, siguiente || null);
+        };
+
+        var actualizar = function () {
+            var n = marcados.children.length;
+            promos.querySelector('[data-promo-contador]').textContent = n;
+            promos.querySelector('[data-promo-vacio]').hidden = n > 0;
+            marcados.hidden = n === 0;
+
+            var q = normalizar(buscador.value.trim());
+            var visibles = 0;
+            Array.prototype.forEach.call(lista.children, function (fila) {
+                var ok = q === '' || normalizar(fila.dataset.texto).indexOf(q) !== -1;
+                fila.hidden = !ok;
+                if (ok) visibles++;
+            });
+            lista.hidden = visibles === 0;
+            promos.querySelector('[data-promo-sin-resultados]').hidden = visibles > 0 || q === '';
+        };
+
+        promos.addEventListener('change', function (e) {
+            if (!e.target.matches('input[type=checkbox]')) return;
+            var fila = e.target.closest('.promo-fila');
+            if (e.target.checked) {
+                ubicar(fila, marcados);
+                // Ya lo encontró: limpia la búsqueda para buscar el siguiente.
+                if (buscador.value !== '') {
+                    buscador.value = '';
+                    buscador.focus();
+                }
+            } else {
+                ubicar(fila, lista);
+            }
+            actualizar();
+        });
+
+        // Anotar el stock marca el producto (se mueve arriba al salir del campo).
+        promos.addEventListener('input', function (e) {
+            if (e.target === buscador) {
+                actualizar();
+                return;
+            }
+            if (!e.target.matches('[data-auto-marcar]') || e.target.value === '') return;
+            var check = e.target.closest('.promo-fila').querySelector('input[type=checkbox]');
+            if (check && !check.checked) {
+                check.checked = true;
+                e.target.addEventListener('blur', function () {
+                    if (check.checked) {
+                        ubicar(check.closest('.promo-fila'), marcados);
+                        actualizar();
+                    }
+                }, { once: true });
+            }
+        });
+
+        // Enter en el buscador no manda el formulario.
+        buscador.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                buscador.blur();
+            }
+        });
+
+        actualizar();
+    }
 
     // ---------- Stock ----------
     var stockForm = document.querySelector('[data-stock-form]');

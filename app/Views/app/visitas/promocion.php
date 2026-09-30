@@ -2,6 +2,36 @@
 use App\Models\Producto;
 
 $vid = (int) $visita['id'];
+
+// Los que ya están en promo van arriba, en "En promo"; el resto, abajo.
+$fila = function (array $p, int $orden, bool $marcadoYa) use ($enPromo): string {
+    $id = (int) $p['id'];
+    $stock = isset($enPromo[$id]) && $p['rp_id'] !== null ? (string) $p['stock'] : '';
+    $nombre = Producto::nombreCompleto($p);
+    $texto = mb_strtolower($nombre . ' ' . $p['marca']);
+
+    return '<label class="promo-fila" data-orden="' . $orden . '" data-texto="' . e($texto) . '">'
+        . '<input class="form-check-input" type="checkbox" name="promo[' . $id . ']" value="1"' . ($marcadoYa ? ' checked' : '')
+        . ' aria-label="En promo: ' . e($nombre) . '">'
+        . '<span class="flex-grow-1 min-w-0"><span class="d-block fw-semibold">' . e($nombre) . '</span>'
+        . ($p['marca'] ? '<span class="small text-body-secondary">' . e($p['marca']) . '</span>' : '') . '</span>'
+        . '<input class="form-control promo-stock" type="number" name="stock[' . $id . ']" value="' . e($stock) . '"'
+        . ' min="0" max="99999" inputmode="numeric" placeholder="Stock" data-auto-marcar aria-label="Stock de ' . e($nombre) . '">'
+        . '</label>';
+};
+
+$marcados = '';
+$resto = '';
+$cantidad = 0;
+foreach ($productos as $i => $p) {
+    $esPromo = isset($enPromo[(int) $p['id']]) || $marcado === (int) $p['id'];
+    if ($esPromo) {
+        $marcados .= $fila($p, $i, true);
+        $cantidad++;
+    } else {
+        $resto .= $fila($p, $i, false);
+    }
+}
 ?>
 <a class="back-link" href="<?= url("/visitas/{$vid}") ?>"><i class="bi bi-arrow-left"></i> Volver a la visita</a>
 
@@ -12,8 +42,6 @@ $vid = (int) $visita['id'];
     </div>
 </div>
 
-<p class="small text-body-secondary">Marcá los productos que están en promo. Si querés, anotá el stock al lado.</p>
-
 <?php if ($productos === []): ?>
     <div class="empty-state card-soft">
         <i class="bi bi-box-seam"></i>
@@ -21,27 +49,22 @@ $vid = (int) $visita['id'];
         <a class="btn btn-outline-primary" href="<?= url("/visitas/{$vid}/productos") ?>">Buscar o escanear productos</a>
     </div>
 <?php else: ?>
-    <form method="post" action="<?= url("/visitas/{$vid}/promociones") ?>">
+    <form method="post" action="<?= url("/visitas/{$vid}/promociones") ?>" data-promos>
         <?= csrf_field() ?>
-        <div class="card-soft">
-            <?php foreach ($productos as $p): ?>
-                <?php
-                $id = (int) $p['id'];
-                $enPromoYa = isset($enPromo[$id]);
-                $stock = $enPromoYa && $p['rp_id'] !== null ? $p['stock'] : '';
-                ?>
-                <label class="promo-fila">
-                    <input class="form-check-input" type="checkbox" name="promo[<?= $id ?>]" value="1"
-                           <?= $enPromoYa || $marcado === $id ? 'checked' : '' ?> aria-label="En promo: <?= e(Producto::nombreCompleto($p)) ?>">
-                    <span class="flex-grow-1 min-w-0">
-                        <span class="d-block fw-semibold"><?= e(Producto::nombreCompleto($p)) ?></span>
-                        <?php if ($p['marca']): ?><span class="small text-body-secondary"><?= e($p['marca']) ?></span><?php endif; ?>
-                    </span>
-                    <input class="form-control promo-stock" type="number" name="stock[<?= $id ?>]" value="<?= e($stock ?? '') ?>"
-                           min="0" max="99999" inputmode="numeric" placeholder="Stock" data-auto-marcar aria-label="Stock">
-                </label>
-            <?php endforeach; ?>
+
+        <div class="search-input mb-3">
+            <i class="bi bi-search"></i>
+            <input type="search" placeholder="Buscar bebida…" autocomplete="off" autocapitalize="off" enterkeyhint="search"
+                   aria-label="Buscar producto" data-promo-buscar>
         </div>
+
+        <h2 class="section-title mt-0">En promo (<span data-promo-contador><?= $cantidad ?></span>)</h2>
+        <div class="card-soft promo-grupo" data-promo-marcados><?= $marcados ?></div>
+        <p class="small text-body-secondary mb-0" data-promo-vacio <?= $cantidad ? 'hidden' : '' ?>>Todavía no marcaste ninguno. Tocá un producto de abajo.</p>
+
+        <h2 class="section-title">Productos del local</h2>
+        <div class="card-soft promo-grupo" data-promo-lista><?= $resto ?></div>
+        <p class="small text-body-secondary mb-0" data-promo-sin-resultados hidden>No hay productos con ese nombre.</p>
 
         <a class="small d-inline-block mt-2" href="<?= url("/visitas/{$vid}/productos") ?>"><i class="bi bi-upc-scan"></i> ¿Falta un producto? Buscalo o escanealo</a>
 

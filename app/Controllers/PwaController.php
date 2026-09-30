@@ -105,7 +105,7 @@ self.addEventListener('fetch', (e) => {
     // CSS, JS, fuentes e íconos: primero del celular.
     if (url.pathname.includes('/assets/')) {
         e.respondWith(
-            caches.match(req, { ignoreSearch: true }).then((guardado) => guardado || fetch(req).then((res) => {
+            caches.match(req).then((guardado) => guardado || fetch(req).then((res) => {
                 if (res.ok) {
                     const copia = res.clone();
                     caches.open(CACHE).then((c) => c.put(req, copia));
