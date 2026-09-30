@@ -102,4 +102,10 @@ $filaLocal = function (array $local) use ($oldLocales, $asignados): array {
             <?= $producto['activo'] ? 'Desactivar producto' : 'Activar producto' ?>
         </button>
     </form>
+
+    <form method="post" action="<?= url("/admin/productos/{$producto['id']}/eliminar") ?>" class="mt-2 text-center"
+          data-confirm="¿Borrar este producto? Desaparece de la app; lo registrado en visitas anteriores se conserva.">
+        <?= csrf_field() ?>
+        <button class="btn btn-link text-danger" type="submit"><i class="bi bi-trash3"></i> Borrar producto</button>
+    </form>
 <?php endif; ?>

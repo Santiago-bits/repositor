@@ -79,6 +79,15 @@ final class User extends Model
         self::execute('UPDATE users SET activo = ? WHERE id = ?', [(int) $activo, $id]);
     }
 
+    /** Se oculta y se libera el email (para poder volver a usarlo). */
+    public static function eliminar(int $id): void
+    {
+        self::execute(
+            "UPDATE users SET deleted_at = NOW(), activo = 0, email = LEFT(CONCAT('eliminado', id, '.', email), 150) WHERE id = ?",
+            [$id]
+        );
+    }
+
     public static function touchLogin(int $id): void
     {
         self::execute('UPDATE users SET last_login_at = NOW() WHERE id = ?', [$id]);

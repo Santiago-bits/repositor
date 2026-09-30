@@ -41,7 +41,6 @@ final class VisitaController extends VisitaBaseController
             'visita'        => $visita,
             'propia'        => (int) $visita['user_id'] === Auth::id(),
             'tareas'        => TareaService::delDia((int) $visita['local_id'], $visita['fecha']),
-            'resumen'       => Relevamiento::resumen($id),
             'registrados'   => RelevamientoProducto::deVisita($id),
             'fotos'         => Foto::deVisita($id),
             'observaciones' => Observacion::deVisita($id),
@@ -59,12 +58,13 @@ final class VisitaController extends VisitaBaseController
         redirect('/visitas/' . $id);
     }
 
-    public function cancelar(int $id): void
+    /** Borra la visita con todo lo cargado. Puede hacerlo quien la hizo o el admin. */
+    public function eliminar(int $id): void
     {
-        $visita = $this->visitaEditable($id);
-        VisitaService::cancelar($visita);
-        flash('success', "Visita a {$visita['local']} cancelada.");
-        redirect('/');
+        $visita = $this->visitaVisible($id);
+        VisitaService::eliminar($visita);
+        flash('success', "Visita a {$visita['local']} eliminada.");
+        redirect((int) $visita['user_id'] !== Auth::id() ? '/admin/relevamientos' : '/');
     }
 
     private static function coordenada(mixed $valor, int $limite): ?float

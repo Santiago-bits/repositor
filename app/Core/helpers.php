@@ -158,7 +158,7 @@ function nav_principal(): array
 function nav_admin(): array
 {
     return [
-        ['/admin', 'bi-speedometer2', 'Dashboard'],
+        ['/admin', 'bi-speedometer2', 'Resumen'],
         ['/admin/relevamientos', 'bi-clipboard-check', 'Relevamientos'],
         ['/reportes', 'bi-file-earmark-bar-graph', 'Reportes'],
         ['/admin/fotos', 'bi-images', 'Fotos'],

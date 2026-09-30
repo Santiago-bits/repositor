@@ -47,3 +47,9 @@ $padreActual = (int) $v('parent_id');
         <button class="btn btn-primary btn-xl flex-grow-1" type="submit"><i class="bi bi-check-lg me-1"></i> Guardar</button>
     </div>
 </form>
+
+<form method="post" action="<?= url("/admin/categorias/{$categoria['id']}/eliminar") ?>" class="mt-3"
+      data-confirm="¿Borrar esta categoría<?= $tieneHijas ? ' y sus subcategorías' : '' ?>? Los productos quedan sin categoría.">
+    <?= csrf_field() ?>
+    <button class="btn btn-outline-danger w-100" type="submit"><i class="bi bi-trash3 me-1"></i> Borrar categoría</button>
+</form>

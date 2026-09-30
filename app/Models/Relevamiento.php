@@ -103,6 +103,19 @@ final class Relevamiento extends Model
         );
     }
 
+    /**
+     * Borra la visita: lo registrado, vencimientos y observaciones se van en cascada.
+     * Devuelve las rutas de las fotos para borrar los archivos.
+     */
+    public static function eliminar(int $id): array
+    {
+        $fotos = array_column(self::fetchAll('SELECT path FROM fotos WHERE relevamiento_id = ? AND deleted_at IS NULL', [$id]), 'path');
+        self::execute('DELETE FROM tarea_ejecuciones WHERE relevamiento_id = ?', [$id]);
+        self::execute('DELETE FROM fotos WHERE relevamiento_id = ?', [$id]);
+        self::execute('DELETE FROM relevamientos WHERE id = ?', [$id]);
+        return $fotos;
+    }
+
     /** Contadores de la visita (productos, estados de stock, vencimientos, fotos, observaciones). */
     public static function resumen(int $id): array
     {

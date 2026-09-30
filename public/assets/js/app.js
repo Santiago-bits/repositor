@@ -68,26 +68,6 @@
         }
     });
 
-    // ---------- Tiempo transcurrido en vivo: <span data-desde="epoch_ms"> ----------
-    function formatearDuracion(ms) {
-        var min = Math.max(0, Math.floor(ms / 60000));
-        if (min < 60) return min + ' min';
-        var h = Math.floor(min / 60);
-        var m = min % 60;
-        return h + ' h ' + (m < 10 ? '0' : '') + m + ' min';
-    }
-
-    var relojes = document.querySelectorAll('[data-desde]');
-    if (relojes.length) {
-        var actualizar = function () {
-            relojes.forEach(function (el) {
-                el.textContent = formatearDuracion(Date.now() - parseInt(el.dataset.desde, 10));
-            });
-        };
-        actualizar();
-        setInterval(actualizar, 30000);
-    }
-
     // ---------- Valores rápidos: <button data-set-valor="2026-10-05" data-target="fecha_fin"> ----------
     document.addEventListener('click', function (e) {
         var b = e.target.closest('[data-set-valor]');

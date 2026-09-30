@@ -8,6 +8,7 @@ use App\Core\Controller;
 use App\Models\Local;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserToken;
 use App\Requests\UsuarioRequest;
 use App\Services\UsuarioService;
 
@@ -75,6 +76,19 @@ final class UsuarioController extends Controller
 
         $activo = UsuarioService::cambiarEstado($usuario);
         flash('success', "Usuario {$usuario['nombre']} {$usuario['apellido']} " . ($activo ? 'activado.' : 'desactivado.'));
+        redirect('/admin/usuarios');
+    }
+
+    public function eliminar(int $id): void
+    {
+        $usuario = $this->notFoundUnless(User::find($id));
+        if ($id === Auth::id()) {
+            flash('error', 'No podés borrar tu propio usuario.');
+            redirect('/admin/usuarios');
+        }
+        User::eliminar($id);
+        UserToken::deleteForUser($id);
+        flash('success', "Usuario {$usuario['nombre']} {$usuario['apellido']} borrado.");
         redirect('/admin/usuarios');
     }
 

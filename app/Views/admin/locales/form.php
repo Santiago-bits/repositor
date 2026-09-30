@@ -115,4 +115,10 @@ $tipoActual = $v('tipo', 'supermercado');
             <?= $local['activo'] ? 'Desactivar local' : 'Activar local' ?>
         </button>
     </form>
+
+    <form method="post" action="<?= url("/admin/locales/{$local['id']}/eliminar") ?>" class="mt-2 text-center"
+          data-confirm="¿Borrar este local? Desaparece de la app; las visitas anteriores se conservan en el historial.">
+        <?= csrf_field() ?>
+        <button class="btn btn-link text-danger" type="submit"><i class="bi bi-trash3"></i> Borrar local</button>
+    </form>
 <?php endif; ?>

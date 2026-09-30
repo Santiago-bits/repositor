@@ -17,7 +17,7 @@ final class Promocion extends Model
                                    CONCAT(u.nombre, ' ', u.apellido) AS creador,
                                    (SELECT GROUP_CONCAT(l.nombre ORDER BY l.nombre SEPARATOR ', ')
                                       FROM promocion_local pl JOIN locales l ON l.id = pl.local_id
-                                     WHERE pl.promocion_id = p.id) AS locales
+                                     WHERE pl.promocion_id = p.id AND l.deleted_at IS NULL) AS locales
                             FROM promociones p
                             JOIN productos pr ON pr.id = p.producto_id
                             LEFT JOIN users u ON u.id = p.created_by";
@@ -112,6 +112,11 @@ final class Promocion extends Model
         foreach ($localIds as $localId) {
             self::execute('INSERT INTO promocion_local (promocion_id, local_id) VALUES (?, ?)', [$id, $localId]);
         }
+    }
+
+    public static function eliminar(int $id): void
+    {
+        self::execute('UPDATE promociones SET deleted_at = NOW() WHERE id = ?', [$id]);
     }
 
     public static function setEstado(int $id, string $estado): void

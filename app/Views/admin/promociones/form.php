@@ -43,6 +43,13 @@ $estadoActual = old('estado', $promo['estado'] ?? 'activa');
     </div>
 </form>
 
+<?php if (!$esNueva): ?>
+    <form method="post" action="<?= url('/admin/promociones/' . $promo['id'] . '/eliminar') ?>" class="mt-3" data-confirm="¿Borrar esta promoción? Los conteos ya hechos se conservan.">
+        <?= csrf_field() ?>
+        <button class="btn btn-outline-danger w-100" type="submit"><i class="bi bi-trash3 me-1"></i> Borrar promoción</button>
+    </form>
+<?php endif; ?>
+
 <?php if (!$esNueva && $promo['estado'] === 'activa'): ?>
     <form method="post" action="<?= url('/admin/promociones/' . $promo['id'] . '/cancelar') ?>" class="mt-3" data-confirm="¿Cancelar esta promoción? Deja de aparecer en el conteo.">
         <?= csrf_field() ?>

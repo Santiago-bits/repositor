@@ -25,7 +25,7 @@
                 <a class="nav-link <?= active($path) ?>" href="<?= url($path) ?>"><i class="bi <?= $icon ?>"></i><span><?= $label ?></span></a>
             <?php endforeach; ?>
             <?php if (is_admin()): ?>
-                <div class="side-title">Administración</div>
+                <div class="side-title">Gestión</div>
                 <?php foreach (nav_admin() as [$path, $icon, $label]): ?>
                     <a class="nav-link <?= active($path, $path === '/admin') ?>" href="<?= url($path) ?>"><i class="bi <?= $icon ?>"></i><span><?= $label ?></span></a>
                 <?php endforeach; ?>

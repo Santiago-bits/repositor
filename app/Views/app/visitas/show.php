@@ -22,58 +22,12 @@ $vid = (int) $visita['id'];
         <span class="badge <?= $estadoClase ?>"><?= $estadoTexto ?></span>
     </div>
 
-    <div class="visita-datos">
-        <div>
-            <span class="visita-dato-label">Inicio</span>
-            <span class="visita-dato-valor"><?= fecha($visita['inicio_at'], 'H:i') ?></span>
-        </div>
-        <div>
-            <span class="visita-dato-label">Tiempo</span>
-            <span class="visita-dato-valor" <?= $abierta ? 'data-desde="' . strtotime($visita['inicio_at']) * 1000 . '"' : '' ?>>
-                <?= duracion($visita['inicio_at'], $visita['fin_at']) ?>
-            </span>
-        </div>
-        <div>
-            <span class="visita-dato-label">Productos</span>
-            <span class="visita-dato-valor"><?= $resumen['productos'] ?></span>
-        </div>
-    </div>
-
-    <div class="resumen-chips">
-        <span title="Con stock"><i class="bi bi-check-circle text-success"></i> <?= $resumen['con_stock'] ?> con stock</span>
-        <span title="Bajo stock"><span class="prio-dot prio-media"></span> <?= $resumen['bajo'] ?> bajo</span>
-        <span title="Sin stock"><span class="prio-dot prio-alta"></span> <?= $resumen['sin_stock'] ?> sin stock</span>
-        <span title="Vencimientos"><i class="bi bi-calendar-event"></i> <?= $resumen['vencimientos'] ?></span>
-        <span title="Fotos"><i class="bi bi-camera"></i> <?= $resumen['fotos'] ?></span>
-        <span title="Observaciones"><i class="bi bi-chat-left-text"></i> <?= $resumen['observaciones'] ?></span>
-    </div>
-
     <?php if (!$propia): ?>
         <p class="small text-body-secondary mb-0 mt-2"><i class="bi bi-person"></i> <?= e($visita['usuario']) ?> · <?= fecha($visita['fecha']) ?></p>
     <?php elseif ($visita['fecha'] !== date('Y-m-d')): ?>
         <p class="small text-body-secondary mb-0 mt-2"><i class="bi bi-calendar"></i> <?= fecha($visita['fecha']) ?></p>
     <?php endif; ?>
 </div>
-
-<?php if ($visita['estado'] === 'finalizado'): ?>
-    <div class="card-soft resumen-final mb-3">
-        <p class="resumen-final-titulo"><i class="bi bi-check-circle-fill text-success"></i> VISITA FINALIZADA</p>
-        <ul class="resumen-lista">
-            <li><span>⏱ Tiempo</span><strong><?= duracion($visita['inicio_at'], $visita['fin_at']) ?></strong></li>
-            <li><span>📦 Productos revisados</span><strong><?= $resumen['productos'] ?></strong></li>
-            <li><span>📊 Productos con stock</span><strong><?= $resumen['con_stock'] ?></strong></li>
-            <li><span>⚠️ Bajo stock</span><strong><?= $resumen['bajo'] ?></strong></li>
-            <li><span>❌ Sin stock</span><strong><?= $resumen['sin_stock'] ?></strong></li>
-            <li><span>📅 Vencimientos registrados</span><strong><?= $resumen['vencimientos'] ?></strong></li>
-            <li><span>📷 Fotografías</span><strong><?= $resumen['fotos'] ?></strong></li>
-            <li><span>📝 Observaciones</span><strong><?= $resumen['observaciones'] ?></strong></li>
-        </ul>
-        <div class="d-grid gap-2" style="grid-template-columns: 1fr 1fr">
-            <a class="btn btn-outline-primary" href="#registrados">VER RESUMEN</a>
-            <a class="btn btn-primary" href="<?= url("/visitas/{$vid}/mensaje") ?>">GENERAR REPORTE</a>
-        </div>
-    </div>
-<?php endif; ?>
 
 <?php if ($editable): ?>
     <div class="accion-grid mb-2" data-foto-subir
@@ -129,6 +83,12 @@ $vid = (int) $visita['id'];
                         <div class="small text-body-secondary">Hasta el <?= fecha($p['fecha_fin'], 'd/m') ?><?= $p['observaciones'] ? ' · ' . e($p['observaciones']) : '' ?></div>
                     </div>
                     <?php if ($p['precio_promo'] !== null): ?><div class="fw-bold"><?= precio($p['precio_promo']) ?></div><?php endif; ?>
+                    <?php if ($editable && ((int) $p['created_by'] === (int) auth()['id'] || is_admin())): ?>
+                        <form method="post" action="<?= url("/visitas/{$vid}/promociones/{$p['id']}/eliminar") ?>" data-confirm="¿Borrar esta promoción?">
+                            <?= csrf_field() ?>
+                            <button class="btn-icon" type="submit" aria-label="Borrar promoción"><i class="bi bi-trash3"></i></button>
+                        </form>
+                    <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -181,14 +141,15 @@ $vid = (int) $visita['id'];
         <button class="btn btn-primary btn-xl w-100" type="submit"><i class="bi bi-flag-fill me-1"></i> Finalizar visita</button>
     </form>
 
-    <form method="post" action="<?= url("/visitas/{$vid}/cancelar") ?>" class="mt-2 text-center"
-          data-confirm="¿Cancelar esta visita? Queda registrada como cancelada.">
-        <?= csrf_field() ?>
-        <button class="btn btn-link text-danger" type="submit">Cancelar visita</button>
-    </form>
 <?php elseif ($visita['estado'] === 'finalizado' && $propia): ?>
     <div class="d-grid gap-2 mt-4">
         <a class="btn btn-primary btn-xl" href="<?= url('/mensaje?fecha=' . $visita['fecha']) ?>"><i class="bi bi-chat-square-text me-1"></i> Mensaje del día para el supervisor</a>
         <a class="btn btn-outline-primary" href="<?= url('/') ?>"><i class="bi bi-house-door me-1"></i> Volver al inicio</a>
     </div>
 <?php endif; ?>
+
+<form method="post" action="<?= url("/visitas/{$vid}/eliminar") ?>" class="mt-3 text-center"
+      data-confirm="¿Eliminar esta visita? Se borra todo lo cargado (stock, vencimientos, fotos y observaciones). No se puede deshacer.">
+    <?= csrf_field() ?>
+    <button class="btn btn-link text-danger" type="submit"><i class="bi bi-trash3"></i> Eliminar visita</button>
+</form>

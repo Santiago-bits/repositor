@@ -74,6 +74,14 @@ $registrado = $rp && ($rp['stock'] !== null || $rp['estado_stock'] !== null);
     <p class="small text-success text-center mb-0 mt-2" data-guardado><?= $registrado ? '✅ Guardado ' . fecha($rp['updated_at'] ?? $rp['created_at'], 'H:i') : '' ?></p>
 </form>
 
+<?php if ($rp): ?>
+    <form method="post" action="<?= url("/visitas/{$vid}/productos/{$pid}/quitar") ?>" class="text-center mb-3"
+          data-confirm="¿Quitar este producto de la visita? Se borran su stock y sus vencimientos de hoy.">
+        <?= csrf_field() ?>
+        <button class="btn btn-link btn-sm text-danger" type="submit"><i class="bi bi-trash3"></i> Quitar de esta visita</button>
+    </form>
+<?php endif; ?>
+
 <!-- Vencimientos -->
 <section class="card-soft p-3 mb-3">
     <h2 class="card-title-sm"><i class="bi bi-calendar-event"></i> Vencimientos</h2>

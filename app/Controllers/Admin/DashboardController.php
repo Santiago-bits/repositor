@@ -11,7 +11,7 @@ final class DashboardController extends Controller
     public function index(): void
     {
         $this->view('admin/dashboard', [
-            'title'     => 'Dashboard',
+            'title'     => 'Resumen',
             'tarjetas'  => DashboardService::tarjetas(),
             'actividad' => DashboardService::actividadReciente(),
             'stats'     => DashboardService::estadisticas(),

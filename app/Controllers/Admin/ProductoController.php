@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controllers\Admin;
 
 use App\Core\Controller;
+use App\Core\Database;
 use App\Core\Request;
 use App\Models\Categoria;
 use App\Models\Local;
@@ -59,6 +60,14 @@ final class ProductoController extends Controller
         Producto::setActivo($id, $activo);
 
         flash('success', '«' . Producto::nombreCompleto($producto) . '» ' . ($activo ? 'activado.' : 'desactivado.'));
+        redirect('/admin/productos');
+    }
+
+    public function eliminar(int $id): void
+    {
+        $producto = $this->notFoundUnless(Producto::find($id));
+        Database::transaction(fn () => Producto::eliminar($id));
+        flash('success', '«' . Producto::nombreCompleto($producto) . '» borrado.');
         redirect('/admin/productos');
     }
 

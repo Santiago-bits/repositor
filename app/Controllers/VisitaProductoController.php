@@ -160,6 +160,14 @@ final class VisitaProductoController extends VisitaBaseController
         $this->responder('Vencimiento eliminado', ['html' => $this->htmlVencimientos($id, (int) $vencimiento['producto_id'])]);
     }
 
+    /** Saca un producto de la visita (por si se cargó por error). */
+    public function quitar(int $id, int $productoId): never
+    {
+        $this->visitaEditable($id);
+        RelevamientoProducto::quitar($id, $productoId);
+        $this->responder('Producto quitado de la visita.', [], "/visitas/{$id}/productos");
+    }
+
     private function productoActivo(int $productoId): array
     {
         $producto = Producto::find($productoId);

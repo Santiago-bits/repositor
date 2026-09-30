@@ -102,6 +102,12 @@ final class Local extends Model
         );
     }
 
+    /** Se oculta (no se borra la fila) para conservar el historial de visitas. */
+    public static function eliminar(int $id): void
+    {
+        self::execute('UPDATE locales SET deleted_at = NOW(), activo = 0 WHERE id = ?', [$id]);
+    }
+
     public static function setActivo(int $id, bool $activo): void
     {
         self::execute('UPDATE locales SET activo = ? WHERE id = ?', [(int) $activo, $id]);

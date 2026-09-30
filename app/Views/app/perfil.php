@@ -23,7 +23,7 @@
 <p class="small text-body-secondary mt-2 mb-0">Instalada, JACOB se abre como una app, a pantalla completa y más rápido.</p>
 
 <?php if (is_admin()): ?>
-    <h2 class="section-title">Administración</h2>
+    <h2 class="section-title">Gestión</h2>
     <div class="item-list">
         <?php foreach (nav_admin() as [$path, $icon, $label]): ?>
             <a class="item-card" href="<?= url($path) ?>">

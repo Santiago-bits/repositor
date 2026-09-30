@@ -96,4 +96,10 @@ $esYo = $usuario && (int) $usuario['id'] === App\Core\Auth::id();
             <?= $usuario['activo'] ? 'Desactivar usuario' : 'Activar usuario' ?>
         </button>
     </form>
+
+    <form method="post" action="<?= url("/admin/usuarios/{$usuario['id']}/eliminar") ?>" class="mt-2 text-center"
+          data-confirm="¿Borrar este usuario? Ya no va a poder entrar; sus visitas se conservan.">
+        <?= csrf_field() ?>
+        <button class="btn btn-link text-danger" type="submit"><i class="bi bi-trash3"></i> Borrar usuario</button>
+    </form>
 <?php endif; ?>

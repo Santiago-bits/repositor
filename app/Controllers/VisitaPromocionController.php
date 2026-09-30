@@ -70,6 +70,19 @@ final class VisitaPromocionController extends VisitaBaseController
         redirect("/visitas/{$id}#promociones");
     }
 
+    /** Borra una promo desde la visita (la que cargó el usuario, o cualquiera si es admin). */
+    public function eliminar(int $id, int $promoId): void
+    {
+        $this->visitaEditable($id);
+        $promo = $this->notFoundUnless(Promocion::find($promoId));
+        if ((int) $promo['created_by'] !== (int) auth()['id'] && !is_admin()) {
+            View::error(403);
+        }
+        Promocion::eliminar($promoId);
+        flash('success', 'Promoción borrada.');
+        redirect("/visitas/{$id}#promociones");
+    }
+
     /** Conteo de a un producto por vez: muestra el primero pendiente (o el elegido con ?promo=). */
     public function conteo(int $id): void
     {

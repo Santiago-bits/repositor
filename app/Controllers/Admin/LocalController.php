@@ -58,6 +58,14 @@ final class LocalController extends Controller
         redirect('/admin/locales');
     }
 
+    public function eliminar(int $id): void
+    {
+        $local = $this->notFoundUnless(Local::find($id));
+        Local::eliminar($id);
+        flash('success', "Local «{$local['nombre']}» borrado.");
+        redirect('/admin/locales');
+    }
+
     public function toggle(int $id): void
     {
         $local = $this->notFoundUnless(Local::find($id));

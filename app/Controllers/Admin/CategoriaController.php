@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controllers\Admin;
 
 use App\Core\Controller;
+use App\Core\Database;
 use App\Models\Categoria;
 use App\Requests\CategoriaRequest;
 
@@ -40,6 +41,14 @@ final class CategoriaController extends Controller
             'principales' => array_filter(Categoria::principales(), fn ($c) => (int) $c['id'] !== $id),
             'tieneHijas'  => Categoria::tieneHijas($id),
         ]);
+    }
+
+    public function eliminar(int $id): void
+    {
+        $categoria = $this->notFoundUnless(Categoria::find($id));
+        Database::transaction(fn () => Categoria::eliminar($id));
+        flash('success', "Categoría «{$categoria['nombre']}» borrada. Sus productos quedaron sin categoría.");
+        redirect('/admin/categorias');
     }
 
     public function update(int $id): void

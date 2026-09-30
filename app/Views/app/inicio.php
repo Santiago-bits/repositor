@@ -17,7 +17,7 @@ $abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
                 <div class="small fw-semibold text-primary"><span class="pulse-dot"></span> Visita en curso</div>
                 <div class="fw-bold fs-5 text-truncate"><?= e($abierta['local']) ?></div>
                 <div class="small text-body-secondary">
-                    <?= $abiertaHoy ? 'Desde las ' . fecha($abierta['inicio_at'], 'H:i') : 'Abierta desde el ' . fecha($abierta['inicio_at'], 'd/m H:i') ?>
+                    <?= $abiertaHoy ? 'Estás trabajando en este local' : 'Quedó abierta del ' . fecha($abierta['fecha'], 'd/m') ?>
                 </div>
             </div>
         </div>
@@ -51,7 +51,7 @@ $abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
             <a class="historial-row text-reset text-decoration-none" href="<?= url('/visitas/' . $v['id']) ?>">
                 <div class="min-w-0">
                     <div class="fw-semibold text-truncate"><i class="bi bi-check-circle-fill text-success"></i> <?= e($v['local']) ?></div>
-                    <div class="small text-body-secondary"><?= fecha($v['inicio_at'], 'H:i') ?> · <?= duracion($v['inicio_at'], $v['fin_at']) ?> · <?= (int) $v['productos'] ?> productos</div>
+                    <div class="small text-body-secondary"><?= (int) $v['productos'] ?> productos</div>
                 </div>
                 <i class="bi bi-chevron-right text-body-secondary"></i>
             </a>
@@ -93,6 +93,6 @@ $abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
 
 <?php if (is_admin()): ?>
     <a class="btn btn-outline-primary btn-xl w-100 mt-4 d-lg-none" href="<?= url('/admin') ?>">
-        <i class="bi bi-speedometer2 me-1"></i> Panel de administración
+        <i class="bi bi-gear me-1"></i> Gestión (locales, productos, promos…)
     </a>
 <?php endif; ?>

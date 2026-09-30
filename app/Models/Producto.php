@@ -113,6 +113,16 @@ final class Producto extends Model
         self::execute('UPDATE productos SET imagen_path = ? WHERE id = ?', [$path, $id]);
     }
 
+    /**
+     * Se oculta (no se borra la fila) para no romper el historial de visitas.
+     * Se libera el código de barras para poder cargarlo de nuevo y se borran sus promos.
+     */
+    public static function eliminar(int $id): void
+    {
+        self::execute('UPDATE productos SET deleted_at = NOW(), activo = 0, codigo_barras = NULL WHERE id = ?', [$id]);
+        self::execute('UPDATE promociones SET deleted_at = NOW() WHERE producto_id = ? AND deleted_at IS NULL', [$id]);
+    }
+
     public static function setActivo(int $id, bool $activo): void
     {
         self::execute('UPDATE productos SET activo = ? WHERE id = ?', [(int) $activo, $id]);

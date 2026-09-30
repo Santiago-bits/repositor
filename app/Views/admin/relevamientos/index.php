@@ -65,9 +65,8 @@ use App\Models\Relevamiento;
                 <div class="item-icon"><i class="bi <?= Local::ICONOS[$r['tipo']] ?>"></i></div>
                 <div class="item-body">
                     <div class="item-title"><?= e($r['local']) ?></div>
-                    <div class="item-sub"><?= fecha($r['inicio_at'], 'd/m H:i') ?> · <?= e($r['usuario']) ?></div>
+                    <div class="item-sub"><?= fecha($r['fecha'], 'd/m') ?> · <?= e($r['usuario']) ?></div>
                     <div class="item-meta">
-                        <span><i class="bi bi-clock"></i> <?= duracion($r['inicio_at'], $r['fin_at']) ?></span>
                         <span><i class="bi bi-box-seam"></i> <?= (int) $r['productos'] ?> productos</span>
                     </div>
                 </div>

@@ -67,6 +67,14 @@ final class PromocionController extends Controller
         redirect('/admin/promociones');
     }
 
+    public function eliminar(int $id): void
+    {
+        $promo = $this->notFoundUnless(Promocion::find($id));
+        Promocion::eliminar($id);
+        flash('success', 'Promoción de ' . Producto::nombreCompleto($promo) . ' borrada.');
+        redirect('/admin/promociones');
+    }
+
     private function validar(?int $id, string $volver): array
     {
         [$data, $errors] = PromocionRequest::validate($_POST);

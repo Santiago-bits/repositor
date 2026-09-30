@@ -48,6 +48,12 @@ final class RelevamientoProducto extends Model
         );
     }
 
+    /** Saca el producto de la visita (sus vencimientos se borran en cascada). */
+    public static function quitar(int $relevamientoId, int $productoId): void
+    {
+        self::execute('DELETE FROM relevamiento_productos WHERE relevamiento_id = ? AND producto_id = ?', [$relevamientoId, $productoId]);
+    }
+
     /** Productos registrados en la visita, el último tocado primero. */
     public static function deVisita(int $relevamientoId): array
     {

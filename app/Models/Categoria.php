@@ -88,6 +88,13 @@ final class Categoria extends Model
         );
     }
 
+    /** Borra la categoría y sus subcategorías; los productos quedan sin categoría (FK ON DELETE SET NULL). */
+    public static function eliminar(int $id): void
+    {
+        self::execute('DELETE FROM categorias WHERE parent_id = ?', [$id]);
+        self::execute('DELETE FROM categorias WHERE id = ?', [$id]);
+    }
+
     public static function setActivo(int $id, bool $activo): void
     {
         self::execute('UPDATE categorias SET activo = ? WHERE id = ?', [(int) $activo, $id]);

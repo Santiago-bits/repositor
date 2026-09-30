@@ -84,7 +84,7 @@
                 <div class="item-icon"><i class="bi <?= Local::ICONOS[$a['tipo']] ?>"></i></div>
                 <div class="item-body">
                     <div class="item-title"><?= e($a['local']) ?></div>
-                    <div class="item-sub"><?= fecha($a['inicio_at'], 'd/m H:i') ?> · <?= e($a['usuario']) ?> · <?= (int) $a['productos'] ?> productos</div>
+                    <div class="item-sub"><?= fecha($a['fecha'], 'd/m') ?> · <?= e($a['usuario']) ?> · <?= (int) $a['productos'] ?> productos</div>
                 </div>
                 <span class="badge <?= $estados[$a['estado']][1] ?>"><?= $estados[$a['estado']][0] ?></span>
             </div>

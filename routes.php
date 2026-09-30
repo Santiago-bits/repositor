@@ -42,7 +42,9 @@ $router->post('/locales/detectar', [InicioController::class, 'detectar'], ['auth
 $router->post('/visitas', [VisitaController::class, 'iniciar'], ['auth']);
 $router->get('/visitas/{id}', [VisitaController::class, 'show'], ['auth']);
 $router->post('/visitas/{id}/finalizar', [VisitaController::class, 'finalizar'], ['auth']);
-$router->post('/visitas/{id}/cancelar', [VisitaController::class, 'cancelar'], ['auth']);
+$router->post('/visitas/{id}/eliminar', [VisitaController::class, 'eliminar'], ['auth']);
+$router->post('/visitas/{id}/productos/{pid}/quitar', [VisitaProductoController::class, 'quitar'], ['auth']);
+$router->post('/visitas/{id}/promociones/{pid}/eliminar', [VisitaPromocionController::class, 'eliminar'], ['auth']);
 
 $router->get('/visitas/{id}/productos', [VisitaProductoController::class, 'lista'], ['auth']);
 $router->get('/visitas/{id}/buscar', [VisitaProductoController::class, 'buscar'], ['auth']);
@@ -95,6 +97,7 @@ $router->post('/admin/locales', [LocalController::class, 'store'], $admin);
 $router->get('/admin/locales/{id}/editar', [LocalController::class, 'edit'], $admin);
 $router->post('/admin/locales/{id}', [LocalController::class, 'update'], $admin);
 $router->post('/admin/locales/{id}/estado', [LocalController::class, 'toggle'], $admin);
+$router->post('/admin/locales/{id}/eliminar', [LocalController::class, 'eliminar'], $admin);
 
 $router->get('/admin/productos', [AdminProductoController::class, 'index'], $admin);
 $router->get('/admin/productos/crear', [AdminProductoController::class, 'create'], $admin);
@@ -102,6 +105,7 @@ $router->post('/admin/productos', [AdminProductoController::class, 'store'], $ad
 $router->get('/admin/productos/{id}/editar', [AdminProductoController::class, 'edit'], $admin);
 $router->post('/admin/productos/{id}', [AdminProductoController::class, 'update'], $admin);
 $router->post('/admin/productos/{id}/estado', [AdminProductoController::class, 'toggle'], $admin);
+$router->post('/admin/productos/{id}/eliminar', [AdminProductoController::class, 'eliminar'], $admin);
 
 $router->get('/admin/promociones', [AdminPromocionController::class, 'index'], $admin);
 $router->get('/admin/promociones/crear', [AdminPromocionController::class, 'create'], $admin);
@@ -109,6 +113,7 @@ $router->post('/admin/promociones', [AdminPromocionController::class, 'store'], 
 $router->get('/admin/promociones/{id}/editar', [AdminPromocionController::class, 'edit'], $admin);
 $router->post('/admin/promociones/{id}', [AdminPromocionController::class, 'update'], $admin);
 $router->post('/admin/promociones/{id}/cancelar', [AdminPromocionController::class, 'cancelar'], $admin);
+$router->post('/admin/promociones/{id}/eliminar', [AdminPromocionController::class, 'eliminar'], $admin);
 
 $router->get('/admin/tareas', [AdminTareaController::class, 'index'], $admin);
 $router->get('/admin/tareas/crear', [AdminTareaController::class, 'create'], $admin);
@@ -121,6 +126,7 @@ $router->get('/admin/categorias', [CategoriaController::class, 'index'], $admin)
 $router->post('/admin/categorias', [CategoriaController::class, 'store'], $admin);
 $router->get('/admin/categorias/{id}/editar', [CategoriaController::class, 'edit'], $admin);
 $router->post('/admin/categorias/{id}', [CategoriaController::class, 'update'], $admin);
+$router->post('/admin/categorias/{id}/eliminar', [CategoriaController::class, 'eliminar'], $admin);
 
 $router->get('/admin/usuarios', [UsuarioController::class, 'index'], $admin);
 $router->get('/admin/usuarios/crear', [UsuarioController::class, 'create'], $admin);
@@ -128,3 +134,4 @@ $router->post('/admin/usuarios', [UsuarioController::class, 'store'], $admin);
 $router->get('/admin/usuarios/{id}/editar', [UsuarioController::class, 'edit'], $admin);
 $router->post('/admin/usuarios/{id}', [UsuarioController::class, 'update'], $admin);
 $router->post('/admin/usuarios/{id}/estado', [UsuarioController::class, 'toggle'], $admin);
+$router->post('/admin/usuarios/{id}/eliminar', [UsuarioController::class, 'eliminar'], $admin);

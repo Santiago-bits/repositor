@@ -52,8 +52,12 @@ final class VisitaService
         Relevamiento::cerrar((int) $visita['id'], 'finalizado', $fin);
     }
 
-    public static function cancelar(array $visita): void
+    /** Borra la visita y todo lo cargado en ella, incluidos los archivos de las fotos. */
+    public static function eliminar(array $visita): void
     {
-        Relevamiento::cerrar((int) $visita['id'], 'cancelado', date('Y-m-d H:i:s'));
+        $fotos = Database::transaction(fn () => Relevamiento::eliminar((int) $visita['id']));
+        foreach ($fotos as $path) {
+            ImageService::eliminar($path);
+        }
     }
 }

@@ -31,7 +31,6 @@ use App\Models\Relevamiento;
                     <div class="item-title"><?= e($v['local']) ?></div>
                     <div class="item-sub"><?= e(Relevamiento::actividad($v)) ?> · <?= (int) $v['productos'] ?> producto<?= (int) $v['productos'] === 1 ? '' : 's' ?></div>
                     <div class="item-meta">
-                        <span><i class="bi bi-clock"></i> <?= fecha($v['inicio_at'], 'H:i') ?> · <?= duracion($v['inicio_at'], $v['fin_at']) ?></span>
                         <?php if ($v['fotos'] > 0): ?><span><i class="bi bi-camera"></i> <?= (int) $v['fotos'] ?></span><?php endif; ?>
                     </div>
                 </div>
