@@ -8,7 +8,7 @@ $unidadActual = $v('unidad_medida');
 ?>
 <div class="mb-3">
     <label class="form-label" for="nombre">Nombre</label>
-    <input class="form-control<?= invalid('nombre') ?>" id="nombre" name="nombre" value="<?= e($v('nombre')) ?>" maxlength="150" required placeholder="Ej: Mirin" <?= $v('nombre') === '' ? 'autofocus' : '' ?>>
+    <input class="form-control<?= invalid('nombre') ?>" id="nombre" name="nombre" value="<?= e($v('nombre')) ?>" maxlength="150" required placeholder="Ej: Fernet Branca" <?= $v('nombre') === '' ? 'autofocus' : '' ?>>
     <?= field_error('nombre') ?>
 </div>
 
@@ -20,7 +20,7 @@ $unidadActual = $v('unidad_medida');
     </div>
     <div class="col-5">
         <label class="form-label" for="presentacion">Presentación</label>
-        <input class="form-control<?= invalid('presentacion') ?>" id="presentacion" name="presentacion" value="<?= e($v('presentacion')) ?>" maxlength="40" placeholder="500 ml">
+        <input class="form-control<?= invalid('presentacion') ?>" id="presentacion" name="presentacion" value="<?= e($v('presentacion')) ?>" maxlength="40" placeholder="750 ml">
         <?= field_error('presentacion') ?>
     </div>
 </div>

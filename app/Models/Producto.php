@@ -5,12 +5,12 @@ namespace App\Models;
 
 final class Producto extends Model
 {
+    /** Bebidas: se venden por volumen. */
     public const UNIDADES = [
+        'ml' => 'Mililitros (ml)',
+        'cc' => 'Centímetros cúbicos (cc)',
+        'l'  => 'Litros (L)',
         'u'  => 'Unidades',
-        'g'  => 'Gramos',
-        'kg' => 'Kilos',
-        'ml' => 'Mililitros',
-        'l'  => 'Litros',
     ];
 
     private const SELECT = 'SELECT p.id, p.nombre, p.marca, p.codigo_barras, p.categoria_id, p.presentacion,

@@ -8,11 +8,12 @@ final class Observacion extends Model
 {
     /** Frases frecuentes: un toque en vez de escribir. */
     public const RAPIDAS = [
-        'Producto ubicado en depósito.',
         'Quedan pocas unidades.',
+        'Falta en la heladera.',
+        'Botella rota o con pérdida.',
         'El precio de góndola no coincide.',
         'No estaba exhibido.',
-        'Producto en mal estado.',
+        'Hay stock en depósito.',
     ];
 
     public static function crear(int $relevamientoId, ?int $productoId, string $texto): int

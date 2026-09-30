@@ -80,7 +80,7 @@ $vid = (int) $visita['id'];
                 <div class="historial-row">
                     <div class="min-w-0">
                         <div class="fw-semibold text-truncate"><i class="bi bi-tag text-primary"></i> <?= e(trim($p['nombre'] . ' ' . $p['presentacion'])) ?></div>
-                        <div class="small text-body-secondary">Hasta el <?= fecha($p['fecha_fin'], 'd/m') ?><?= $p['observaciones'] ? ' · ' . e($p['observaciones']) : '' ?></div>
+                        <?php if ($p['observaciones']): ?><div class="small text-body-secondary"><?= e($p['observaciones']) ?></div><?php endif; ?>
                     </div>
                     <?php if ($p['precio_promo'] !== null): ?><div class="fw-bold"><?= precio($p['precio_promo']) ?></div><?php endif; ?>
                     <?php if ($editable && ((int) $p['created_by'] === (int) auth()['id'] || is_admin())): ?>
@@ -95,7 +95,7 @@ $vid = (int) $visita['id'];
     <?php endif; ?>
 
     <?php if ($editable): ?>
-        <a class="btn btn-outline-primary w-100" href="<?= url("/visitas/{$vid}/promociones/crear") ?>"><i class="bi bi-plus-lg"></i> Registrar promoción que veo</a>
+        <a class="btn btn-primary btn-xl w-100" href="<?= url("/visitas/{$vid}/promociones/crear") ?>"><i class="bi bi-megaphone me-1"></i> Promos del finde</a>
     <?php endif; ?>
 <?php endif; ?>
 

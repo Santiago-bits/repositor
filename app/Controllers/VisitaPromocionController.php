@@ -3,71 +3,88 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Core\Database;
 use App\Core\Request;
 use App\Core\View;
-use App\Models\Local;
 use App\Models\Producto;
 use App\Models\ProductoLocal;
 use App\Models\Promocion;
+use App\Models\RelevamientoProducto;
 use App\Models\Tarea;
-use App\Requests\PromocionRequest;
 use App\Services\ConteoService;
 use App\Services\PromocionService;
+use App\Services\RegistroVisitaService;
 use App\Services\TareaService;
 
 /** Dentro de una visita: registrar promociones vistas en góndola, conteo de promociones y tareas. */
 final class VisitaPromocionController extends VisitaBaseController
 {
+    /** Promos del finde: lista de productos del local para marcar (sin fechas). */
     public function crear(int $id): void
     {
         $visita = $this->visitaEditable($id);
-        $user = auth();
 
         $this->view('app/visitas/promocion', [
-            'title'     => 'Registrar promoción',
+            'title'     => 'Promos del finde',
             'visita'    => $visita,
-            'promo'     => [
-                'producto_id'  => (int) Request::input('producto', 0) ?: null,
-                'fecha_inicio' => date('Y-m-d'),
-                'fecha_fin'    => PromocionService::finPorDefecto(),
-            ],
-            'grupos'    => self::opcionesProducto($visita),
-            'atajos'    => PromocionService::atajosFin(),
-            'otros'     => array_filter(Local::paraUsuario($user), fn ($l) => (int) $l['id'] !== (int) $visita['local_id']),
-            'scripts'   => ['assets/js/escaner.js', 'assets/js/visita.js'],
+            'productos' => ProductoLocal::productosDeLocal((int) $visita['local_id'], $id),
+            'enPromo'   => Promocion::vigentesEnLocal((int) $visita['local_id'], $visita['fecha']),
+            'marcado'   => (int) Request::input('producto', 0),
+            'scripts'   => ['assets/js/visita.js'],
         ]);
     }
 
+    /**
+     * Guarda las promos marcadas. Las fechas no se piden: van de hoy al lunes,
+     * así el lunes aparecen solas en el conteo. Desmarcar una promo propia la borra.
+     */
     public function guardar(int $id): void
     {
         $visita = $this->visitaEditable($id);
-        $user = auth();
-        [$data, $errors] = PromocionRequest::validate($_POST);
-        $data['estado'] = 'activa';
+        $userId = (int) auth()['id'];
+        $localId = (int) $visita['local_id'];
+        $marcados = array_map('intval', array_keys((array) Request::input('promo', [])));
+        $stocks = (array) Request::input('stock', []);
+        $guardadas = 0;
 
-        // Siempre el local de la visita; los demás, solo si el usuario puede trabajarlos.
-        $locales = [(int) $visita['local_id']];
-        foreach ($data['locales'] as $localId) {
-            if (Local::accesible($user, $localId)) {
-                $locales[] = $localId;
+        Database::transaction(function () use ($visita, $id, $userId, $localId, $marcados, $stocks, &$guardadas): void {
+            $enPromo = Promocion::vigentesEnLocal($localId, $visita['fecha']);
+
+            foreach (ProductoLocal::productosDeLocal($localId, $id) as $p) {
+                $pid = (int) $p['id'];
+                $promo = $enPromo[$pid] ?? null;
+
+                if (!in_array($pid, $marcados, true)) {
+                    if ($promo && (int) $promo['created_by'] === $userId) {
+                        Promocion::eliminar((int) $promo['id']);
+                    }
+                    continue;
+                }
+
+                $promoId = $promo ? (int) $promo['id'] : Promocion::create([
+                    'producto_id'   => $pid,
+                    'fecha_inicio'  => $visita['fecha'],
+                    'fecha_fin'     => max($visita['fecha'], PromocionService::finPorDefecto()),
+                    'precio_normal' => null,
+                    'precio_promo'  => null,
+                    'observaciones' => null,
+                ], $userId);
+                if (!$promo) {
+                    Promocion::syncLocales($promoId, [$localId]);
+                }
+
+                $stock = filter_var(trim((string) ($stocks[$pid] ?? '')), FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 99999]]);
+                if ($stock !== false) {
+                    RelevamientoProducto::guardarStock($id, $pid, $stock, RegistroVisitaService::estadoPorDefecto($stock), false, $promoId);
+                }
+                $guardadas++;
             }
-        }
-        $locales = array_values(array_unique($locales));
+        });
 
-        if (!$errors) {
-            $solapada = Promocion::solapada($data['producto_id'], $locales, $data['fecha_inicio'], $data['fecha_fin']);
-            if ($solapada) {
-                $errors['producto_id'] = "Ya hay una promo de ese producto en {$solapada['local']} del "
-                    . fecha($solapada['fecha_inicio'], 'd/m') . ' al ' . fecha($solapada['fecha_fin'], 'd/m') . '.';
-            }
-        }
-        if ($errors) {
-            $this->backWithErrors($errors, $_POST, "/visitas/{$id}/promociones/crear");
-        }
-
-        PromocionService::guardar($data, $locales, (int) $user['id']);
-        flash('success', 'Promoción registrada hasta el ' . fecha($data['fecha_fin'], 'd/m') . '.');
-        redirect("/visitas/{$id}#promociones");
+        flash('success', $guardadas === 1 ? '1 promo guardada.' : "{$guardadas} promos guardadas.");
+        redirect(Request::input('mensaje') === '1'
+            ? '/mensaje?fecha=' . $visita['fecha'] . '&tipo=promos'
+            : "/visitas/{$id}#promociones");
     }
 
     /** Borra una promo desde la visita (la que cargó el usuario, o cualquiera si es admin). */

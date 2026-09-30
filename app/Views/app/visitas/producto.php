@@ -30,7 +30,7 @@ $registrado = $rp && ($rp['stock'] !== null || $rp['estado_stock'] !== null);
 <?php if ($promo): ?>
     <div class="promo-aviso mb-2">
         <i class="bi bi-tag-fill"></i>
-        <span>En promoción hasta el <?= fecha($promo['fecha_fin'], 'd/m') ?><?= $promo['precio_promo'] !== null ? ' · ' . precio($promo['precio_promo']) : '' ?></span>
+        <span>En promo del finde<?= $promo['precio_promo'] !== null ? ' · ' . precio($promo['precio_promo']) : '' ?></span>
     </div>
 <?php else: ?>
     <a class="small d-inline-block mb-2" href="<?= url("/visitas/{$vid}/promociones/crear?producto={$pid}") ?>"><i class="bi bi-megaphone"></i> ¿Está en promo? Registrala</a>

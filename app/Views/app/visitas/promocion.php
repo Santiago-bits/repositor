@@ -1,40 +1,53 @@
 <?php
-use App\Models\Configuracion;
+use App\Models\Producto;
 
-$marcados = array_map('intval', (array) old('locales', []));
+$vid = (int) $visita['id'];
 ?>
-<a class="back-link" href="<?= url('/visitas/' . $visita['id']) ?>"><i class="bi bi-arrow-left"></i> Volver a la visita</a>
+<a class="back-link" href="<?= url("/visitas/{$vid}") ?>"><i class="bi bi-arrow-left"></i> Volver a la visita</a>
 
 <div class="page-head">
     <div class="min-w-0">
-        <h1>Registrar promoción</h1>
+        <h1>Promos del finde</h1>
         <div class="small text-body-secondary text-truncate"><i class="bi bi-geo-alt"></i> <?= e($visita['local']) ?></div>
     </div>
 </div>
 
-<form method="post" action="<?= url('/visitas/' . $visita['id'] . '/promociones') ?>" novalidate>
-    <?= csrf_field() ?>
-    <?= partial('promo-campos', ['promo' => $promo, 'grupos' => $grupos, 'atajos' => $atajos]) ?>
+<p class="small text-body-secondary">Marcá los productos que están en promo. Si querés, anotá el stock al lado.</p>
 
-    <?php if ($otros !== []): ?>
-        <div class="mb-3">
-            <span class="form-label d-block">¿También está en otros locales?</span>
-            <div class="card-soft check-list">
-                <?php foreach ($otros as $l): ?>
-                    <label class="form-check check-row">
-                        <input class="form-check-input" type="checkbox" name="locales[]" value="<?= $l['id'] ?>" <?= in_array((int) $l['id'], $marcados, true) ? 'checked' : '' ?>>
-                        <span class="form-check-label"><?= e($l['nombre']) ?></span>
-                    </label>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    <?php endif; ?>
-
-    <p class="small text-body-secondary">
-        <i class="bi bi-info-circle"></i> El día que termina (y hasta <?= (int) Configuracion::get('conteo_promos_dias_gracia', '2') ?> días después) aparece en <strong>Conteo de promociones</strong>.
-    </p>
-
-    <div class="form-actions">
-        <button class="btn btn-primary btn-xl flex-grow-1" type="submit"><i class="bi bi-megaphone me-1"></i> Guardar promoción</button>
+<?php if ($productos === []): ?>
+    <div class="empty-state card-soft">
+        <i class="bi bi-box-seam"></i>
+        <p>Este local todavía no tiene productos.</p>
+        <a class="btn btn-outline-primary" href="<?= url("/visitas/{$vid}/productos") ?>">Buscar o escanear productos</a>
     </div>
-</form>
+<?php else: ?>
+    <form method="post" action="<?= url("/visitas/{$vid}/promociones") ?>">
+        <?= csrf_field() ?>
+        <div class="card-soft">
+            <?php foreach ($productos as $p): ?>
+                <?php
+                $id = (int) $p['id'];
+                $enPromoYa = isset($enPromo[$id]);
+                $stock = $enPromoYa && $p['rp_id'] !== null ? $p['stock'] : '';
+                ?>
+                <label class="promo-fila">
+                    <input class="form-check-input" type="checkbox" name="promo[<?= $id ?>]" value="1"
+                           <?= $enPromoYa || $marcado === $id ? 'checked' : '' ?> aria-label="En promo: <?= e(Producto::nombreCompleto($p)) ?>">
+                    <span class="flex-grow-1 min-w-0">
+                        <span class="d-block fw-semibold"><?= e(Producto::nombreCompleto($p)) ?></span>
+                        <?php if ($p['marca']): ?><span class="small text-body-secondary"><?= e($p['marca']) ?></span><?php endif; ?>
+                    </span>
+                    <input class="form-control promo-stock" type="number" name="stock[<?= $id ?>]" value="<?= e($stock ?? '') ?>"
+                           min="0" max="99999" inputmode="numeric" placeholder="Stock" data-auto-marcar aria-label="Stock">
+                </label>
+            <?php endforeach; ?>
+        </div>
+
+        <a class="small d-inline-block mt-2" href="<?= url("/visitas/{$vid}/productos") ?>"><i class="bi bi-upc-scan"></i> ¿Falta un producto? Buscalo o escanealo</a>
+
+        <div class="form-actions flex-column">
+            <button class="btn btn-primary btn-xl" type="submit" name="mensaje" value="0"><i class="bi bi-check-lg me-1"></i> GUARDAR</button>
+            <button class="btn btn-outline-primary" type="submit" name="mensaje" value="1"><i class="bi bi-chat-square-text me-1"></i> Guardar y armar mensaje</button>
+        </div>
+    </form>
+<?php endif; ?>

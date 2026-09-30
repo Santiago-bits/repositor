@@ -64,6 +64,13 @@
         if (navigator.vibrate) navigator.vibrate(8);
     });
 
+    // ---------- Promos del finde: anotar el stock marca el producto ----------
+    document.addEventListener('input', function (e) {
+        if (!e.target.matches('[data-auto-marcar]') || e.target.value === '') return;
+        var check = e.target.closest('.promo-fila').querySelector('input[type=checkbox]');
+        if (check) check.checked = true;
+    });
+
     // ---------- Stock ----------
     var stockForm = document.querySelector('[data-stock-form]');
     if (stockForm) {

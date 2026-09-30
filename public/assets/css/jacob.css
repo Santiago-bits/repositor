@@ -1306,3 +1306,19 @@ body.escaner-abierto { overflow: hidden; }
 .page-head h1 { font-size: 1.3rem; }
 
 .btn-xl { min-height: 52px; font-size: 1rem; border-radius: 12px; }
+
+/* Promos del finde: tocar la fila marca el producto. */
+.promo-fila {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 60px;
+    margin: 0;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.promo-fila + .promo-fila { border-top: 1px solid var(--app-border); }
+.promo-fila .form-check-input { width: 1.5em; height: 1.5em; margin: 0; flex-shrink: 0; }
+.promo-fila:has(.form-check-input:checked) { background: var(--bs-primary-bg-subtle); }
+.promo-stock { width: 84px; min-height: 42px; flex-shrink: 0; text-align: center; }

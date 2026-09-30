@@ -6,6 +6,7 @@ namespace App\Services;
 use App\Core\Database;
 use App\Models\Observacion;
 use App\Models\Producto;
+use App\Models\Promocion;
 use App\Models\Vencimiento;
 
 /**
@@ -28,7 +29,7 @@ final class MensajeService
     private static function visitas(string $where, array $params): array
     {
         $stmt = Database::connection()->prepare(
-            "SELECT r.id, r.estado, l.nombre AS local
+            "SELECT r.id, r.estado, r.local_id, l.nombre AS local
              FROM relevamientos r JOIN locales l ON l.id = r.local_id
              WHERE {$where} AND r.estado <> 'cancelado'
              ORDER BY r.inicio_at"
@@ -61,6 +62,19 @@ final class MensajeService
                             $vencimientos[] = '- ' . Producto::nombreCompleto($p) . ": {$cant}"
                                 . ($estado['clave'] === 'vencido' ? 'vencidas el ' : 'vencen el ') . fecha($venc['fecha_vencimiento'], 'd/m');
                         }
+                    }
+                }
+            }
+
+            // Promos marcadas en el local que no tienen stock anotado: igual van en el mensaje.
+            if ($soloPromos) {
+                $conStock = array_map('intval', array_column(
+                    array_filter(self::productos((int) $v['id']), fn ($p) => $p['promocion_id'] !== null),
+                    'producto_id'
+                ));
+                foreach (Promocion::vigentesEnLocal((int) $v['local_id'], $fecha) as $pid => $promo) {
+                    if (!in_array((int) $pid, $conStock, true)) {
+                        $lineas[] = '- ' . Producto::nombreCompleto($promo) . ': en promo';
                     }
                 }
             }
@@ -102,7 +116,7 @@ final class MensajeService
     private static function productos(int $relevamientoId): array
     {
         $stmt = Database::connection()->prepare(
-            'SELECT rp.id AS rp_id, rp.stock, rp.estado_stock, rp.con_problema, rp.promocion_id, p.nombre, p.presentacion
+            'SELECT rp.id AS rp_id, rp.producto_id, rp.stock, rp.estado_stock, rp.con_problema, rp.promocion_id, p.nombre, p.presentacion
              FROM relevamiento_productos rp JOIN productos p ON p.id = rp.producto_id
              WHERE rp.relevamiento_id = ?
              ORDER BY p.nombre, p.presentacion'

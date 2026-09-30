@@ -73,21 +73,27 @@ Database::transaction(function () use ($db, $insert, $password): void {
 
     // ── Categorías ───────────────────────────────────────────
     $sqlCat = 'INSERT INTO categorias (parent_id, nombre) VALUES (?, ?)';
-    $condimentos = $insert($sqlCat, [null, 'Condimentos']);
-    $almacen = $insert($sqlCat, [null, 'Almacén']);
-    $orientales = $insert($sqlCat, [$condimentos, 'Orientales']);
-    $salsas = $insert($sqlCat, [$condimentos, 'Salsas']);
-    $insert($sqlCat, [$almacen, 'Conservas']);
+    $conAlcohol = $insert($sqlCat, [null, 'Bebidas con alcohol']);
+    $sinAlcohol = $insert($sqlCat, [null, 'Bebidas sin alcohol']);
+    $aperitivos = $insert($sqlCat, [$conAlcohol, 'Aperitivos']);
+    $cervezas = $insert($sqlCat, [$conAlcohol, 'Cervezas']);
+    $vinos = $insert($sqlCat, [$conAlcohol, 'Vinos']);
+    $insert($sqlCat, [$conAlcohol, 'Destilados']);
+    $gaseosas = $insert($sqlCat, [$sinAlcohol, 'Gaseosas']);
+    $aguas = $insert($sqlCat, [$sinAlcohol, 'Aguas']);
 
-    // ── Productos (códigos ficticios) ─────────────────────────
+    // ── Productos (bebidas de ejemplo; códigos de barras FICTICIOS) ──
     $sqlProd = 'INSERT INTO productos (nombre, marca, codigo_barras, categoria_id, presentacion, unidad_medida)
                 VALUES (?, ?, ?, ?, ?, ?)';
-    $mirin = $insert($sqlProd, ['Mirin', 'Marca X', ean13('779000000001'), $orientales, '500 ml', 'ml']);
-    $salsaX = $insert($sqlProd, ['Salsa X', 'Marca X', ean13('779000000002'), $salsas, '250 ml', 'ml']);
-    $prodY = $insert($sqlProd, ['Producto Y', 'Marca Y', ean13('779000000003'), $almacen, '1 kg', 'kg']);
-    $prodZ = $insert($sqlProd, ['Producto Z', 'Marca Z', ean13('779000000004'), $almacen, '400 g', 'g']);
+    $fernet = $insert($sqlProd, ['Fernet Branca', 'Branca', ean13('779000000001'), $aperitivos, '750 ml', 'ml']);
+    $gancia = $insert($sqlProd, ['Gancia', 'Gancia', ean13('779000000002'), $aperitivos, '950 ml', 'ml']);
+    $cerveza = $insert($sqlProd, ['Cerveza Quilmes', 'Quilmes', ean13('779000000003'), $cervezas, '1 L', 'l']);
+    $lata = $insert($sqlProd, ['Cerveza Quilmes lata', 'Quilmes', ean13('779000000004'), $cervezas, '473 cc', 'cc']);
+    $vino = $insert($sqlProd, ['Vino Malbec', 'Bodega Ejemplo', ean13('779000000005'), $vinos, '750 ml', 'ml']);
+    $coca = $insert($sqlProd, ['Coca-Cola', 'Coca-Cola', ean13('779000000006'), $gaseosas, '2,25 L', 'l']);
+    $agua = $insert($sqlProd, ['Agua Villavicencio', 'Villavicencio', ean13('779000000007'), $aguas, '1,5 L', 'l']);
 
-    foreach ([$mirin, $salsaX, $prodY, $prodZ] as $productoId) {
+    foreach ([$fernet, $gancia, $cerveza, $lata, $vino, $coca, $agua] as $productoId) {
         foreach ($locales as $localId) {
             $db->prepare('INSERT INTO producto_local (producto_id, local_id, stock_habitual) VALUES (?, ?, 12)')
                 ->execute([$productoId, $localId]);
@@ -102,9 +108,9 @@ Database::transaction(function () use ($db, $insert, $password): void {
     $lunes = date('Y-m-d', strtotime($viernes . ' +3 days'));
 
     $promos = [
-        [$insert($sqlPromo, [$mirin, date('Y-m-d', strtotime('-3 days')), $hoy, 5200, 4400, 'Prueba: termina hoy', $adminId]), $locales],
-        [$insert($sqlPromo, [$salsaX, date('Y-m-d', strtotime('-3 days')), $hoy, 2100, 1750, 'Prueba: termina hoy', $adminId]), $locales],
-        [$insert($sqlPromo, [$prodY, $viernes, $lunes, null, null, 'Prueba: viernes a lunes', $adminId]), [$locales[0], $locales[1]]],
+        [$insert($sqlPromo, [$fernet, date('Y-m-d', strtotime('-3 days')), $hoy, 12500, 10900, 'Prueba: termina hoy', $adminId]), $locales],
+        [$insert($sqlPromo, [$cerveza, date('Y-m-d', strtotime('-3 days')), $hoy, 2800, 2300, 'Prueba: termina hoy', $adminId]), $locales],
+        [$insert($sqlPromo, [$coca, $viernes, $lunes, null, null, 'Prueba: viernes a lunes', $adminId]), [$locales[0], $locales[1]]],
     ];
     foreach ($promos as [$promoId, $localesPromo]) {
         foreach ($localesPromo as $localId) {
