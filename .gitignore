@@ -1,0 +1,14 @@
+# Credenciales reales: cada entorno tiene la suya (partir de config/config.example.php)
+/config/config.php
+
+# Archivos que genera la app (logs, fotos e imágenes subidas)
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/productos/
+/storage/relevamientos/
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

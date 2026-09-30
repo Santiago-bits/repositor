@@ -1,0 +1,13 @@
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Hostinger: forzar HTTPS (la cámara, el GPS y la PWA lo necesitan)
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP_HOST} ^(www\.)?baseocho\.tienda$ [NC]
+    RewriteRule ^ https://baseocho.tienda%{REQUEST_URI} [L,R=301]
+
+    # Todo pasa por public/: config, app, database y storage nunca son accesibles
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
