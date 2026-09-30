@@ -2,7 +2,10 @@
 
 <div class="page-head">
     <h1>Productos</h1>
-    <a class="btn btn-primary" href="<?= url('/admin/productos/crear') ?>"><i class="bi bi-plus-lg"></i> Nuevo</a>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-primary" href="<?= url('/admin/productos/importar') ?>"><i class="bi bi-file-earmark-excel"></i> Excel</a>
+        <a class="btn btn-primary" href="<?= url('/admin/productos/crear') ?>"><i class="bi bi-plus-lg"></i> Nuevo</a>
+    </div>
 </div>
 
 <form method="get" action="<?= url('/admin/productos') ?>" class="mb-3" role="search">

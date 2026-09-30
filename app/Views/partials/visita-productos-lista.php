@@ -10,12 +10,12 @@ $hechos = count(array_filter($productos, fn ($p) => $p['rp_id'] !== null));
 <?php if ($productos === []): ?>
     <div class="empty-state card-soft">
         <i class="bi bi-box-seam"></i>
-        <p class="mb-0">Este local todavía no tiene productos asignados.<br>Buscalos o escanealos: al registrarlos quedan asociados al local.</p>
+        <p class="mb-0">Todavía no hay productos cargados.<br>Buscalos o escanealos, o subí el Excel desde Gestión → Productos.</p>
     </div>
 <?php else: ?>
     <div class="progreso mb-3">
         <div class="d-flex justify-content-between small mb-1">
-            <span class="text-body-secondary">Productos del local</span>
+            <span class="text-body-secondary">Productos</span>
             <span><strong><?= $hechos ?></strong> de <?= $total ?> registrados</span>
         </div>
         <div class="progress" role="progressbar" aria-valuenow="<?= $hechos ?>" aria-valuemin="0" aria-valuemax="<?= $total ?>" style="height: 8px">

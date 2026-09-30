@@ -1,6 +1,11 @@
 <div class="page-head">
     <h1>Productos</h1>
-    <a class="btn btn-link" href="<?= url('/productos/crear') ?>"><i class="bi bi-plus-lg"></i> Nuevo</a>
+    <div class="d-flex">
+        <?php if (is_admin()): ?>
+            <a class="btn btn-link" href="<?= url('/admin/productos/importar') ?>"><i class="bi bi-file-earmark-excel"></i> Excel</a>
+        <?php endif; ?>
+        <a class="btn btn-link" href="<?= url('/productos/crear') ?>"><i class="bi bi-plus-lg"></i> Nuevo</a>
+    </div>
 </div>
 
 <form class="search-bar" method="get" action="<?= url('/productos') ?>" role="search" data-busqueda>

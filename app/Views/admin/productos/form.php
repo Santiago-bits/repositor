@@ -1,22 +1,6 @@
 <?php
-use App\Models\Local;
-
 $activo = has_old() ? (bool) old('activo', false) : (bool) ($producto['activo'] ?? true);
 
-// Locales: lo que se reenvió tras un error, lo guardado, o todos los activos si es nuevo.
-$oldLocales = old('locales', null);
-$filaLocal = function (array $local) use ($oldLocales, $asignados): array {
-    $id = (int) $local['id'];
-    if (is_array($oldLocales)) {
-        $f = $oldLocales[$id] ?? [];
-        return [!empty($f['activo']), $f['stock_habitual'] ?? '', $f['ubicacion_gondola'] ?? ''];
-    }
-    if ($asignados === null) {
-        return [(bool) $local['activo'], '', ''];
-    }
-    $f = $asignados[$id] ?? null;
-    return [$f !== null, $f['stock_habitual'] ?? '', $f['ubicacion_gondola'] ?? ''];
-};
 ?>
 
 <div class="page-head">
@@ -46,38 +30,6 @@ $filaLocal = function (array $local) use ($oldLocales, $asignados): array {
             </div>
         </div>
         <div class="form-text">Se achica automáticamente para no ocupar espacio.</div>
-    </div>
-
-    <div class="mb-3">
-        <span class="form-label d-block">Locales donde se trabaja</span>
-        <?php if ($locales === []): ?>
-            <p class="text-body-secondary small">No hay locales cargados.</p>
-        <?php else: ?>
-            <div class="card-soft">
-                <?php foreach ($locales as $l): ?>
-                    <?php [$marcado, $stock, $ubicacion] = $filaLocal($l); $id = (int) $l['id']; ?>
-                    <div class="local-row" data-local-row>
-                        <label class="form-check m-0 d-flex align-items-center gap-2">
-                            <input class="form-check-input" type="checkbox" name="locales[<?= $id ?>][activo]" value="1" <?= $marcado ? 'checked' : '' ?> data-local-check>
-                            <span class="form-check-label">
-                                <i class="bi <?= Local::ICONOS[$l['tipo']] ?> text-body-secondary"></i> <?= e($l['nombre']) ?>
-                                <?php if (!$l['activo']): ?><span class="badge text-bg-secondary">Inactivo</span><?php endif; ?>
-                            </span>
-                        </label>
-                        <div class="row g-2 mt-1 local-row-extra">
-                            <div class="col-5">
-                                <input class="form-control form-control-sm" type="number" min="0" max="65535" inputmode="numeric"
-                                       name="locales[<?= $id ?>][stock_habitual]" value="<?= e($stock) ?>" placeholder="Stock habitual" aria-label="Stock habitual en <?= e($l['nombre']) ?>">
-                            </div>
-                            <div class="col-7">
-                                <input class="form-control form-control-sm" maxlength="80"
-                                       name="locales[<?= $id ?>][ubicacion_gondola]" value="<?= e($ubicacion) ?>" placeholder="Góndola / ubicación" aria-label="Ubicación en <?= e($l['nombre']) ?>">
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
     </div>
 
     <div class="card-soft px-3 py-2 mb-3">

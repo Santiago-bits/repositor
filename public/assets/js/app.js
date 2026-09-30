@@ -122,6 +122,16 @@
         window.addEventListener('load', function () {
             navigator.serviceWorker.register(base + 'sw.js').catch(function () { /* sin PWA, la web funciona igual */ });
         });
+
+        // Se subió una versión nueva: recargar una vez para ver el diseño nuevo.
+        // Solo si ya había una versión anterior y la página se acaba de abrir (no mientras se carga algo).
+        var habiaVersion = !!navigator.serviceWorker.controller;
+        var abierta = Date.now();
+        navigator.serviceWorker.addEventListener('controllerchange', function () {
+            if (habiaVersion && Date.now() - abierta < 15000) {
+                window.location.reload();
+            }
+        });
     }
 
     var pedidoInstalacion = null;

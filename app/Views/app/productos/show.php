@@ -1,5 +1,4 @@
 <?php
-use App\Models\Local;
 use App\Models\Producto;
 
 $estados = [
@@ -35,30 +34,6 @@ $estados = [
 
 <?php if (is_admin()): ?>
     <a class="btn btn-outline-primary w-100" href="<?= url('/admin/productos/' . $producto['id'] . '/editar') ?>"><i class="bi bi-pencil"></i> Editar producto</a>
-<?php endif; ?>
-
-<h2 class="section-title">Dónde se trabaja</h2>
-<?php if ($locales === []): ?>
-    <p class="text-body-secondary small">Todavía no está asignado a <?= is_admin() ? 'ningún local' : 'tus locales' ?>.</p>
-<?php else: ?>
-    <div class="item-list">
-        <?php foreach ($locales as $l): ?>
-            <div class="item-card py-2">
-                <div class="item-icon item-icon-sm"><i class="bi <?= Local::ICONOS[$l['tipo']] ?>"></i></div>
-                <div class="item-body">
-                    <div class="item-title"><?= e($l['nombre']) ?></div>
-                    <?php if ($l['ubicacion_gondola'] || $l['stock_habitual'] !== null): ?>
-                        <div class="item-sub">
-                            <?= e(implode(' · ', array_filter([
-                                $l['ubicacion_gondola'],
-                                $l['stock_habitual'] !== null ? 'Habitual: ' . $l['stock_habitual'] : null,
-                            ]))) ?>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
 <?php endif; ?>
 
 <h2 class="section-title">Historial de stock</h2>

@@ -68,7 +68,8 @@ final class PwaController extends Controller
             $firma .= $archivo . @filemtime(BASE_PATH . '/public/' . $archivo);
         }
         $cache = 'jacob-' . substr(md5($firma), 0, 10);
-        $precache = array_map(fn ($a) => url($a), self::ARCHIVOS);
+        // Con la misma versión (?v=) que piden las páginas: así nunca se sirve un CSS viejo.
+        $precache = array_map(fn ($a) => asset($a), self::ARCHIVOS);
         $precache[] = url('/offline');
 
         header('Content-Type: application/javascript; charset=utf-8');
@@ -79,7 +80,7 @@ final class PwaController extends Controller
             . <<<'JS'
 
 self.addEventListener('install', (e) => {
-    e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
+    e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE.map((u) => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (e) => {

@@ -9,7 +9,6 @@ use App\Core\Request;
 use App\Core\View;
 use App\Models\Categoria;
 use App\Models\Producto;
-use App\Models\ProductoLocal;
 use App\Models\Relevamiento;
 use App\Requests\ProductoRequest;
 use App\Services\ImageService;
@@ -75,7 +74,6 @@ final class ProductoController extends Controller
         $this->view('app/productos/show', [
             'title'     => Producto::nombreCompleto($producto),
             'producto'  => $producto,
-            'locales'   => ProductoLocal::localesDeProducto($id, $user),
             'historial' => Producto::historial($id, $user),
         ]);
     }

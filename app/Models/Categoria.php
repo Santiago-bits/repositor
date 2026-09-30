@@ -67,6 +67,13 @@ final class Categoria extends Model
         );
     }
 
+    /** Busca por nombre (sin distinguir mayúsculas ni tildes, por el collation) dentro del mismo padre. */
+    public static function idPorNombre(string $nombre, ?int $parentId): ?int
+    {
+        $id = self::value('SELECT id FROM categorias WHERE nombre = ? AND parent_id <=> ? ORDER BY id LIMIT 1', [$nombre, $parentId]);
+        return $id !== null && $id !== false ? (int) $id : null;
+    }
+
     public static function tieneHijas(int $id): bool
     {
         return (bool) self::value('SELECT COUNT(*) FROM categorias WHERE parent_id = ?', [$id]);

@@ -45,7 +45,7 @@ foreach ($productos as $i => $p) {
 <?php if ($productos === []): ?>
     <div class="empty-state card-soft">
         <i class="bi bi-box-seam"></i>
-        <p>Este local todavía no tiene productos.</p>
+        <p>Todavía no hay productos cargados.</p>
         <a class="btn btn-outline-primary" href="<?= url("/visitas/{$vid}/productos") ?>">Buscar o escanear productos</a>
     </div>
 <?php else: ?>
@@ -62,7 +62,7 @@ foreach ($productos as $i => $p) {
         <div class="card-soft promo-grupo" data-promo-marcados><?= $marcados ?></div>
         <p class="small text-body-secondary mb-0" data-promo-vacio <?= $cantidad ? 'hidden' : '' ?>>Todavía no marcaste ninguno. Tocá un producto de abajo.</p>
 
-        <h2 class="section-title">Productos del local</h2>
+        <h2 class="section-title">Todos los productos</h2>
         <div class="card-soft promo-grupo" data-promo-lista><?= $resto ?></div>
         <p class="small text-body-secondary mb-0" data-promo-sin-resultados hidden>No hay productos con ese nombre.</p>
 

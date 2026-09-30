@@ -7,11 +7,10 @@ use App\Core\Controller;
 use App\Core\Database;
 use App\Core\Request;
 use App\Models\Categoria;
-use App\Models\Local;
 use App\Models\Producto;
-use App\Models\ProductoLocal;
 use App\Requests\ProductoRequest;
 use App\Services\ImageService;
+use App\Services\ProductoImportService;
 use App\Services\ProductoService;
 use RuntimeException;
 
@@ -71,6 +70,41 @@ final class ProductoController extends Controller
         redirect('/admin/productos');
     }
 
+    /** Subir el Excel con todos los productos de la empresa. */
+    public function importarForm(): void
+    {
+        $this->view('admin/productos/importar', [
+            'title'     => 'Subir Excel de productos',
+            'resultado' => $_SESSION['import_resultado'] ?? null,
+        ]);
+        unset($_SESSION['import_resultado']);
+    }
+
+    public function importar(): void
+    {
+        try {
+            $resultado = ProductoImportService::importar(ProductoImportService::leer($_FILES['archivo'] ?? []));
+        } catch (RuntimeException $e) {
+            flash('error', $e->getMessage());
+            redirect('/admin/productos/importar');
+        }
+
+        // Solo los primeros errores: con eso alcanza para corregir el Excel.
+        $resultado['total_errores'] = count($resultado['errores']);
+        $resultado['errores'] = array_slice($resultado['errores'], 0, 50, true);
+        $_SESSION['import_resultado'] = $resultado;
+        redirect('/admin/productos/importar');
+    }
+
+    public function plantilla(): never
+    {
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="plantilla-productos.csv"');
+        header('Cache-Control: no-store');
+        echo ProductoImportService::plantilla();
+        exit;
+    }
+
     private function guardar(?int $id, string $volver): int
     {
         [$data, $errors] = ProductoRequest::validate($_POST, $id);
@@ -91,8 +125,7 @@ final class ProductoController extends Controller
             $data,
             $id,
             $imagen,
-            !empty($_POST['quitar_imagen']),
-            ProductoRequest::locales($_POST)
+            !empty($_POST['quitar_imagen'])
         );
     }
 
@@ -102,9 +135,6 @@ final class ProductoController extends Controller
             'title'      => $title,
             'producto'   => $producto,
             'categorias' => Categoria::opciones($producto['categoria_id'] ?? null),
-            'locales'    => Local::all(),
-            // Producto nuevo: marcado en todos los locales activos (es lo más común).
-            'asignados'  => $producto ? ProductoLocal::dePorProducto((int) $producto['id']) : null,
             'scripts'    => ['assets/js/escaner.js'],
         ]);
     }

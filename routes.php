@@ -100,6 +100,9 @@ $router->post('/admin/locales/{id}/estado', [LocalController::class, 'toggle'], 
 $router->post('/admin/locales/{id}/eliminar', [LocalController::class, 'eliminar'], $admin);
 
 $router->get('/admin/productos', [AdminProductoController::class, 'index'], $admin);
+$router->get('/admin/productos/importar', [AdminProductoController::class, 'importarForm'], $admin);
+$router->post('/admin/productos/importar', [AdminProductoController::class, 'importar'], $admin);
+$router->get('/admin/productos/plantilla', [AdminProductoController::class, 'plantilla'], $admin);
 $router->get('/admin/productos/crear', [AdminProductoController::class, 'create'], $admin);
 $router->post('/admin/productos', [AdminProductoController::class, 'store'], $admin);
 $router->get('/admin/productos/{id}/editar', [AdminProductoController::class, 'edit'], $admin);

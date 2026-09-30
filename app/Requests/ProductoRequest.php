@@ -66,27 +66,4 @@ final class ProductoRequest
         return [$data, $errors];
     }
 
-    /**
-     * Locales marcados en el formulario de admin.
-     * Entrada: locales[ID][activo|stock_habitual|ubicacion_gondola]
-     *
-     * @return array<int, array{stock_habitual: ?int, ubicacion_gondola: ?string}>
-     */
-    public static function locales(array $input): array
-    {
-        $locales = [];
-        foreach ((array) ($input['locales'] ?? []) as $localId => $fila) {
-            if (!is_array($fila) || empty($fila['activo'])) {
-                continue;
-            }
-            $stock = filter_var($fila['stock_habitual'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 65535]]);
-            $ubicacion = trim((string) ($fila['ubicacion_gondola'] ?? ''));
-
-            $locales[(int) $localId] = [
-                'stock_habitual'    => $stock === false ? null : $stock,
-                'ubicacion_gondola' => $ubicacion === '' ? null : mb_substr($ubicacion, 0, 80),
-            ];
-        }
-        return $locales;
-    }
 }
