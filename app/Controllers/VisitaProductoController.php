@@ -25,6 +25,7 @@ final class VisitaProductoController extends VisitaBaseController
 
         $this->view('app/visitas/producto', [
             'title'           => Producto::nombreCompleto($producto),
+            'visitaBar'       => ['id' => $id, 'activo' => ''],
             'visita'          => $visita,
             'producto'        => $producto,
             'rp'              => $rp,

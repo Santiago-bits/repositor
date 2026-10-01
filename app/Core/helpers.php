@@ -90,6 +90,16 @@ function partial(string $name, array $data = []): string
     return View::partial($name, $data);
 }
 
+/** Miniatura del producto para las listas: su imagen si tiene, si no un ícono. */
+function producto_thumb(array $p): string
+{
+    $id = (int) ($p['producto_id'] ?? $p['id'] ?? 0);
+    if (!empty($p['imagen_path']) && $id > 0) {
+        return '<img class="prod-thumb" src="' . url('/productos/' . $id . '/imagen') . '" alt="" loading="lazy">';
+    }
+    return '<span class="prod-thumb prod-thumb-vacia"><i class="bi bi-box-seam"></i></span>';
+}
+
 /** "active" si la ruta actual coincide con $path. */
 function active(string $path, bool $exact = false): string
 {

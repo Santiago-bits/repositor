@@ -4,12 +4,12 @@ use App\Models\Producto;
 $vid = (int) $visita['id'];
 
 /** Fila de un faltante con "Sin stock / Poco" y el botón para quitarlo. $id puede ser el marcador __ID__ (plantilla). */
-$fila = function (string $id, string $nombre, string $estado): string {
+$fila = function (string $id, string $nombre, string $estado, string $thumb = ''): string {
     $opcion = fn (string $valor, string $texto, string $clase) =>
         '<input type="radio" class="btn-check" name="falta[' . $id . ']" id="f-' . $id . '-' . $valor . '" value="' . $valor . '"' . ($estado === $valor ? ' checked' : '') . '>'
         . '<label class="btn btn-sm ' . $clase . '" for="f-' . $id . '-' . $valor . '">' . $texto . '</label>';
 
-    return '<div class="falta-fila" data-id="' . $id . '">'
+    return '<div class="falta-fila" data-id="' . $id . '">' . $thumb
         . '<div class="min-w-0 flex-grow-1 fw-semibold text-truncate" data-falta-nombre>' . e($nombre) . '</div>'
         . '<div class="falta-opciones">' . $opcion('sin_stock', 'Sin stock', 'falta-sin') . $opcion('bajo', 'Poco', 'falta-poco') . '</div>'
         . '<button type="button" class="btn-icon" aria-label="Quitar" data-falta-quitar><i class="bi bi-x-lg"></i></button>'
@@ -40,6 +40,7 @@ $fila = function (string $id, string $nombre, string $estado): string {
             <button type="button" class="venc-opcion" data-id="<?= (int) $p['id'] ?>"
                     data-nombre="<?= e(Producto::nombreCompleto($p)) ?>"
                     data-texto="<?= e(mb_strtolower(Producto::nombreCompleto($p) . ' ' . $p['marca'])) ?>">
+                <?= producto_thumb($p) ?>
                 <span class="min-w-0 flex-grow-1 text-start">
                     <span class="d-block fw-semibold"><?= e(Producto::nombreCompleto($p)) ?></span>
                     <?php if ($p['marca']): ?><span class="small text-body-secondary"><?= e($p['marca']) ?></span><?php endif; ?>
@@ -55,7 +56,7 @@ $fila = function (string $id, string $nombre, string $estado): string {
     <h2 class="section-title mt-0">Faltan (<span data-falta-contador><?= count($faltantes) ?></span>)</h2>
     <div class="card-soft promo-grupo" data-falta-lista>
         <?php foreach ($faltantes as $f): ?>
-            <?= $fila((string) (int) $f['producto_id'], Producto::nombreCompleto($f), $f['estado_stock']) ?>
+            <?= $fila((string) (int) $f['producto_id'], Producto::nombreCompleto($f), $f['estado_stock'], producto_thumb($f)) ?>
         <?php endforeach; ?>
     </div>
     <p class="small text-body-secondary mb-0" data-falta-vacio <?= $faltantes ? 'hidden' : '' ?>>

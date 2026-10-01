@@ -11,8 +11,16 @@ $extra = $productoId ? 'scope=producto&producto_id=' . (int) $productoId : 'scop
                 <a href="<?= url('/fotos/' . $f['id']) ?>" target="_blank" rel="noopener">
                     <img src="<?= url('/fotos/' . $f['id']) ?>" alt="Foto<?= $f['producto'] ? ' de ' . e($f['producto']) : '' ?>" loading="lazy">
                 </a>
-                <?php if ($mostrarProducto): ?>
-                    <figcaption><?= $f['producto'] ? e(trim($f['producto'] . ' ' . $f['presentacion'])) : 'General' ?></figcaption>
+                <?php
+                // Qué muestra la foto: tipo (Heladera…) y/o descripción; si es de un producto, el producto.
+                $partes = array_filter([
+                    isset(App\Models\Foto::TIPOS[$f['tipo'] ?? '']) ? App\Models\Foto::TIPOS[$f['tipo']][0] : null,
+                    $f['descripcion'] ?? null,
+                    $mostrarProducto && $f['producto'] ? trim($f['producto'] . ' ' . $f['presentacion']) : null,
+                ]);
+                ?>
+                <?php if ($partes || $mostrarProducto): ?>
+                    <figcaption><?= $partes ? e(implode(' · ', $partes)) : 'Foto' ?></figcaption>
                 <?php endif; ?>
                 <?php if ($editable): ?>
                     <button type="button" class="foto-borrar" aria-label="Eliminar foto"

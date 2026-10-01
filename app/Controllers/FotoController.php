@@ -33,8 +33,13 @@ final class FotoController extends VisitaBaseController
             $this->fallar($e->getMessage());
         }
 
+        $tipo = (string) Request::input('tipo', '');
+        $tipo = isset(Foto::TIPOS[$tipo]) ? $tipo : null;
+        $descripcion = trim((string) Request::input('descripcion', ''));
+        $descripcion = $descripcion === '' || !mb_check_encoding($descripcion, 'UTF-8') ? null : mb_substr($descripcion, 0, 120);
+
         try {
-            Foto::crear($id, $productoId, $info);
+            Foto::crear($id, $productoId, $info, $tipo, $descripcion);
         } catch (Throwable $e) {
             ImageService::eliminar($info['path']);
             throw $e;

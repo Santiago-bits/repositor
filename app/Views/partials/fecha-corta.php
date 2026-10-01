@@ -16,6 +16,7 @@ $detalle = array_filter([
 ?>
 <div class="corta-row">
     <div class="corta-fecha <?= $estado['clase'] ?>"><?= fecha($v['fecha_vencimiento'], 'd/m') ?></div>
+    <?= producto_thumb($v) ?>
     <a class="min-w-0 flex-grow-1 text-reset text-decoration-none" href="<?= url('/productos/' . (int) $v['producto_id']) ?>">
         <div class="fw-semibold text-truncate"><?= e($nombre) ?></div>
         <?php if ($detalle): ?><div class="small text-body-secondary text-truncate"><?= e(implode(' · ', $detalle)) ?></div><?php endif; ?>

@@ -6,11 +6,19 @@ namespace App\Models;
 /** Fotos de una visita. El archivo está en storage/; acá solo la ruta y los metadatos. */
 final class Foto extends Model
 {
-    public static function crear(int $relevamientoId, ?int $productoId, array $info): int
+    /** De qué es la foto del local: clave => [etiqueta, ícono]. */
+    public const TIPOS = [
+        'gondola'    => ['Góndola', 'bi-bookshelf'],
+        'heladera'   => ['Heladera', 'bi-snow'],
+        'exhibicion' => ['Exhibición externa', 'bi-shop-window'],
+        'otra'       => ['Otra', 'bi-image'],
+    ];
+
+    public static function crear(int $relevamientoId, ?int $productoId, array $info, ?string $tipo = null, ?string $descripcion = null): int
     {
         return self::insert(
-            'INSERT INTO fotos (relevamiento_id, producto_id, path, mime, bytes, ancho, alto) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [$relevamientoId, $productoId, $info['path'], $info['mime'], $info['bytes'], $info['ancho'], $info['alto']]
+            'INSERT INTO fotos (relevamiento_id, producto_id, tipo, descripcion, path, mime, bytes, ancho, alto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [$relevamientoId, $productoId, $tipo, $descripcion, $info['path'], $info['mime'], $info['bytes'], $info['ancho'], $info['alto']]
         );
     }
 
@@ -29,7 +37,7 @@ final class Foto extends Model
     /** Fotos de la visita; con $productoId, solo las de ese producto. */
     public static function deVisita(int $relevamientoId, ?int $productoId = null): array
     {
-        $sql = 'SELECT f.id, f.producto_id, f.created_at, p.nombre AS producto, p.presentacion
+        $sql = 'SELECT f.id, f.producto_id, f.tipo, f.descripcion, f.created_at, p.nombre AS producto, p.presentacion
                 FROM fotos f
                 LEFT JOIN productos p ON p.id = f.producto_id
                 WHERE f.relevamiento_id = ? AND f.deleted_at IS NULL';
@@ -44,7 +52,7 @@ final class Foto extends Model
     /** Para la galería del admin. @param array{desde: string, hasta: string, local_id: ?int} $f */
     public static function buscar(array $f, int $limite = 300): array
     {
-        $sql = "SELECT f.id, f.relevamiento_id, f.created_at, r.fecha, l.nombre AS local, p.nombre AS producto, p.presentacion,
+        $sql = "SELECT f.id, f.relevamiento_id, f.tipo, f.descripcion, f.created_at, r.fecha, l.nombre AS local, p.nombre AS producto, p.presentacion,
                        CONCAT(u.nombre, ' ', u.apellido) AS usuario
                 FROM fotos f
                 JOIN relevamientos r ON r.id = f.relevamiento_id

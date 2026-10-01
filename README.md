@@ -33,6 +33,8 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 - **Productos:** el catálogo es único y vale para todos los locales (una Quilmes es la misma en cualquier súper o chino). Se cargan de a uno, escaneando, o todos juntos desde un Excel.
 - **Subir Excel:** Gestión → Productos → **Excel** (o el botón Excel en Productos). Acepta `.xlsx` o `.csv` con los títulos *Nombre, Marca, Presentación, Código, Categoría, Subcategoría* (solo Nombre es obligatorio). Si el producto ya existe se actualiza, no se duplica; las celdas vacías no borran nada; las categorías se crean solas y la unidad (ml, cc, L) se saca de la presentación. Hay una plantilla para descargar.
 - **En el local:** arriba ves lo que vence primero (ponelo adelante en la heladera; si ya lo sacaste, Retirar). Después: Vencimientos, Promos del finde y Faltantes.
+- **En el local:** abajo tenés siempre Vencimientos, Promos, Faltantes y Fotos.
+- **Fotos:** elegí de qué es (Góndola, Heladera, Exhibición externa u Otra), escribí qué se ve si querés, y sacala.
 - **Faltantes:** botón «Faltantes» en el local. Buscás el producto, lo tocás y elegís «Sin stock» o «Poco». Con «Guardar y armar lista para el vendedor» sale la lista agrupada por categoría (Cervezas, Gaseosas, Agua…) para copiar o mandar por WhatsApp. También desde la visita: «Lista vendedor».
 - **Conteo de promos:** cuando quieras, desde «Promos del finde» → «Anotar cuánto quedó de las promos que terminaron».
 - **Visitas:** no hay que finalizarlas. Entrás al local, cargás lo que quieras y listo: se cierra sola cuando el GPS ve que te fuiste, cuando entrás a otro local o al día siguiente. Si volvés el mismo día, seguís en la misma visita.
@@ -43,6 +45,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-10-01** · Dentro del local, la barra de abajo cambia a: Local, Vencimientos, Promos, Faltantes y Fotos · Fotos con tipo (Góndola, Heladera, Exhibición externa, Otra) y descripción de qué se ve (migración 010) · La imagen de cada producto aparece en las listas (buscador, faltantes, promos, vencimientos, fechas cortas y lo registrado).
 - **2026-09-30** · Se sacó «Registrar productos» de la visita (contaba stock de todo). Para buscar o escanear un código de barras está la pestaña **Productos**.
 - **2026-09-30** · «Registrado en esta visita» muestra solo lo que quedó anotado (faltantes, vencimientos sin retirar, promo vigente); si sacás algo, desaparece.
 - **2026-09-30** · **Faltantes** en vez de contar stock: en el local buscás lo que no hay o hay poco y armás la lista para el vendedor (agrupada por categoría, lista para WhatsApp) · En cada producto, solo «Hay / Poco / Sin stock» (se guarda al tocar) · Sin recordatorios del conteo de promos: se entra cuando querés desde «Promos del finde» · Resumen: «Faltantes hoy».

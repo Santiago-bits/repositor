@@ -28,7 +28,7 @@ final class Vencimiento extends Model
         return self::fetchAll(
             'SELECT * FROM (
                 SELECT v.id, v.fecha_vencimiento, v.cantidad, v.nota, v.retirado_at, r.local_id, l.nombre AS local,
-                       p.id AS producto_id, p.nombre, p.marca, p.presentacion,
+                       p.id AS producto_id, p.nombre, p.marca, p.presentacion, p.imagen_path,
                        DENSE_RANK() OVER (PARTITION BY r.local_id, rp.producto_id ORDER BY r.fecha DESC, r.id DESC) AS ultimo
                 FROM vencimientos v
                 JOIN relevamiento_productos rp ON rp.id = v.relevamiento_producto_id
@@ -48,7 +48,7 @@ final class Vencimiento extends Model
     public static function deVisita(int $relevamientoId): array
     {
         return self::fetchAll(
-            'SELECT v.id, v.fecha_vencimiento, v.cantidad, v.nota, v.retirado_at, rp.producto_id, p.nombre, p.marca, p.presentacion
+            'SELECT v.id, v.fecha_vencimiento, v.cantidad, v.nota, v.retirado_at, rp.producto_id, p.nombre, p.marca, p.presentacion, p.imagen_path
              FROM vencimientos v
              JOIN relevamiento_productos rp ON rp.id = v.relevamiento_producto_id
              JOIN productos p ON p.id = rp.producto_id

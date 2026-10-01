@@ -18,6 +18,7 @@ final class VisitaVencimientoController extends VisitaBaseController
 
         $this->view('app/visitas/vencimientos', [
             'title'     => 'Vencimientos',
+            'visitaBar' => ['id' => $id, 'activo' => 'vencimientos'],
             'visita'    => $visita,
             'productos' => ProductoLocal::productosDeLocal((int) $visita['local_id'], $id),
             'cargados'  => Vencimiento::deVisita($id),

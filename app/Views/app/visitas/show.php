@@ -42,9 +42,8 @@ $vid = (int) $visita['id'];
 <?php endif; ?>
 
 <?php if ($editable): ?>
-    <div class="accion-grid mb-2" data-foto-subir
-         data-endpoint="<?= url("/visitas/{$vid}/fotos") ?>" data-producto="" data-scope="visita"
-         data-destino="#fotos-lista" data-estado="#foto-estado">
+    <?php // En el celular estas acciones están en la barra de abajo; en la compu, acá. ?>
+    <div class="accion-grid mb-2 d-none d-lg-grid">
         <a class="accion accion-principal" href="<?= url("/visitas/{$vid}/vencimientos") ?>">
             <i class="bi bi-calendar-event"></i><span>Vencimientos</span>
         </a>
@@ -54,10 +53,9 @@ $vid = (int) $visita['id'];
         <a class="accion" href="<?= url("/visitas/{$vid}/faltantes") ?>">
             <i class="bi bi-cart-x"></i><span>Faltantes</span>
         </a>
-        <label class="accion">
-            <i class="bi bi-camera"></i><span>Sacar foto</span>
-            <input type="file" accept="image/*" capture="environment" hidden data-foto-input>
-        </label>
+        <a class="accion" href="#fotos">
+            <i class="bi bi-camera"></i><span>Fotos</span>
+        </a>
         <a class="accion" href="#observaciones">
             <i class="bi bi-chat-left-text"></i><span>Observación</span>
         </a>
@@ -65,7 +63,9 @@ $vid = (int) $visita['id'];
             <i class="bi bi-whatsapp"></i><span>Lista vendedor</span>
         </a>
     </div>
-    <div id="foto-estado"></div>
+    <a class="btn btn-outline-success w-100 mb-2 d-lg-none" href="<?= url("/visitas/{$vid}/mensaje?tipo=faltantes") ?>">
+        <i class="bi bi-whatsapp me-1"></i> Lista para el vendedor
+    </a>
 <?php endif; ?>
 
 <?php if ($promos !== []): ?>
@@ -100,6 +100,7 @@ $vid = (int) $visita['id'];
             $susLotes = $lotes[(int) $r['producto_id']] ?? [];
             ?>
             <<?= $tag ?> class="registro-row text-reset text-decoration-none"<?= $editable ? ' href="' . url("/visitas/{$vid}/productos/{$r['producto_id']}") . '"' : '' ?>>
+                <?= producto_thumb($r) ?>
                 <div class="min-w-0 flex-grow-1">
                     <div class="fw-semibold text-truncate"><?= e(Producto::nombreCompleto($r)) ?></div>
 
@@ -145,6 +146,31 @@ $vid = (int) $visita['id'];
 
 <?php if ($editable || $fotos !== []): ?>
     <h2 class="section-title" id="fotos">Fotos</h2>
+    <?php if ($editable): ?>
+        <div class="card-soft p-3 mb-2" data-foto-subir
+             data-endpoint="<?= url("/visitas/{$vid}/fotos") ?>" data-producto="" data-scope="visita"
+             data-destino="#fotos-lista" data-estado="#foto-estado">
+            <span class="form-label d-block small fw-semibold">¿De qué es la foto?</span>
+            <div class="foto-tipos mb-2" role="radiogroup" aria-label="Tipo de foto">
+                <?php foreach (App\Models\Foto::TIPOS as $clave => [$etiqueta, $icono]): ?>
+                    <input type="radio" class="btn-check" name="foto_tipo" id="foto-tipo-<?= $clave ?>" value="<?= $clave ?>" <?= $clave === 'gondola' ? 'checked' : '' ?>>
+                    <label class="btn btn-sm" for="foto-tipo-<?= $clave ?>"><i class="bi <?= $icono ?>"></i> <?= $etiqueta ?></label>
+                <?php endforeach; ?>
+            </div>
+            <input class="form-control mb-2" name="foto_descripcion" maxlength="120" placeholder="Qué se ve (opcional): ej. heladera Quilmes, punta de góndola">
+            <div class="d-flex gap-2">
+                <label class="btn btn-primary flex-fill">
+                    <i class="bi bi-camera-fill"></i> Sacar foto
+                    <input type="file" accept="image/*" capture="environment" hidden data-foto-input>
+                </label>
+                <label class="btn btn-outline-primary flex-fill">
+                    <i class="bi bi-images"></i> Galería
+                    <input type="file" accept="image/*" multiple hidden data-foto-input>
+                </label>
+            </div>
+            <div id="foto-estado" class="mt-2"></div>
+        </div>
+    <?php endif; ?>
     <div id="fotos-lista"><?= partial('fotos-grid', ['fotos' => $fotos, 'editable' => $editable, 'mostrarProducto' => true, 'productoId' => null]) ?></div>
 <?php endif; ?>
 

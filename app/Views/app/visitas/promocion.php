@@ -13,6 +13,7 @@ $fila = function (array $p, int $orden, bool $marcadoYa) use ($enPromo): string 
     return '<label class="promo-fila" data-orden="' . $orden . '" data-texto="' . e($texto) . '">'
         . '<input class="form-check-input" type="checkbox" name="promo[' . $id . ']" value="1"' . ($marcadoYa ? ' checked' : '')
         . ' aria-label="En promo: ' . e($nombre) . '">'
+        . producto_thumb($p)
         . '<span class="flex-grow-1 min-w-0"><span class="d-block fw-semibold">' . e($nombre) . '</span>'
         . ($p['marca'] ? '<span class="small text-body-secondary">' . e($p['marca']) . '</span>' : '') . '</span>'
         . '<input class="form-control promo-stock" type="number" name="stock[' . $id . ']" value="' . e($stock) . '"'

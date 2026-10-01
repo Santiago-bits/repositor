@@ -1478,3 +1478,32 @@ body.escaner-abierto { overflow: hidden; }
 .btn-check:checked + .falta-poco { background: var(--jacob-warn); border-color: var(--jacob-warn); color: #fff; }
 .falta-fila .btn-icon { flex-shrink: 0; }
 .estado-chips-3 { grid-template-columns: repeat(3, 1fr); }
+
+/* Fotos del local: elegir de qué es (góndola, heladera, exhibición externa…). */
+.foto-tipos { display: flex; flex-wrap: wrap; gap: 6px; }
+.foto-tipos .btn {
+    border: 1px solid var(--app-border);
+    color: var(--bs-secondary-color);
+    border-radius: 999px;
+}
+.foto-tipos .btn-check:checked + .btn { background: var(--bs-primary); border-color: var(--bs-primary); color: #fff; }
+
+/* Miniatura del producto en las listas (su imagen, o un ícono si no tiene). */
+.prod-thumb {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: var(--bs-tertiary-bg);
+}
+.prod-thumb-vacia {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bs-secondary-color);
+}
+.venc-row { display: flex; align-items: center; gap: 10px; }
+
+/* Barra del local: 5 accesos, etiquetas un poco más chicas para que entren. */
+.bottom-nav-visita span { font-size: .68rem; }

@@ -18,6 +18,7 @@ final class VisitaFaltanteController extends VisitaBaseController
 
         $this->view('app/visitas/faltantes', [
             'title'     => 'Faltantes',
+            'visitaBar' => ['id' => $id, 'activo' => 'faltantes'],
             'visita'    => $visita,
             'productos' => ProductoLocal::productosDeLocal((int) $visita['local_id'], $id),
             'faltantes' => RelevamientoProducto::faltantesDeVisita($id),

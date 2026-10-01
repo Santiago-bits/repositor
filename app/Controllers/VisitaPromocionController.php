@@ -24,6 +24,7 @@ final class VisitaPromocionController extends VisitaBaseController
 
         $this->view('app/visitas/promocion', [
             'title'     => 'Promos del finde',
+            'visitaBar' => ['id' => $id, 'activo' => 'promos'],
             'visita'    => $visita,
             'productos' => ProductoLocal::productosDeLocal((int) $visita['local_id'], $id),
             'enPromo'   => Promocion::vigentesEnLocal((int) $visita['local_id'], $visita['fecha']),
@@ -115,6 +116,7 @@ final class VisitaPromocionController extends VisitaBaseController
 
         $this->view('app/visitas/conteo', [
             'title'    => 'Conteo de promociones',
+            'visitaBar' => ['id' => $id, 'activo' => 'promos'],
             'visita'   => $visita,
             'items'    => $items,
             'actual'   => $actual,

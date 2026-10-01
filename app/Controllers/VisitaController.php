@@ -57,6 +57,8 @@ final class VisitaController extends VisitaBaseController
 
         $this->view('app/visitas/show', [
             'title'         => $visita['local'],
+            'visitaBar'     => (int) $visita['user_id'] === Auth::id() && $visita['fecha'] === date('Y-m-d') && $visita['estado'] !== 'cancelado'
+                ? ['id' => $id, 'activo' => 'local'] : null,
             'visita'        => $visita,
             'propia'        => (int) $visita['user_id'] === Auth::id(),
             'registrados'   => $registrados,

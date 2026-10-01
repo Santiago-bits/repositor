@@ -167,6 +167,8 @@
             tmp.innerHTML = fPlantilla.innerHTML.replace(/__ID__/g, String(parseInt(op.dataset.id, 10)));
             var fila = tmp.firstElementChild;
             fila.querySelector('[data-falta-nombre]').textContent = op.dataset.nombre;
+            var thumb = op.querySelector('.prod-thumb');
+            if (thumb) fila.insertBefore(thumb.cloneNode(true), fila.firstChild);
             fLista.appendChild(fila);
             fBuscar.value = '';
             fActualizar();
@@ -391,6 +393,13 @@
         aviso.textContent = '⏳ Preparando foto…';
         if (estado) estado.appendChild(aviso);
 
+        // De qué es la foto (góndola, heladera…) y la descripción: se toman al sacarla.
+        var tipoElegido = zona.querySelector('[name=foto_tipo]:checked');
+        var campoDesc = zona.querySelector('[name=foto_descripcion]');
+        var tipo = tipoElegido ? tipoElegido.value : '';
+        var descripcion = campoDesc ? campoDesc.value.trim() : '';
+        if (campoDesc) campoDesc.value = '';
+
         comprimir(archivo).then(function intentar(blob) {
             aviso.className = 'foto-subiendo';
             aviso.textContent = '⏳ Subiendo foto…';
@@ -399,6 +408,8 @@
             datos.append('foto', blob, blob.name || 'foto.jpg');
             datos.append('producto_id', zona.dataset.producto || '');
             datos.append('scope', zona.dataset.scope || 'visita');
+            datos.append('tipo', tipo);
+            datos.append('descripcion', descripcion);
 
             enviar(zona.dataset.endpoint, datos).then(function (d) {
                 reemplazar(zona.dataset.destino, d.html);

@@ -66,7 +66,7 @@ final class RelevamientoProducto extends Model
     public static function faltantesDeVisita(int $relevamientoId): array
     {
         return self::fetchAll(
-            "SELECT rp.producto_id, rp.estado_stock, p.nombre, p.marca, p.presentacion,
+            "SELECT rp.producto_id, rp.estado_stock, p.nombre, p.marca, p.presentacion, p.imagen_path,
                     COALESCE(c.nombre, 'Otros') AS categoria
              FROM relevamiento_productos rp
              JOIN productos p ON p.id = rp.producto_id
@@ -101,7 +101,7 @@ final class RelevamientoProducto extends Model
     {
         return self::fetchAll(
             'SELECT rp.id, rp.producto_id, rp.stock, rp.estado_stock, rp.con_problema, rp.promocion_id,
-                    p.nombre, p.marca, p.presentacion,
+                    p.nombre, p.marca, p.presentacion, p.imagen_path,
                     (SELECT COUNT(*) FROM vencimientos v WHERE v.relevamiento_producto_id = rp.id) AS vencimientos
              FROM relevamiento_productos rp
              JOIN productos p ON p.id = rp.producto_id

@@ -28,6 +28,7 @@ $vid = (int) $visita['id'];
             <button type="button" class="venc-opcion" data-id="<?= (int) $p['id'] ?>"
                     data-nombre="<?= e(Producto::nombreCompleto($p)) ?>"
                     data-texto="<?= e(mb_strtolower(Producto::nombreCompleto($p) . ' ' . $p['marca'])) ?>">
+                <?= producto_thumb($p) ?>
                 <span class="min-w-0 flex-grow-1 text-start">
                     <span class="d-block fw-semibold"><?= e(Producto::nombreCompleto($p)) ?></span>
                     <?php if ($p['marca']): ?><span class="small text-body-secondary"><?= e($p['marca']) ?></span><?php endif; ?>
@@ -76,6 +77,7 @@ $vid = (int) $visita['id'];
         <?php foreach ($cargados as $v): ?>
             <?php $estado = VencimientoService::estado($v['fecha_vencimiento']); ?>
             <div class="venc-row">
+                <?= producto_thumb($v) ?>
                 <div class="flex-grow-1 min-w-0">
                     <div class="fw-semibold text-truncate"><?= e(Producto::nombreCompleto($v)) ?></div>
                     <div class="small"><?= fecha($v['fecha_vencimiento']) ?> <span class="venc-badge <?= $estado['clase'] ?>"><?= e($estado['etiqueta']) ?></span></div>
