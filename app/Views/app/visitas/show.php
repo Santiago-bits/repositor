@@ -8,7 +8,7 @@ $editable = $propia && ($visita['estado'] === 'en_proceso' || ($visita['estado']
 $vid = (int) $visita['id'];
 ?>
 
-<a class="back-link" href="<?= url(is_admin() && !$propia ? '/admin/relevamientos' : '/') ?>" data-volver><i class="bi bi-arrow-left"></i> Volver</a>
+<a class="back-link" href="<?= url('/') ?>" data-volver><i class="bi bi-arrow-left"></i> Volver</a>
 
 <div class="card-soft visita-head mb-3">
     <div class="d-flex align-items-center gap-3">

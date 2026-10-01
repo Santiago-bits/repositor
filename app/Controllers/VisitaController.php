@@ -66,7 +66,7 @@ final class VisitaController extends VisitaBaseController
         $visita = $this->visitaVisible($id);
         VisitaService::eliminar($visita);
         flash('success', "Visita a {$visita['local']} eliminada.");
-        redirect((int) $visita['user_id'] !== Auth::id() ? '/admin/relevamientos' : '/');
+        redirect('/');
     }
 
     private static function coordenada(mixed $valor, int $limite): ?float

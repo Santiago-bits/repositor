@@ -6,7 +6,6 @@ use App\Controllers\Admin\DashboardController;
 use App\Controllers\Admin\LocalController;
 use App\Controllers\Admin\ProductoController as AdminProductoController;
 use App\Controllers\Admin\PromocionController as AdminPromocionController;
-use App\Controllers\Admin\RelevamientoController;
 use App\Controllers\Admin\TareaController as AdminTareaController;
 use App\Controllers\TareaController;
 use App\Controllers\VisitaPromocionController;
@@ -89,7 +88,6 @@ $router->get('/reportes/csv', [ReporteController::class, 'csv'], ['auth']);
 $admin = ['auth', 'admin'];
 $router->get('/admin', [DashboardController::class, 'index'], $admin);
 
-$router->get('/admin/relevamientos', [RelevamientoController::class, 'index'], $admin);
 $router->get('/admin/fotos', [AdminFotoController::class, 'index'], $admin);
 $router->get('/admin/configuracion', [ConfiguracionController::class, 'index'], $admin);
 $router->post('/admin/configuracion', [ConfiguracionController::class, 'guardar'], $admin);
