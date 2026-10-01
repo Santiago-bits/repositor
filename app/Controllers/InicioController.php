@@ -31,6 +31,19 @@ final class InicioController extends Controller
         ]);
     }
 
+    /** Fechas cortas: "ya lo saqué de la góndola". El lote deja de aparecer, pero queda en el historial. */
+    public function retirar(int $id): void
+    {
+        $lote = $this->notFoundUnless(Vencimiento::conLocal($id));
+        if (Local::accesible(auth(), (int) $lote['local_id']) === null) {
+            $this->notFoundUnless(null);
+        }
+
+        Vencimiento::retirar($id);
+        flash('success', 'Retirado: ' . trim($lote['nombre'] . ' ' . $lote['presentacion']) . ' (' . fecha($lote['fecha_vencimiento'], 'd/m') . ').');
+        redirect('/#fechas-cortas');
+    }
+
     /** Recibe la ubicación del celular y devuelve el/los locales cercanos (JSON). No guarda nada. */
     public function detectar(): never
     {

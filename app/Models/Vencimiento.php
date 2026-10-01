@@ -27,7 +27,7 @@ final class Vencimiento extends Model
 
         return self::fetchAll(
             'SELECT * FROM (
-                SELECT v.id, v.fecha_vencimiento, v.cantidad, v.nota, r.local_id, l.nombre AS local,
+                SELECT v.id, v.fecha_vencimiento, v.cantidad, v.nota, v.retirado_at, r.local_id, l.nombre AS local,
                        p.id AS producto_id, p.nombre, p.marca, p.presentacion,
                        DENSE_RANK() OVER (PARTITION BY r.local_id, rp.producto_id ORDER BY r.fecha DESC, r.id DESC) AS ultimo
                 FROM vencimientos v
@@ -37,7 +37,7 @@ final class Vencimiento extends Model
                 ' . ($esAdmin ? '' : 'JOIN local_user lu ON lu.local_id = l.id AND lu.user_id = ?') . '
                 JOIN productos p ON p.id = rp.producto_id AND p.deleted_at IS NULL
              ) t
-             WHERE t.ultimo = 1 AND t.fecha_vencimiento BETWEEN ? AND ?
+             WHERE t.ultimo = 1 AND t.retirado_at IS NULL AND t.fecha_vencimiento BETWEEN ? AND ?
              ORDER BY t.fecha_vencimiento, t.local, t.nombre
              LIMIT 100',
             $params
@@ -61,7 +61,7 @@ final class Vencimiento extends Model
     public static function deRegistro(int $relevamientoProductoId): array
     {
         return self::fetchAll(
-            'SELECT id, fecha_vencimiento, cantidad, nota FROM vencimientos
+            'SELECT id, fecha_vencimiento, cantidad, nota, retirado_at FROM vencimientos
              WHERE relevamiento_producto_id = ? ORDER BY fecha_vencimiento, id',
             [$relevamientoProductoId]
         );
@@ -77,6 +77,26 @@ final class Vencimiento extends Model
              WHERE v.id = ? AND rp.relevamiento_id = ?',
             [$id, $relevamientoId]
         );
+    }
+
+    /** El lote con su local, para controlar que el usuario trabaje en ese local. */
+    public static function conLocal(int $id): ?array
+    {
+        return self::fetch(
+            'SELECT v.id, v.fecha_vencimiento, v.retirado_at, r.local_id, p.nombre, p.presentacion
+             FROM vencimientos v
+             JOIN relevamiento_productos rp ON rp.id = v.relevamiento_producto_id
+             JOIN relevamientos r ON r.id = rp.relevamiento_id
+             JOIN productos p ON p.id = rp.producto_id
+             WHERE v.id = ?',
+            [$id]
+        );
+    }
+
+    /** Fecha corta ya sacada de la góndola: deja de aparecer en Inicio (no se borra, queda en el historial). */
+    public static function retirar(int $id): void
+    {
+        self::execute('UPDATE vencimientos SET retirado_at = NOW() WHERE id = ? AND retirado_at IS NULL', [$id]);
     }
 
     public static function eliminar(int $id): void

@@ -49,7 +49,7 @@ final class RegistroVisitaService
         $hoy = date('Y-m-d');
         return array_values(array_filter(
             Vencimiento::deRegistro((int) $anterior['id']),
-            fn ($v) => $v['fecha_vencimiento'] >= $hoy
+            fn ($v) => $v['fecha_vencimiento'] >= $hoy && $v['retirado_at'] === null
         ));
     }
 

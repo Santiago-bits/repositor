@@ -93,11 +93,17 @@ $abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
     $fila = function (array $v): string {
         $estado = VencimientoService::estado($v['fecha_vencimiento']);
         $detalle = array_filter([$v['local'], $v['cantidad'] !== null ? (int) $v['cantidad'] . ' u.' : null, $v['nota']]);
-        return '<a class="corta-row text-reset text-decoration-none" href="' . url('/productos/' . (int) $v['producto_id']) . '">'
+        $nombre = Producto::nombreCompleto($v);
+        return '<div class="corta-row">'
             . '<div class="corta-fecha ' . $estado['clase'] . '">' . fecha($v['fecha_vencimiento'], 'd/m') . '</div>'
-            . '<div class="min-w-0 flex-grow-1"><div class="fw-semibold text-truncate">' . e(Producto::nombreCompleto($v)) . '</div>'
-            . '<div class="small text-body-secondary text-truncate">' . e(implode(' · ', $detalle)) . '</div></div>'
-            . '<span class="venc-badge ' . $estado['clase'] . '">' . e($estado['etiqueta']) . '</span></a>';
+            . '<a class="min-w-0 flex-grow-1 text-reset text-decoration-none" href="' . url('/productos/' . (int) $v['producto_id']) . '">'
+            . '<div class="fw-semibold text-truncate">' . e($nombre) . '</div>'
+            . '<div class="small text-body-secondary text-truncate">' . e(implode(' · ', $detalle)) . '</div>'
+            . '<span class="venc-badge ' . $estado['clase'] . '">' . e($estado['etiqueta']) . '</span></a>'
+            . '<form method="post" action="' . url('/vencimientos/' . (int) $v['id'] . '/retirar') . '"'
+            . ' data-confirm="' . e("¿Ya retiraste {$nombre} de {$v['local']}?") . '">' . csrf_field()
+            . '<button class="btn btn-outline-danger btn-sm" type="submit"><i class="bi bi-box-arrow-up"></i> Retirar</button></form>'
+            . '</div>';
     };
     $primeras = array_slice($cortas, 0, 6);
     $resto = array_slice($cortas, 6);
