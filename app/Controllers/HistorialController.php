@@ -28,10 +28,10 @@ final class HistorialController extends VisitaBaseController
     {
         $fecha = (string) Request::input('fecha', date('Y-m-d'));
         $fecha = fecha_valida($fecha) ? $fecha : date('Y-m-d');
-        $tipo = Request::input('tipo') === 'promos' ? 'promos' : 'completo';
+        $tipo = in_array(Request::input('tipo'), ['promos', 'faltantes'], true) ? Request::input('tipo') : 'completo';
 
         $this->view('app/mensaje', [
-            'title'   => 'Mensaje para el supervisor',
+            'title'   => $tipo === 'faltantes' ? 'Lista para el vendedor' : 'Mensaje para el supervisor',
             'mensaje' => MensajeService::delDia((int) auth()['id'], $fecha, $tipo),
             'fecha'   => $fecha,
             'tipo'    => $tipo,
@@ -43,10 +43,10 @@ final class HistorialController extends VisitaBaseController
     public function mensajeDeVisita(int $id): void
     {
         $visita = $this->visitaVisible($id);
-        $tipo = Request::input('tipo') === 'promos' ? 'promos' : 'completo';
+        $tipo = in_array(Request::input('tipo'), ['promos', 'faltantes'], true) ? Request::input('tipo') : 'completo';
 
         $this->view('app/mensaje', [
-            'title'   => 'Reporte de la visita',
+            'title'   => $tipo === 'faltantes' ? 'Lista para el vendedor' : 'Reporte de la visita',
             'mensaje' => MensajeService::deVisita($visita, $tipo),
             'fecha'   => $visita['fecha'],
             'tipo'    => $tipo,

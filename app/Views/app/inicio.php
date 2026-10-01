@@ -72,9 +72,6 @@ $abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
                 <div class="item-body">
                     <div class="item-title"><?= e($local['nombre']) ?></div>
                     <div class="item-sub"><?= e($local['direccion'] ?: Local::TIPOS[$local['tipo']]) ?></div>
-                    <?php if ($local['para_contar'] > 0): ?>
-                        <div class="small fw-semibold text-warning-emphasis"><i class="bi bi-123"></i> <?= (int) $local['para_contar'] ?> promo<?= $local['para_contar'] > 1 ? 's' : '' ?> para contar</div>
-                    <?php endif; ?>
                 </div>
                 <?php if ($abiertaHoy && (int) $abierta['local_id'] === (int) $local['id']): ?>
                     <a class="btn btn-primary btn-sm" href="<?= url('/visitas/' . $abierta['id']) ?>">Continuar</a>

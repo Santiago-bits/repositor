@@ -7,11 +7,13 @@ use App\Core\Database;
 use App\Models\Observacion;
 use App\Models\Producto;
 use App\Models\Promocion;
+use App\Models\RelevamientoProducto;
 use App\Models\Vencimiento;
 
 /**
  * Arma el mensaje para el supervisor a partir de lo registrado.
- * $tipo 'promos' = solo el conteo de promociones; 'completo' = stock, vencimientos y observaciones.
+ * $tipo 'promos' = solo el conteo de promociones; 'completo' = stock, vencimientos y observaciones;
+ * 'faltantes' = lista para el vendedor (lo que no hay o hay poco), agrupada por categoría.
  */
 final class MensajeService
 {
@@ -40,6 +42,9 @@ final class MensajeService
 
     private static function armar(array $visitas, string $fecha, string $tipo): string
     {
+        if ($tipo === 'faltantes') {
+            return self::faltantes($visitas, $fecha);
+        }
         $soloPromos = $tipo === 'promos';
         $dia = dia_semana(strtotime($fecha)) . ' ' . date('d/m', strtotime($fecha));
         $bloques = [];
@@ -109,6 +114,50 @@ final class MensajeService
         }
 
         return $titulo . "\n\nLocales relevados:\n\n" . implode("\n\n", $bloques);
+    }
+
+    /**
+     * Como la lista que se le manda al vendedor:
+     *   Cervezas
+     *   * Andes Oro 1L
+     */
+    private static function faltantes(array $visitas, string $fecha): string
+    {
+        $dia = dia_semana(strtotime($fecha)) . ' ' . date('d/m', strtotime($fecha));
+        $bloques = [];
+
+        foreach ($visitas as $v) {
+            $porCategoria = [];
+            foreach (RelevamientoProducto::faltantesDeVisita((int) $v['id']) as $p) {
+                $porCategoria[$p['categoria']][] = '* ' . Producto::nombreCompleto($p);
+            }
+            if ($porCategoria === []) {
+                continue;
+            }
+
+            $partes = [];
+            foreach ($porCategoria as $categoria => $items) {
+                $partes[] = $categoria . "
+" . implode("
+", $items);
+            }
+            $bloques[] = '📍 ' . $v['local'] . "
+
+" . implode("
+
+", $partes);
+        }
+
+        if ($bloques === []) {
+            return "Faltantes — {$dia}
+
+No hay faltantes anotados para esta fecha.";
+        }
+        return "Faltantes — {$dia}
+
+" . implode("
+
+", $bloques);
     }
 
     private static function productos(int $relevamientoId): array

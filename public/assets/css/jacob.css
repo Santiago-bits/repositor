@@ -1456,3 +1456,25 @@ body.escaner-abierto { overflow: hidden; }
 .accion-alerta .bi { color: var(--jacob-warn); }
 .venc-form .venc-nota { grid-column: 1 / -1; }
 .corta-row form .btn { white-space: nowrap; }
+
+/* Faltantes: cada producto con "Sin stock / Poco" y la X para sacarlo. */
+.falta-fila {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 56px;
+    padding: 8px 8px 8px 12px;
+}
+.falta-fila + .falta-fila { border-top: 1px solid var(--app-border); }
+.falta-opciones { display: flex; flex-shrink: 0; gap: 4px; }
+.falta-opciones .btn {
+    min-height: 38px;
+    padding: 4px 10px;
+    border: 1px solid var(--app-border);
+    color: var(--bs-secondary-color);
+    white-space: nowrap;
+}
+.btn-check:checked + .falta-sin { background: var(--jacob-danger); border-color: var(--jacob-danger); color: #fff; }
+.btn-check:checked + .falta-poco { background: var(--jacob-warn); border-color: var(--jacob-warn); color: #fff; }
+.falta-fila .btn-icon { flex-shrink: 0; }
+.estado-chips-3 { grid-template-columns: repeat(3, 1fr); }

@@ -20,7 +20,8 @@ $params = fn (string $t) => $visita ? '?tipo=' . $t : '?fecha=' . $fecha . '&tip
 
 <nav class="nav nav-pills filtro-pills mb-3">
     <a class="nav-link<?= $tipo === 'completo' ? ' active' : '' ?>" href="<?= url($base . $params('completo')) ?>">Completo</a>
-    <a class="nav-link<?= $tipo === 'promos' ? ' active' : '' ?>" href="<?= url($base . $params('promos')) ?>">Solo promociones</a>
+    <a class="nav-link<?= $tipo === 'promos' ? ' active' : '' ?>" href="<?= url($base . $params('promos')) ?>">Promociones</a>
+    <a class="nav-link<?= $tipo === 'faltantes' ? ' active' : '' ?>" href="<?= url($base . $params('faltantes')) ?>">Faltantes (vendedor)</a>
 </nav>
 
 <textarea id="mensaje" class="form-control mensaje-texto mb-3" rows="14" readonly aria-label="Mensaje generado"><?= e($mensaje) ?></textarea>

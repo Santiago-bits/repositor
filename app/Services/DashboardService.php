@@ -5,7 +5,6 @@ namespace App\Services;
 
 use App\Core\Database;
 use App\Models\Configuracion;
-use App\Models\Local;
 use App\Models\Vencimiento;
 
 /** Datos del Resumen: cómo viene la semana, qué falta y qué locales hace mucho que no se visitan. */
@@ -18,19 +17,13 @@ final class DashboardService
         return [
             ['label' => 'Visitas de hoy', 'icon' => 'bi-geo-alt', 'tone' => 'ok', 'href' => '/historial',
              'value' => self::count("SELECT COUNT(*) FROM relevamientos WHERE fecha = CURDATE() AND estado <> 'cancelado'")],
-            ['label' => 'Sin stock hoy', 'icon' => 'bi-x-octagon', 'tone' => 'danger', 'href' => '/mensaje',
-             'value' => self::count("SELECT COUNT(*) FROM relevamiento_productos rp
-                                     JOIN relevamientos r ON r.id = rp.relevamiento_id
-                                     WHERE r.fecha = CURDATE() AND r.estado <> 'cancelado' AND rp.estado_stock = 'sin_stock'")],
             // Las mismas que se ven en Inicio (sin las retiradas).
             ['label' => "Fechas cortas ({$dias} días)", 'icon' => 'bi-calendar-x', 'tone' => 'warn', 'href' => '/#fechas-cortas',
              'value' => count(Vencimiento::proximos($user, $dias))],
-            // Lo que importa de las promos: cuánto quedó cuando terminan (se cuenta el lunes).
-            ['label' => 'Promos para contar', 'icon' => 'bi-123', 'tone' => 'warn', 'href' => '/#locales',
-             'value' => array_sum(array_map(
-                 fn ($l) => ConteoService::pendientes((int) $l['id']),
-                 Local::paraUsuario($user)
-             ))],
+            ['label' => 'Faltantes hoy', 'icon' => 'bi-cart-x', 'tone' => 'warn', 'href' => '/mensaje?tipo=faltantes',
+             'value' => self::count("SELECT COUNT(*) FROM relevamiento_productos rp
+                                     JOIN relevamientos r ON r.id = rp.relevamiento_id
+                                     WHERE r.fecha = CURDATE() AND r.estado <> 'cancelado' AND rp.estado_stock IN ('sin_stock', 'bajo')")],
             ['label' => 'Locales', 'icon' => 'bi-shop', 'tone' => '', 'href' => '/admin/locales',
              'value' => self::count('SELECT COUNT(*) FROM locales WHERE activo = 1 AND deleted_at IS NULL')],
             ['label' => 'Productos', 'icon' => 'bi-box-seam', 'tone' => '', 'href' => '/admin/productos',

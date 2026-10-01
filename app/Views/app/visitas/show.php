@@ -42,10 +42,6 @@ $vid = (int) $visita['id'];
 <?php endif; ?>
 
 <?php if ($editable): ?>
-    <?php
-    $sinContar = count(array_filter($conteo, fn ($i) => $i['rp_id'] === null));
-    $esLunes = date('N') === '1';
-    ?>
     <div class="accion-grid mb-2" data-foto-subir
          data-endpoint="<?= url("/visitas/{$vid}/fotos") ?>" data-producto="" data-scope="visita"
          data-destino="#fotos-lista" data-estado="#foto-estado">
@@ -55,9 +51,8 @@ $vid = (int) $visita['id'];
         <a class="accion" href="<?= url("/visitas/{$vid}/promociones/crear") ?>">
             <i class="bi bi-megaphone"></i><span>Promos del finde</span>
         </a>
-        <a class="accion<?= $sinContar > 0 || $esLunes ? ' accion-alerta' : '' ?>" href="<?= url("/visitas/{$vid}/conteo") ?>">
-            <i class="bi bi-123"></i>
-            <span>Contar promos<?= $sinContar > 0 ? " ({$sinContar})" : '' ?></span>
+        <a class="accion" href="<?= url("/visitas/{$vid}/faltantes") ?>">
+            <i class="bi bi-cart-x"></i><span>Faltantes</span>
         </a>
         <label class="accion">
             <i class="bi bi-camera"></i><span>Sacar foto</span>
@@ -66,8 +61,8 @@ $vid = (int) $visita['id'];
         <a class="accion" href="#observaciones">
             <i class="bi bi-chat-left-text"></i><span>Observación</span>
         </a>
-        <a class="accion" href="<?= url("/visitas/{$vid}/productos") ?>">
-            <i class="bi bi-box-seam"></i><span>Stock</span>
+        <a class="accion" href="<?= url("/visitas/{$vid}/mensaje?tipo=faltantes") ?>">
+            <i class="bi bi-whatsapp"></i><span>Lista vendedor</span>
         </a>
     </div>
     <div id="foto-estado"></div>

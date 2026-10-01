@@ -35,6 +35,48 @@ final class RelevamientoProducto extends Model
         );
     }
 
+    /** Faltante: "sin_stock" o "bajo" (poco). No toca el número de stock ni lo demás del registro. */
+    public static function marcarFaltante(int $relevamientoId, int $productoId, string $estado): void
+    {
+        self::execute(
+            'INSERT INTO relevamiento_productos (relevamiento_id, producto_id, estado_stock) VALUES (?, ?, ?)
+             ON DUPLICATE KEY UPDATE estado_stock = VALUES(estado_stock)',
+            [$relevamientoId, $productoId, $estado]
+        );
+    }
+
+    /** Ya no falta: se borra la marca y, si el registro queda vacío (sin stock, promo ni vencimientos), se quita. */
+    public static function desmarcarFaltante(int $relevamientoId, int $productoId): void
+    {
+        self::execute(
+            "UPDATE relevamiento_productos SET estado_stock = NULL
+             WHERE relevamiento_id = ? AND producto_id = ? AND estado_stock IN ('sin_stock', 'bajo')",
+            [$relevamientoId, $productoId]
+        );
+        self::execute(
+            'DELETE rp FROM relevamiento_productos rp
+             WHERE rp.relevamiento_id = ? AND rp.producto_id = ?
+               AND rp.stock IS NULL AND rp.estado_stock IS NULL AND rp.promocion_id IS NULL AND rp.con_problema = 0
+               AND NOT EXISTS (SELECT 1 FROM vencimientos v WHERE v.relevamiento_producto_id = rp.id)',
+            [$relevamientoId, $productoId]
+        );
+    }
+
+    /** Faltantes de la visita con su categoría (para la lista del vendedor). */
+    public static function faltantesDeVisita(int $relevamientoId): array
+    {
+        return self::fetchAll(
+            "SELECT rp.producto_id, rp.estado_stock, p.nombre, p.marca, p.presentacion,
+                    COALESCE(c.nombre, 'Otros') AS categoria
+             FROM relevamiento_productos rp
+             JOIN productos p ON p.id = rp.producto_id
+             LEFT JOIN categorias c ON c.id = p.categoria_id
+             WHERE rp.relevamiento_id = ? AND rp.estado_stock IN ('sin_stock', 'bajo')
+             ORDER BY c.id IS NULL, COALESCE(c.parent_id, c.id), c.id, p.nombre, p.presentacion",
+            [$relevamientoId]
+        );
+    }
+
     /** Crea el registro vacío si no existe (para colgarle vencimientos) y devuelve su id. */
     public static function asegurar(int $relevamientoId, int $productoId): int
     {

@@ -128,6 +128,68 @@
         vActualizar();
     }
 
+    // ---------- Faltantes: buscar, tocar y elegir "Sin stock" o "Poco" ----------
+    var falt = document.querySelector('[data-faltantes]');
+    if (falt) {
+        var fBuscar = falt.querySelector('[data-falta-buscar]');
+        var fResultados = falt.querySelector('[data-falta-resultados]');
+        var fLista = falt.querySelector('[data-falta-lista]');
+        var fPlantilla = falt.querySelector('[data-falta-plantilla]');
+
+        var fNormalizar = function (s) {
+            return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        };
+        var enLista = function (id) {
+            return !!fLista.querySelector('.falta-fila[data-id="' + id + '"]');
+        };
+
+        var fActualizar = function () {
+            var q = fNormalizar(fBuscar.value.trim());
+            var visibles = 0;
+            Array.prototype.forEach.call(fResultados.children, function (op) {
+                var ok = q !== '' && !enLista(op.dataset.id) && fNormalizar(op.dataset.texto).indexOf(q) !== -1;
+                op.hidden = !ok;
+                if (ok) visibles++;
+            });
+            fResultados.hidden = visibles === 0;
+            falt.querySelector('[data-falta-sin-resultados]').hidden = visibles > 0 || q === '';
+
+            var n = fLista.children.length;
+            falt.querySelector('[data-falta-contador]').textContent = n;
+            falt.querySelector('[data-falta-vacio]').hidden = n > 0;
+            fLista.hidden = n === 0;
+        };
+
+        fResultados.addEventListener('click', function (e) {
+            var op = e.target.closest('.venc-opcion');
+            if (!op || enLista(op.dataset.id)) return;
+            var tmp = document.createElement('div');
+            tmp.innerHTML = fPlantilla.innerHTML.replace(/__ID__/g, String(parseInt(op.dataset.id, 10)));
+            var fila = tmp.firstElementChild;
+            fila.querySelector('[data-falta-nombre]').textContent = op.dataset.nombre;
+            fLista.appendChild(fila);
+            fBuscar.value = '';
+            fActualizar();
+            fBuscar.focus();
+        });
+
+        fLista.addEventListener('click', function (e) {
+            var quitar = e.target.closest('[data-falta-quitar]');
+            if (!quitar) return;
+            quitar.closest('.falta-fila').remove();
+            fActualizar();
+        });
+
+        fBuscar.addEventListener('input', fActualizar);
+        fBuscar.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                fBuscar.blur();
+            }
+        });
+        fActualizar();
+    }
+
     // ---------- Promos del finde: buscador + los marcados arriba ----------
     var promos = document.querySelector('[data-promos]');
     if (promos) {
@@ -245,7 +307,7 @@
                     toast(d.completo ? '✅ ¡Todos los productos del local registrados!' : '✅ Registrado. Siguiente…');
                     setTimeout(function () { window.location.href = d.siguiente_url; }, d.completo ? 1200 : 350);
                 } else {
-                    toast('✅ Producto registrado');
+                    toast('✅ Guardado');
                     ocupado(stockForm, false);
                 }
             }).catch(function (err) {
@@ -254,6 +316,13 @@
             });
         });
     }
+
+    // "Hay / Poco / Sin stock": se guarda apenas se toca.
+    document.querySelectorAll('[data-auto-guardar]').forEach(function (r) {
+        r.addEventListener('change', function () {
+            if (r.form.requestSubmit) r.form.requestSubmit(); else r.form.dispatchEvent(new Event('submit', { cancelable: true }));
+        });
+    });
 
     // ---------- Vencimientos y observaciones (formularios que reemplazan una lista) ----------
     document.querySelectorAll('[data-venc-form], [data-obs-form]').forEach(function (form) {

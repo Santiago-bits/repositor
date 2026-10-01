@@ -42,6 +42,8 @@ foreach ($productos as $i => $p) {
     </div>
 </div>
 
+<a class="small d-inline-block mb-3" href="<?= url("/visitas/{$vid}/conteo") ?>"><i class="bi bi-123"></i> Anotar cuánto quedó de las promos que terminaron</a>
+
 <?php if ($productos === []): ?>
     <div class="empty-state card-soft">
         <i class="bi bi-box-seam"></i>

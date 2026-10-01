@@ -36,11 +36,10 @@ $registrado = $rp && ($rp['stock'] !== null || $rp['estado_stock'] !== null);
     <a class="small d-inline-block mb-2" href="<?= url("/visitas/{$vid}/promociones/crear?producto={$pid}") ?>"><i class="bi bi-megaphone"></i> ¿Está en promo? Registrala</a>
 <?php endif; ?>
 
-<?php if ($anterior): ?>
+<?php if ($anterior && $anterior['estado_stock'] && $anterior['estado_stock'] !== 'normal'): ?>
     <p class="small text-body-secondary mb-3">
-        <i class="bi bi-clock-history"></i> Última vez (<?= fecha($anterior['fecha'], 'd/m') ?>):
-        <strong><?= $anterior['stock'] !== null ? (int) $anterior['stock'] : '—' ?></strong>
-        <?php if ($anterior['estado_stock']): ?>· <?= RelevamientoProducto::ESTADOS[$anterior['estado_stock']][0] ?><?php endif; ?>
+        <i class="bi bi-clock-history"></i> La vez anterior (<?= fecha($anterior['fecha'], 'd/m') ?>):
+        <strong><?= $anterior['estado_stock'] === 'bajo' ? 'había poco' : 'no había' ?></strong>
     </p>
 <?php endif; ?>
 
@@ -73,34 +72,19 @@ $registrado = $rp && ($rp['stock'] !== null || $rp['estado_stock'] !== null);
     <?php endif; ?>
 </section>
 
-<!-- Stock -->
+<!-- ¿Hay en el local? (se guarda solo al tocar) -->
 <form class="card-soft p-3 mb-3" method="post" action="<?= url("/visitas/{$vid}/productos/{$pid}/stock") ?>" data-stock-form>
     <?= csrf_field() ?>
-    <label class="form-label fw-semibold" for="stock">Stock encontrado <span class="fw-normal text-body-secondary small">(opcional)</span></label>
-    <div class="stepper">
-        <button type="button" data-paso="-1" aria-label="Restar uno"><i class="bi bi-dash-lg"></i></button>
-        <input id="stock" name="stock" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="99999"
-               value="<?= e($rp['stock'] ?? '') ?>" placeholder="0">
-        <button type="button" data-paso="1" aria-label="Sumar uno"><i class="bi bi-plus-lg"></i></button>
-    </div>
-
-    <div class="estado-chips mt-3" role="radiogroup" aria-label="Estado del stock">
-        <?php foreach (RelevamientoProducto::ESTADOS as $valor => [$etiqueta]): ?>
-            <input type="radio" class="btn-check" name="estado_stock" id="estado-<?= $valor ?>" value="<?= $valor ?>" <?= $estadoActual === $valor ? 'checked' : '' ?>>
+    <input type="hidden" name="stock" value="">
+    <span class="form-label fw-semibold d-block">¿Hay en el local?</span>
+    <div class="estado-chips estado-chips-3" role="radiogroup" aria-label="¿Hay en el local?">
+        <?php foreach (['normal' => 'Hay', 'bajo' => 'Poco', 'sin_stock' => 'Sin stock'] as $valor => $etiqueta): ?>
+            <input type="radio" class="btn-check" name="estado_stock" id="estado-<?= $valor ?>" value="<?= $valor ?>" <?= $estadoActual === $valor ? 'checked' : '' ?> data-auto-guardar>
             <label class="btn estado-chip estado-<?= $valor ?>" for="estado-<?= $valor ?>"><?= $etiqueta ?></label>
         <?php endforeach; ?>
     </div>
-
-    <div class="form-check form-switch mt-3">
-        <input class="form-check-input" type="checkbox" role="switch" id="con_problema" name="con_problema" value="1" <?= !empty($rp['con_problema']) ? 'checked' : '' ?>>
-        <label class="form-check-label" for="con_problema">Producto con problema</label>
-    </div>
-
-    <div class="d-grid gap-2 mt-3">
-        <button class="btn btn-primary btn-xl" type="submit" name="siguiente" value="1">GUARDAR Y SIGUIENTE <i class="bi bi-arrow-right ms-1"></i></button>
-        <button class="btn btn-outline-primary" type="submit" name="siguiente" value="0">Guardar</button>
-    </div>
-    <p class="small text-success text-center mb-0 mt-2" data-guardado><?= $registrado ? '✅ Guardado ' . fecha($rp['updated_at'] ?? $rp['created_at'], 'H:i') : '' ?></p>
+    <p class="small text-body-secondary mb-0 mt-2">«Poco» y «Sin stock» van a la lista de faltantes para el vendedor.</p>
+    <p class="small text-success text-center mb-0 mt-1" data-guardado><?= $registrado && $estadoActual ? '✅ Guardado ' . fecha($rp['updated_at'] ?? $rp['created_at'], 'H:i') : '' ?></p>
 </form>
 
 <?php if ($rp): ?>
