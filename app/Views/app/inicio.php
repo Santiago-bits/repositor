@@ -1,5 +1,7 @@
 <?php
 use App\Models\Local;
+use App\Models\Producto;
+use App\Services\VencimientoService;
 
 $abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
 ?>
@@ -80,6 +82,34 @@ $abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
                 <?php endif; ?>
             </div>
         <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<h2 class="section-title" id="fechas-cortas">Fechas cortas <span class="text-lowercase">(próximos <?= (int) $diasCortas ?> días)</span></h2>
+<?php if ($cortas === []): ?>
+    <p class="small text-body-secondary"><i class="bi bi-check-circle text-success"></i> No hay nada por vencer. Se cargan con el botón «Vencimientos» en la visita.</p>
+<?php else: ?>
+    <?php
+    $fila = function (array $v): string {
+        $estado = VencimientoService::estado($v['fecha_vencimiento']);
+        $detalle = array_filter([$v['local'], $v['cantidad'] !== null ? (int) $v['cantidad'] . ' u.' : null, $v['nota']]);
+        return '<a class="corta-row text-reset text-decoration-none" href="' . url('/productos/' . (int) $v['producto_id']) . '">'
+            . '<div class="corta-fecha ' . $estado['clase'] . '">' . fecha($v['fecha_vencimiento'], 'd/m') . '</div>'
+            . '<div class="min-w-0 flex-grow-1"><div class="fw-semibold text-truncate">' . e(Producto::nombreCompleto($v)) . '</div>'
+            . '<div class="small text-body-secondary text-truncate">' . e(implode(' · ', $detalle)) . '</div></div>'
+            . '<span class="venc-badge ' . $estado['clase'] . '">' . e($estado['etiqueta']) . '</span></a>';
+    };
+    $primeras = array_slice($cortas, 0, 6);
+    $resto = array_slice($cortas, 6);
+    ?>
+    <div class="card-soft">
+        <?php foreach ($primeras as $v): ?><?= $fila($v) ?><?php endforeach; ?>
+        <?php if ($resto !== []): ?>
+            <details class="corta-mas">
+                <summary>Ver <?= count($resto) ?> más</summary>
+                <?php foreach ($resto as $v): ?><?= $fila($v) ?><?php endforeach; ?>
+            </details>
+        <?php endif; ?>
     </div>
 <?php endif; ?>
 

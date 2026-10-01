@@ -1350,3 +1350,34 @@ body.escaner-abierto { overflow: hidden; }
 .venc-opcion:not([hidden]) ~ .venc-opcion:not([hidden]) { border-top: 1px solid var(--app-border); }
 .venc-opcion:active { background: var(--bs-primary-bg-subtle); }
 .venc-nuevo { padding: 12px; }
+
+/* Inicio: fechas cortas (lo que vence pronto en tus locales). */
+.corta-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 60px;
+    padding: 8px 12px;
+}
+.corta-row + .corta-row,
+.corta-mas,
+.corta-mas .corta-row { border-top: 1px solid var(--app-border); }
+.corta-fecha {
+    flex-shrink: 0;
+    min-width: 52px;
+    padding: 6px 4px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-align: center;
+}
+.corta-row .venc-badge { flex-shrink: 0; }
+.corta-mas summary {
+    padding: 12px;
+    color: var(--bs-primary);
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    list-style: none;
+}
+.corta-mas summary::-webkit-details-marker { display: none; }
+.corta-mas[open] summary { display: none; }

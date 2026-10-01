@@ -6,7 +6,9 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Core\Request;
 use App\Models\Local;
+use App\Models\Configuracion;
 use App\Models\Relevamiento;
+use App\Models\Vencimiento;
 use App\Services\DeteccionLocalService;
 use App\Services\VisitaService;
 
@@ -15,6 +17,7 @@ final class InicioController extends Controller
     public function index(): void
     {
         $user = auth();
+        $dias = (int) Configuracion::get('vencimiento_dias_proximo', '15');
 
         $this->view('app/inicio', [
             'title'   => 'Inicio',
@@ -22,6 +25,8 @@ final class InicioController extends Controller
             'abierta' => VisitaService::abierta((int) $user['id']),
             'hoy'     => Relevamiento::finalizadasHoy((int) $user['id']),
             'locales' => Local::paraUsuario($user),
+            'cortas'  => Vencimiento::proximos($user, $dias),
+            'diasCortas' => $dias,
             'scripts' => ['assets/js/inicio.js'],
         ]);
     }

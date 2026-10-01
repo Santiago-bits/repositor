@@ -35,10 +35,12 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 - **Visitas:** no hay que finalizarlas. Entrás al local, cargás lo que quieras y listo: se cierra sola cuando el GPS ve que te fuiste, cuando entrás a otro local o al día siguiente. Si volvés el mismo día, seguís en la misma visita.
 - **Ubicación de un local:** en Gestión → Locales, pegá el link de Google Maps (Compartir → copiar link), un Plus Code (ej: JX3M+PF) o las coordenadas. Se completa al tocar «Buscar» o al guardar.
 - **Vencimientos:** en la visita, botón «Vencimientos». Buscás el producto, lo tocás y le ponés la fecha, la cantidad (opcional) y una nota con la ubicación (ej: depósito). Podés agregar varios (también el mismo producto con otro lote) y guardar todo junto.
+- **Fechas cortas:** en Inicio, debajo de tus locales, ves lo que vence en los próximos días (según Configuración, 15 por defecto) y lo vencido en la última semana, con local, cantidad y nota. Se toma el último relevamiento de cada producto en cada local.
 - **Promos del finde:** en la visita, escribís en el buscador, tocás el producto y queda abajo en "En promo". Sin buscar no se muestra la lista completa. El stock es opcional. Después, "Guardar y armar mensaje".
 
 ## Cambios
 
+- **2026-09-30** · Inicio: sección **Fechas cortas** con lo que vence en los próximos días (y lo vencido hace poco) en tus locales.
 - **2026-09-30** · Botón **Vencimientos** en la visita: buscás el producto, le ponés fecha, cantidad y una nota (ubicación); se pueden cargar varios juntos · Las migraciones nuevas se aplican solas en el servidor después de cada deploy (sin SSH).
 - **2026-09-30** · Visitas sin "en proceso": se cierran solas cuando el GPS detecta que te fuiste del local (o al entrar a otro, o al día siguiente); si volvés el mismo día sigue la misma visita · Locales: se puede pegar el link de Google Maps (también los cortos), un Plus Code o coordenadas y la ubicación se completa sola.
 - **2026-09-30** · Promos del finde: la lista completa ya no se muestra; los productos aparecen solo al buscar y abajo quedan los marcados · Se sacó el aviso rojo "Conteo de promociones" de la visita.
