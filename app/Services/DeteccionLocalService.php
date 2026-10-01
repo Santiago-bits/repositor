@@ -47,17 +47,9 @@ final class DeteccionLocalService
             default => 'varios',
         };
 
-        $tareas = [];
-        if ($estado === 'detectado') {
-            foreach (TareaService::delDia($dentro[0]['id']) as $t) {
-                $tareas[] = ['nombre' => $t['nombre'], 'prioridad' => $t['prioridad'], 'hecha' => $t['hecha']];
-            }
-        }
-
         return [
             'estado'          => $estado,
             'locales'         => array_slice($dentro ?: $candidatos, 0, $estado === 'ninguno' ? 3 : 5),
-            'tareas'          => $tareas,
             'precision'       => (int) round($precision),
             'precision_baja'  => $precision > self::PRECISION_BAJA,
             'sin_coordenadas' => $sinCoordenadas,

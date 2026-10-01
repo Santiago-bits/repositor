@@ -11,7 +11,6 @@ use App\Models\Promocion;
 use App\Services\ConteoService;
 use App\Models\Relevamiento;
 use App\Models\RelevamientoProducto;
-use App\Services\TareaService;
 use App\Services\VisitaService;
 use RuntimeException;
 
@@ -40,7 +39,6 @@ final class VisitaController extends VisitaBaseController
             'title'         => $visita['local'],
             'visita'        => $visita,
             'propia'        => (int) $visita['user_id'] === Auth::id(),
-            'tareas'        => TareaService::delDia((int) $visita['local_id'], $visita['fecha']),
             'registrados'   => RelevamientoProducto::deVisita($id),
             'fotos'         => Foto::deVisita($id),
             'observaciones' => Observacion::deVisita($id),

@@ -40,6 +40,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-09-30** · Se sacaron las Tareas (pestaña, Gestión → Tareas y las tareas dentro de la visita). Las tablas quedan en la base sin usarse.
 - **2026-09-30** · Se sacó la sección Gestión → Relevamientos (las visitas se ven en Historial).
 - **2026-09-30** · Inicio: sección **Fechas cortas** con lo que vence en los próximos días (y lo vencido hace poco) en tus locales.
 - **2026-09-30** · Botón **Vencimientos** en la visita: buscás el producto, le ponés fecha, cantidad y una nota (ubicación); se pueden cargar varios juntos · Las migraciones nuevas se aplican solas en el servidor después de cada deploy (sin SSH).

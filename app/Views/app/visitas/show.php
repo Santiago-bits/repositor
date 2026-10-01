@@ -44,15 +44,6 @@ $vid = (int) $visita['id'];
     <div id="foto-estado"></div>
 <?php endif; ?>
 
-<?php $sinContar = count(array_filter($conteo, fn ($i) => $i['rp_id'] === null)); ?>
-
-<?php if ($tareas !== []): ?>
-    <h2 class="section-title">Tareas de <?= $visita['fecha'] === date('Y-m-d') ? 'hoy' : 'ese día' ?></h2>
-    <div id="tareas-lista">
-        <?= partial('tareas-visita', ['visita' => $visita, 'tareas' => $tareas, 'editable' => $editable, 'pendientes' => $sinContar]) ?>
-    </div>
-<?php endif; ?>
-
 <?php if ($editable || $promos !== [] || $conteo !== []): ?>
     <h2 class="section-title" id="promociones">Promociones</h2>
 

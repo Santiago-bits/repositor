@@ -149,7 +149,6 @@ function nav_principal(): array
     return [
         ['/', 'bi-house-door', 'Inicio'],
         ['/productos', 'bi-box-seam', 'Productos'],
-        ['/tareas', 'bi-list-check', 'Tareas'],
         ['/historial', 'bi-clock-history', 'Historial'],
         ['/perfil', 'bi-person-circle', 'Perfil'],
     ];
@@ -165,7 +164,6 @@ function nav_admin(): array
         ['/admin/productos', 'bi-box-seam', 'Productos'],
         ['/admin/categorias', 'bi-tags', 'Categorías'],
         ['/admin/promociones', 'bi-megaphone', 'Promociones'],
-        ['/admin/tareas', 'bi-list-check', 'Tareas'],
         ['/admin/usuarios', 'bi-people', 'Usuarios'],
         ['/admin/configuracion', 'bi-gear', 'Configuración'],
     ];

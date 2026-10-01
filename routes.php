@@ -6,8 +6,6 @@ use App\Controllers\Admin\DashboardController;
 use App\Controllers\Admin\LocalController;
 use App\Controllers\Admin\ProductoController as AdminProductoController;
 use App\Controllers\Admin\PromocionController as AdminPromocionController;
-use App\Controllers\Admin\TareaController as AdminTareaController;
-use App\Controllers\TareaController;
 use App\Controllers\VisitaPromocionController;
 use App\Controllers\VisitaVencimientoController;
 use App\Controllers\Admin\UsuarioController;
@@ -64,7 +62,6 @@ $router->get('/visitas/{id}/promociones/crear', [VisitaPromocionController::clas
 $router->post('/visitas/{id}/promociones', [VisitaPromocionController::class, 'guardar'], ['auth']);
 $router->get('/visitas/{id}/conteo', [VisitaPromocionController::class, 'conteo'], ['auth']);
 $router->post('/visitas/{id}/conteo/{pid}', [VisitaPromocionController::class, 'guardarConteo'], ['auth']);
-$router->post('/visitas/{id}/tareas/{tid}', [VisitaPromocionController::class, 'tarea'], ['auth']);
 
 $router->post('/visitas/{id}/observaciones', [ObservacionController::class, 'crear'], ['auth']);
 $router->post('/observaciones/{id}/eliminar', [ObservacionController::class, 'eliminar'], ['auth']);
@@ -77,7 +74,6 @@ $router->get('/productos/crear', [ProductoController::class, 'create'], ['auth']
 $router->post('/productos', [ProductoController::class, 'store'], ['auth']);
 $router->get('/productos/{id}', [ProductoController::class, 'show'], ['auth']);
 $router->get('/productos/{id}/imagen', [ProductoController::class, 'imagen'], ['auth']);
-$router->get('/tareas', [TareaController::class, 'index'], ['auth']);
 $router->get('/historial', [HistorialController::class, 'index'], ['auth']);
 $router->get('/mensaje', [HistorialController::class, 'mensajeDelDia'], ['auth']);
 $router->get('/visitas/{id}/mensaje', [HistorialController::class, 'mensajeDeVisita'], ['auth']);
@@ -120,12 +116,6 @@ $router->post('/admin/promociones/{id}', [AdminPromocionController::class, 'upda
 $router->post('/admin/promociones/{id}/cancelar', [AdminPromocionController::class, 'cancelar'], $admin);
 $router->post('/admin/promociones/{id}/eliminar', [AdminPromocionController::class, 'eliminar'], $admin);
 
-$router->get('/admin/tareas', [AdminTareaController::class, 'index'], $admin);
-$router->get('/admin/tareas/crear', [AdminTareaController::class, 'create'], $admin);
-$router->post('/admin/tareas', [AdminTareaController::class, 'store'], $admin);
-$router->get('/admin/tareas/{id}/editar', [AdminTareaController::class, 'edit'], $admin);
-$router->post('/admin/tareas/{id}', [AdminTareaController::class, 'update'], $admin);
-$router->post('/admin/tareas/{id}/eliminar', [AdminTareaController::class, 'eliminar'], $admin);
 
 $router->get('/admin/categorias', [CategoriaController::class, 'index'], $admin);
 $router->post('/admin/categorias', [CategoriaController::class, 'store'], $admin);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Carga DATOS DE PRUEBA (usuarios, 3 locales con coordenadas ficticias, productos, promos y tareas).
+ * Carga DATOS DE PRUEBA (usuarios, 3 locales con coordenadas ficticias, productos y promos).
  *
  *   c:\xampp\php\php.exe database/seed.php
  *
@@ -118,18 +118,6 @@ Database::transaction(function () use ($db, $insert, $password): void {
         }
     }
 
-    // ── Tareas de ejemplo (configurables desde admin en la Etapa 5) ──
-    $sqlTarea = 'INSERT INTO tareas (nombre, tipo, periodicidad, dias_semana, prioridad) VALUES (?, ?, ?, ?, ?)';
-    $tareas = [
-        $insert($sqlTarea, ['Conteo de promociones', 'conteo_promociones', 'semanal', '1', 'alta']),
-        $insert($sqlTarea, ['Control de vencimientos', 'vencimientos', 'cada_visita', null, 'media']),
-        $insert($sqlTarea, ['Reposición', 'reposicion', 'cada_visita', null, 'baja']),
-    ];
-    foreach ($tareas as $tareaId) {
-        foreach ($locales as $localId) {
-            $db->prepare('INSERT INTO tarea_local (tarea_id, local_id) VALUES (?, ?)')->execute([$tareaId, $localId]);
-        }
-    }
 });
 
 echo "Datos de prueba cargados.\n\n";

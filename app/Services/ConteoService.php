@@ -32,10 +32,6 @@ final class ConteoService
         $estado = $noExhibido ? 'no_exhibido' : RegistroVisitaService::estadoPorDefecto($stock);
         RegistroVisitaService::guardarStock($visita, (int) $item['producto_id'], $stock, $estado, false, (int) $item['promo_id']);
 
-        $faltan = array_filter(self::items($visita), fn ($i) => $i['rp_id'] === null);
-        if ($faltan === []) {
-            TareaService::completarTipo($visita, 'conteo_promociones');
-        }
     }
 
     private static function consultar(int $localId, string $fecha, int $relevamientoId): array

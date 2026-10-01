@@ -50,7 +50,6 @@ final class PwaController extends Controller
             ],
             'shortcuts'        => [
                 ['name' => 'Productos', 'url' => url('/productos')],
-                ['name' => 'Tareas de hoy', 'url' => url('/tareas')],
                 ['name' => 'Mensaje del día', 'url' => url('/mensaje')],
             ],
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);

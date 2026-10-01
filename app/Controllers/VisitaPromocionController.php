@@ -10,13 +10,11 @@ use App\Models\Producto;
 use App\Models\ProductoLocal;
 use App\Models\Promocion;
 use App\Models\RelevamientoProducto;
-use App\Models\Tarea;
 use App\Services\ConteoService;
 use App\Services\PromocionService;
 use App\Services\RegistroVisitaService;
-use App\Services\TareaService;
 
-/** Dentro de una visita: registrar promociones vistas en góndola, conteo de promociones y tareas. */
+/** Dentro de una visita: registrar promociones vistas en góndola, y conteo de promociones. */
 final class VisitaPromocionController extends VisitaBaseController
 {
     /** Promos del finde: lista de productos del local para marcar (sin fechas). */
@@ -146,37 +144,6 @@ final class VisitaPromocionController extends VisitaBaseController
         ConteoService::guardar($visita, $item, $stock, Request::input('no_exhibido') === '1');
         flash('success', '✅ ' . Producto::nombreCompleto($item) . " registrado: {$stock} u.");
         redirect("/visitas/{$id}/conteo");
-    }
-
-    /** Marca o desmarca una tarea del día como hecha. */
-    public function tarea(int $id, int $tareaId): never
-    {
-        $visita = $this->visitaEditable($id);
-        $tareas = TareaService::delDia((int) $visita['local_id'], $visita['fecha']);
-        $tarea = null;
-        foreach ($tareas as $t) {
-            if ((int) $t['id'] === $tareaId) {
-                $tarea = $t;
-            }
-        }
-        if ($tarea === null) {
-            $this->fallar('Esa tarea no corresponde a este local hoy.', 404);
-        }
-
-        if ($tarea['hecha']) {
-            Tarea::desmarcar($tareaId, (int) $visita['local_id'], $visita['fecha']);
-        } else {
-            Tarea::marcar($tareaId, (int) $visita['local_id'], $id, (int) $visita['user_id'], $visita['fecha']);
-        }
-
-        $this->responder($tarea['hecha'] ? 'Tarea pendiente' : '✅ Tarea hecha', [
-            'html' => View::partial('tareas-visita', [
-                'visita'    => $visita,
-                'tareas'    => TareaService::delDia((int) $visita['local_id'], $visita['fecha']),
-                'editable'  => true,
-                'pendientes' => count(array_filter(ConteoService::items($visita), fn ($i) => $i['rp_id'] === null)),
-            ]),
-        ], "/visitas/{$id}");
     }
 
     /** Productos del local primero; después el resto del catálogo. */

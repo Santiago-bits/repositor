@@ -103,19 +103,6 @@
         return fila;
     }
 
-    function listaTareas(tareas) {
-        if (!tareas || !tareas.length) return null;
-        var wrap = el('div', 'deteccion-tareas');
-        wrap.appendChild(el('div', 'small fw-semibold text-body-secondary mb-1', 'Tareas pendientes'));
-        tareas.forEach(function (t) {
-            var fila = el('div', 'tarea-mini' + (t.hecha ? ' is-hecha' : ''));
-            fila.appendChild(t.hecha ? icono('bi-check-circle-fill text-success') : el('span', 'prio-dot prio-' + t.prioridad));
-            fila.appendChild(el('span', null, t.nombre));
-            wrap.appendChild(fila);
-        });
-        return wrap;
-    }
-
     // ---------- Estados ----------
     function cargando(texto) {
         var d = el('div', 'deteccion-cargando');
@@ -153,7 +140,7 @@
             var dist = el('div', 'small text-body-secondary', 'Distancia aproximada: ' + local.texto);
             var otro = el('a', 'btn btn-link btn-sm w-100 mt-1', 'No es este local');
             otro.href = '#locales';
-            mostrar(cab, nombre, dist, listaTareas(data.tareas), el('div', 'mt-3'), accionLocal(local, true), otro);
+            mostrar(cab, nombre, dist, el('div', 'mt-3'), accionLocal(local, true), otro);
             return;
         }
 
