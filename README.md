@@ -40,6 +40,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-09-30** · Resumen renovado: tarjetas (visitas de hoy, sin stock, fechas cortas, promos), tu semana con barritas por día, locales que hace mucho no visitás, faltantes y últimas visitas.
 - **2026-09-30** · Fechas cortas: botón **Retirar** para cuando sacás el producto de la góndola (el lote deja de aparecer pero queda en el historial) · Barra de abajo pareja con 4 botones.
 - **2026-09-30** · Se sacaron las Tareas (pestaña, Gestión → Tareas y las tareas dentro de la visita). Las tablas quedan en la base sin usarse.
 - **2026-09-30** · Se sacó la sección Gestión → Relevamientos (las visitas se ven en Historial).

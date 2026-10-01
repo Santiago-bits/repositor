@@ -1382,3 +1382,43 @@ body.escaner-abierto { overflow: hidden; }
 }
 .corta-mas summary::-webkit-details-marker { display: none; }
 .corta-mas[open] summary { display: none; }
+
+/* Resumen: tarjetas de a 3, totales de la semana y barritas de visitas por día. */
+.stat-card-sm { padding: 10px; min-height: 0; height: 100%; }
+.stat-card-sm .stat-icon { width: 30px; height: 30px; font-size: 1rem; margin-bottom: 6px; }
+.stat-card-sm .stat-value { font-size: 1.35rem; line-height: 1.1; }
+.stat-card-sm .stat-label { font-size: .72rem; line-height: 1.2; }
+
+.semana-totales {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+.semana-totales strong { display: block; font-size: 1.3rem; line-height: 1.1; }
+.semana-totales span { font-size: .75rem; color: var(--bs-secondary-color); }
+
+.semana-barras {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+    height: 110px;
+}
+.semana-dia {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    min-width: 0;
+}
+.semana-num { font-size: .75rem; font-weight: 600; min-height: 1em; }
+.semana-barra {
+    width: 100%;
+    max-width: 28px;
+    border-radius: 6px 6px 2px 2px;
+    background: var(--bs-primary-bg-subtle);
+}
+.semana-dia.is-hoy .semana-barra { background: var(--bs-primary); }
+.semana-etq { margin-top: 4px; font-size: .72rem; color: var(--bs-secondary-color); }
+.semana-dia.is-hoy .semana-etq { color: var(--bs-primary); font-weight: 700; }

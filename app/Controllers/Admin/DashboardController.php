@@ -11,10 +11,12 @@ final class DashboardController extends Controller
     public function index(): void
     {
         $this->view('admin/dashboard', [
-            'title'     => 'Resumen',
-            'tarjetas'  => DashboardService::tarjetas(),
-            'actividad' => DashboardService::actividadReciente(),
-            'stats'     => DashboardService::estadisticas(),
+            'title'      => 'Resumen',
+            'tarjetas'   => DashboardService::tarjetas(auth()),
+            'semana'     => DashboardService::semana(),
+            'olvidados'  => DashboardService::localesOlvidados(),
+            'faltantes'  => DashboardService::faltantes(),
+            'actividad'  => DashboardService::actividadReciente(),
         ]);
     }
 }
