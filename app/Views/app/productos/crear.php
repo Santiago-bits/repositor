@@ -1,6 +1,6 @@
 <div class="page-head">
     <h1>Nuevo producto</h1>
-    <a class="btn btn-link" href="<?= url($visitaId ? "/visitas/{$visitaId}/productos" : '/productos') ?>">Cancelar</a>
+    <a class="btn btn-link" href="<?= url($visitaId ? "/visitas/{$visitaId}" : '/productos') ?>">Cancelar</a>
 </div>
 
 <?php if ($escaneado !== ''): ?>

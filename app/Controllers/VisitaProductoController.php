@@ -14,46 +14,9 @@ use App\Models\RelevamientoProducto;
 use App\Models\Vencimiento;
 use App\Services\RegistroVisitaService;
 
-/** Registrar productos dentro de una visita: stock y vencimientos. */
+/** Un producto dentro de una visita: hay / poco / sin stock y sus vencimientos. */
 final class VisitaProductoController extends VisitaBaseController
 {
-    /** Lista de productos del local, con buscador y escáner. */
-    public function lista(int $id): void
-    {
-        $visita = $this->visitaEditable($id);
-
-        $this->view('app/visitas/productos', [
-            'title'     => 'Registrar productos',
-            'visita'    => $visita,
-            'productos' => ProductoLocal::productosDeLocal((int) $visita['local_id'], $id),
-            'scripts'   => ['assets/js/escaner.js', 'assets/js/productos.js'],
-        ]);
-    }
-
-    /** Fragmento HTML: sin texto, los productos del local; con texto, la búsqueda general. */
-    public function buscar(int $id): void
-    {
-        $visita = $this->visitaEditable($id);
-        $q = trim((string) Request::input('q', ''));
-        header('Content-Type: text/html; charset=utf-8');
-        header('Cache-Control: no-store');
-
-        if ($q === '') {
-            View::render('partials/visita-productos-lista', [
-                'visita'    => $visita,
-                'productos' => ProductoLocal::productosDeLocal((int) $visita['local_id'], $id),
-            ], null);
-            return;
-        }
-
-        View::render('partials/productos-resultados', [
-            'q'          => $q,
-            'resultados' => Producto::buscar($q),
-            'enlace'     => fn (array $p) => url("/visitas/{$id}/productos/{$p['id']}"),
-            'crearExtra' => '&visita=' . $id,
-        ], null);
-    }
-
     public function show(int $id, int $productoId): void
     {
         $visita = $this->visitaEditable($id);
@@ -101,16 +64,7 @@ final class VisitaProductoController extends VisitaBaseController
 
         RegistroVisitaService::guardarStock($visita, $productoId, $stock, $estado, Request::input('con_problema') === '1');
 
-        $extra = ['estado' => $estado, 'hora' => date('H:i')];
-        if (Request::input('siguiente') === '1') {
-            $siguiente = RegistroVisitaService::siguientePendiente($visita, $productoId);
-            $extra['completo'] = $siguiente === null;
-            $extra['siguiente_url'] = $siguiente !== null
-                ? url("/visitas/{$id}/productos/{$siguiente}")
-                : url("/visitas/{$id}/productos");
-        }
-
-        $this->responder('Producto registrado', $extra, "/visitas/{$id}/productos/{$productoId}");
+        $this->responder('Guardado', ['estado' => $estado, 'hora' => date('H:i')], "/visitas/{$id}/productos/{$productoId}");
     }
 
     public function agregarVencimiento(int $id, int $productoId): never
@@ -168,7 +122,7 @@ final class VisitaProductoController extends VisitaBaseController
     {
         $this->visitaEditable($id);
         RelevamientoProducto::quitar($id, $productoId);
-        $this->responder('Producto quitado de la visita.', [], "/visitas/{$id}/productos");
+        $this->responder('Producto quitado de la visita.', [], "/visitas/{$id}");
     }
 
     private function productoActivo(int $productoId): array

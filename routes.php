@@ -44,8 +44,6 @@ $router->post('/visitas/{id}/eliminar', [VisitaController::class, 'eliminar'], [
 $router->post('/visitas/{id}/productos/{pid}/quitar', [VisitaProductoController::class, 'quitar'], ['auth']);
 $router->post('/visitas/{id}/promociones/{pid}/eliminar', [VisitaPromocionController::class, 'eliminar'], ['auth']);
 
-$router->get('/visitas/{id}/productos', [VisitaProductoController::class, 'lista'], ['auth']);
-$router->get('/visitas/{id}/buscar', [VisitaProductoController::class, 'buscar'], ['auth']);
 $router->get('/visitas/{id}/productos/{pid}', [VisitaProductoController::class, 'show'], ['auth']);
 $router->post('/visitas/{id}/productos/{pid}/stock', [VisitaProductoController::class, 'guardarStock'], ['auth']);
 $router->post('/visitas/{id}/productos/{pid}/vencimientos', [VisitaProductoController::class, 'agregarVencimiento'], ['auth']);

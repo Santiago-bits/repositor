@@ -8,7 +8,7 @@ $estadoActual = $rp['estado_stock'] ?? '';
 $registrado = $rp && ($rp['stock'] !== null || $rp['estado_stock'] !== null);
 ?>
 
-<a class="back-link" href="<?= url("/visitas/{$vid}/productos") ?>"><i class="bi bi-arrow-left"></i> Productos de <?= e($visita['local']) ?></a>
+<a class="back-link" href="<?= url("/visitas/{$vid}") ?>"><i class="bi bi-arrow-left"></i> Volver a la visita</a>
 
 <div class="card-soft producto-head mb-2">
     <?php if ($producto['imagen_path']): ?>

@@ -74,27 +74,4 @@ final class RegistroVisitaService
             return $copiados;
         });
     }
-
-    /** Próximo producto del local todavía sin registrar (sigue el orden de la lista y vuelve al principio). */
-    public static function siguientePendiente(array $visita, int $productoActual): ?int
-    {
-        $lista = ProductoLocal::productosDeLocal((int) $visita['local_id'], (int) $visita['id']);
-        $ids = array_map(fn ($p) => (int) $p['id'], $lista);
-        $pendientes = array_map(fn ($p) => (int) $p['id'], array_filter($lista, fn ($p) => $p['rp_id'] === null));
-
-        $posicion = array_search($productoActual, $ids, true);
-        $ordenados = $posicion === false
-            ? $pendientes
-            : array_merge(
-                array_filter($pendientes, fn ($id) => array_search($id, $ids, true) > $posicion),
-                array_filter($pendientes, fn ($id) => array_search($id, $ids, true) < $posicion)
-            );
-
-        foreach ($ordenados as $id) {
-            if ($id !== $productoActual) {
-                return $id;
-            }
-        }
-        return null;
-    }
 }

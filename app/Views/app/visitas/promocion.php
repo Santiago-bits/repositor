@@ -48,7 +48,7 @@ foreach ($productos as $i => $p) {
     <div class="empty-state card-soft">
         <i class="bi bi-box-seam"></i>
         <p>Todavía no hay productos cargados.</p>
-        <a class="btn btn-outline-primary" href="<?= url("/visitas/{$vid}/productos") ?>">Buscar o escanear productos</a>
+        <a class="btn btn-outline-primary" href="<?= url('/admin/productos/importar') ?>">Subir productos desde Excel</a>
     </div>
 <?php else: ?>
     <form method="post" action="<?= url("/visitas/{$vid}/promociones") ?>" data-promos>
@@ -68,7 +68,7 @@ foreach ($productos as $i => $p) {
         <div class="card-soft promo-grupo" data-promo-marcados><?= $marcados ?></div>
         <p class="small text-body-secondary mb-0" data-promo-vacio <?= $cantidad ? 'hidden' : '' ?>>Todavía no marcaste ninguno. Buscá el producto arriba y tocalo.</p>
 
-        <a class="small d-inline-block mt-2" href="<?= url("/visitas/{$vid}/productos") ?>"><i class="bi bi-upc-scan"></i> ¿Falta un producto? Buscalo o escanealo</a>
+        <a class="small d-inline-block mt-2" href="<?= url('/productos/crear?visita=' . $vid) ?>"><i class="bi bi-plus-circle"></i> ¿Falta un producto? Crealo</a>
 
         <div class="form-actions flex-column">
             <button class="btn btn-primary btn-xl" type="submit" name="mensaje" value="0"><i class="bi bi-check-lg me-1"></i> GUARDAR</button>
