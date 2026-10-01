@@ -58,7 +58,7 @@ final class RelevamientoProducto extends Model
     public static function deVisita(int $relevamientoId): array
     {
         return self::fetchAll(
-            'SELECT rp.id, rp.producto_id, rp.stock, rp.estado_stock, rp.con_problema,
+            'SELECT rp.id, rp.producto_id, rp.stock, rp.estado_stock, rp.con_problema, rp.promocion_id,
                     p.nombre, p.marca, p.presentacion,
                     (SELECT COUNT(*) FROM vencimientos v WHERE v.relevamiento_producto_id = rp.id) AS vencimientos
              FROM relevamiento_productos rp

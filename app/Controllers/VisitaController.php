@@ -11,6 +11,7 @@ use App\Models\Promocion;
 use App\Services\ConteoService;
 use App\Models\Relevamiento;
 use App\Models\RelevamientoProducto;
+use App\Models\Vencimiento;
 use App\Services\VisitaService;
 use RuntimeException;
 
@@ -40,6 +41,11 @@ final class VisitaController extends VisitaBaseController
             'visita'        => $visita,
             'propia'        => (int) $visita['user_id'] === Auth::id(),
             'registrados'   => RelevamientoProducto::deVisita($id),
+            // Lotes de vencimiento agrupados por producto, para mostrarlos en cada fila.
+            'lotes'         => array_reduce(Vencimiento::deVisita($id), function (array $g, array $v) {
+                $g[(int) $v['producto_id']][] = $v;
+                return $g;
+            }, []),
             'fotos'         => Foto::deVisita($id),
             'observaciones' => Observacion::deVisita($id),
             'promos'        => Promocion::vigentesEnLocal((int) $visita['local_id'], $visita['fecha']),

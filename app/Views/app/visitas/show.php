@@ -2,6 +2,7 @@
 use App\Models\Local;
 use App\Models\Producto;
 use App\Models\RelevamientoProducto;
+use App\Services\VencimientoService;
 
 // Las visitas de hoy siempre se pueden tocar (si se cerró sola al irte, se reabre al cargar algo).
 $editable = $propia && ($visita['estado'] === 'en_proceso' || ($visita['estado'] === 'finalizado' && $visita['fecha'] === date('Y-m-d')));
@@ -74,22 +75,54 @@ $vid = (int) $visita['id'];
 <?php endif; ?>
 
 <?php if ($registrados !== []): ?>
-    <h2 class="section-title" id="registrados">Registrado en esta visita</h2>
+    <h2 class="section-title" id="registrados">
+        Registrado en esta visita <span class="text-lowercase">(<?= count($registrados) ?> producto<?= count($registrados) === 1 ? '' : 's' ?>)</span>
+    </h2>
     <div class="card-soft">
         <?php foreach ($registrados as $r): ?>
-            <?php $tag = $editable ? 'a' : 'div'; ?>
-            <<?= $tag ?> class="historial-row text-reset text-decoration-none"<?= $editable ? ' href="' . url("/visitas/{$vid}/productos/{$r['producto_id']}") . '"' : '' ?>>
-                <div class="min-w-0">
+            <?php
+            $tag = $editable ? 'a' : 'div';
+            $susLotes = $lotes[(int) $r['producto_id']] ?? [];
+            ?>
+            <<?= $tag ?> class="registro-row text-reset text-decoration-none"<?= $editable ? ' href="' . url("/visitas/{$vid}/productos/{$r['producto_id']}") . '"' : '' ?>>
+                <div class="min-w-0 flex-grow-1">
                     <div class="fw-semibold text-truncate"><?= e(Producto::nombreCompleto($r)) ?></div>
-                    <div class="d-flex flex-wrap gap-1 align-items-center small text-body-secondary">
-                        <?php if ($r['estado_stock']): ?>
+
+                    <div class="registro-datos">
+                        <?php if ($r['stock'] !== null): ?>
+                            <span><i class="bi bi-box-seam"></i> Stock <strong><?= (int) $r['stock'] ?> u.</strong></span>
+                        <?php endif; ?>
+                        <?php if ($r['estado_stock'] && $r['estado_stock'] !== 'normal'): ?>
                             <span class="badge <?= RelevamientoProducto::ESTADOS[$r['estado_stock']][1] ?>"><?= RelevamientoProducto::ESTADOS[$r['estado_stock']][0] ?></span>
                         <?php endif; ?>
-                        <?php if ($r['vencimientos'] > 0): ?><span><i class="bi bi-calendar-event"></i> <?= (int) $r['vencimientos'] ?></span><?php endif; ?>
-                        <?php if ($r['con_problema']): ?><span class="text-danger"><i class="bi bi-exclamation-triangle"></i> Con problema</span><?php endif; ?>
+                        <?php if (isset($promos[(int) $r['producto_id']])): ?>
+                            <span class="text-primary"><i class="bi bi-megaphone"></i> En promo</span>
+                        <?php endif; ?>
+                        <?php if ($r['con_problema']): ?>
+                            <span class="text-danger"><i class="bi bi-exclamation-triangle"></i> Con problema</span>
+                        <?php endif; ?>
                     </div>
+
+                    <?php foreach ($susLotes as $v): ?>
+                        <?php $estado = VencimientoService::estado($v['fecha_vencimiento']); ?>
+                        <div class="registro-lote">
+                            <i class="bi bi-calendar-event"></i>
+                            Vence <strong><?= fecha($v['fecha_vencimiento'], 'd/m') ?></strong>
+                            <?php if ($v['retirado_at']): ?>
+                                <span class="badge text-bg-secondary">Retirado</span>
+                            <?php else: ?>
+                                <span class="venc-badge <?= $estado['clase'] ?>"><?= e($estado['etiqueta']) ?></span>
+                            <?php endif; ?>
+                            <?php if ($v['cantidad'] !== null): ?>· <?= (int) $v['cantidad'] ?> u.<?php endif; ?>
+                            <?php if ($v['nota']): ?>· <?= e($v['nota']) ?><?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+
+                    <?php if ($r['stock'] === null && $susLotes === [] && !$r['estado_stock']): ?>
+                        <div class="small text-body-secondary">Sin datos cargados</div>
+                    <?php endif; ?>
                 </div>
-                <div class="historial-stock"><?= $r['stock'] !== null ? (int) $r['stock'] : '—' ?></div>
+                <?php if ($editable): ?><i class="bi bi-chevron-right text-body-secondary"></i><?php endif; ?>
             </<?= $tag ?>>
         <?php endforeach; ?>
     </div>

@@ -20,7 +20,7 @@ final class ObservacionController extends VisitaBaseController
         }
         $texto = trim((string) preg_replace('/\s+/u', ' ', $texto));
         if ($texto === '') {
-            $this->fallar('Escribí la observación o elegí una frase.');
+            $this->fallar('Escribí la observación.');
         }
         if (mb_strlen($texto) > 500) {
             $this->fallar('La observación no puede superar los 500 caracteres.');

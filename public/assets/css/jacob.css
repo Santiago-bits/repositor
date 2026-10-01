@@ -1422,3 +1422,28 @@ body.escaner-abierto { overflow: hidden; }
 .semana-dia.is-hoy .semana-barra { background: var(--bs-primary); }
 .semana-etq { margin-top: 4px; font-size: .72rem; color: var(--bs-secondary-color); }
 .semana-dia.is-hoy .semana-etq { color: var(--bs-primary); font-weight: 700; }
+
+/* Visita: "Registrado en esta visita", con stock y cada lote de vencimiento en palabras. */
+.registro-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+}
+.registro-row + .registro-row { border-top: 1px solid var(--app-border); }
+.registro-datos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 10px;
+    font-size: .85rem;
+    color: var(--bs-secondary-color);
+}
+.registro-datos:empty { display: none; }
+.registro-datos strong { color: var(--bs-body-color); }
+.registro-lote {
+    margin-top: 2px;
+    font-size: .85rem;
+    color: var(--bs-secondary-color);
+}
+.registro-lote strong { color: var(--bs-body-color); }

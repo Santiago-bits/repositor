@@ -48,7 +48,7 @@ final class Vencimiento extends Model
     public static function deVisita(int $relevamientoId): array
     {
         return self::fetchAll(
-            'SELECT v.id, v.fecha_vencimiento, v.cantidad, v.nota, rp.producto_id, p.nombre, p.marca, p.presentacion
+            'SELECT v.id, v.fecha_vencimiento, v.cantidad, v.nota, v.retirado_at, rp.producto_id, p.nombre, p.marca, p.presentacion
              FROM vencimientos v
              JOIN relevamiento_productos rp ON rp.id = v.relevamiento_producto_id
              JOIN productos p ON p.id = rp.producto_id

@@ -6,16 +6,6 @@ namespace App\Models;
 /** Observaciones de una visita: generales (sin producto) o de un producto. */
 final class Observacion extends Model
 {
-    /** Frases frecuentes: un toque en vez de escribir. */
-    public const RAPIDAS = [
-        'Quedan pocas unidades.',
-        'Falta en la heladera.',
-        'Botella rota o con pérdida.',
-        'El precio de góndola no coincide.',
-        'No estaba exhibido.',
-        'Hay stock en depósito.',
-    ];
-
     public static function crear(int $relevamientoId, ?int $productoId, string $texto): int
     {
         return self::insert(
