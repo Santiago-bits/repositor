@@ -35,20 +35,35 @@ final class VisitaController extends VisitaBaseController
     public function show(int $id): void
     {
         $visita = $this->visitaVisible($id);
+        $promos = Promocion::vigentesEnLocal((int) $visita['local_id'], $visita['fecha']);
+
+        // Lotes que siguen en el local (los retirados ya no cuentan), agrupados por producto.
+        $lotes = [];
+        foreach (Vencimiento::deVisita($id) as $v) {
+            if ($v['retirado_at'] === null) {
+                $lotes[(int) $v['producto_id']][] = $v;
+            }
+        }
+
+        // Solo lo que quedó anotado: si se sacó el faltante, el vencimiento o la promo, el producto no se muestra.
+        $registrados = array_values(array_filter(
+            RelevamientoProducto::deVisita($id),
+            fn ($r) => $r['stock'] !== null
+                || in_array($r['estado_stock'], ['bajo', 'sin_stock', 'no_exhibido'], true)
+                || $r['con_problema']
+                || isset($lotes[(int) $r['producto_id']])
+                || isset($promos[(int) $r['producto_id']])
+        ));
 
         $this->view('app/visitas/show', [
             'title'         => $visita['local'],
             'visita'        => $visita,
             'propia'        => (int) $visita['user_id'] === Auth::id(),
-            'registrados'   => RelevamientoProducto::deVisita($id),
-            // Lotes de vencimiento agrupados por producto, para mostrarlos en cada fila.
-            'lotes'         => array_reduce(Vencimiento::deVisita($id), function (array $g, array $v) {
-                $g[(int) $v['producto_id']][] = $v;
-                return $g;
-            }, []),
+            'registrados'   => $registrados,
+            'lotes'         => $lotes,
             'fotos'         => Foto::deVisita($id),
             'observaciones' => Observacion::deVisita($id),
-            'promos'        => Promocion::vigentesEnLocal((int) $visita['local_id'], $visita['fecha']),
+            'promos'        => $promos,
             'conteo'        => ConteoService::items($visita),
             // Para acomodar la heladera: lo que vence primero en este local (próximos 60 días y vencidos recientes).
             'cortasLocal'   => array_values(array_filter(

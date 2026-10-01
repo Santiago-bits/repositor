@@ -43,6 +43,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-09-30** · «Registrado en esta visita» muestra solo lo que quedó anotado (faltantes, vencimientos sin retirar, promo vigente); si sacás algo, desaparece.
 - **2026-09-30** · **Faltantes** en vez de contar stock: en el local buscás lo que no hay o hay poco y armás la lista para el vendedor (agrupada por categoría, lista para WhatsApp) · En cada producto, solo «Hay / Poco / Sin stock» (se guarda al tocar) · Sin recordatorios del conteo de promos: se entra cuando querés desde «Promos del finde» · Resumen: «Faltantes hoy».
 - **2026-09-30** · Revisión según el trabajo diario: la visita arranca con «Vence primero en este local» (para acomodar la heladera, con Retirar) y los botones en orden: Vencimientos, Promos del finde, Contar promos (resaltado los lunes o si hay para contar), Foto, Observación y Stock · En cada producto, vencimientos primero (con nota) y el stock opcional abajo · Inicio muestra cuántas promos hay para contar en cada local · Resumen: «Promos para contar» en vez de promos activas · Se sacaron Usuarios y Reportes.
 - **2026-09-30** · Visita: "Registrado en esta visita" muestra en palabras el stock, cada lote con su fecha, cantidad y nota, y si está en promo · Observaciones sin frases precargadas.
