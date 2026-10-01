@@ -78,6 +78,7 @@ $vid = (int) $visita['id'];
 
     <?php if ($editable): ?>
         <a class="btn btn-primary btn-xl w-100" href="<?= url("/visitas/{$vid}/promociones/crear") ?>"><i class="bi bi-megaphone me-1"></i> Promos del finde</a>
+        <a class="btn btn-outline-primary btn-xl w-100 mt-2" href="<?= url("/visitas/{$vid}/vencimientos") ?>"><i class="bi bi-calendar-event me-1"></i> Vencimientos</a>
     <?php endif; ?>
 <?php endif; ?>
 

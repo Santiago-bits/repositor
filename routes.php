@@ -10,6 +10,7 @@ use App\Controllers\Admin\RelevamientoController;
 use App\Controllers\Admin\TareaController as AdminTareaController;
 use App\Controllers\TareaController;
 use App\Controllers\VisitaPromocionController;
+use App\Controllers\VisitaVencimientoController;
 use App\Controllers\Admin\UsuarioController;
 use App\Controllers\AuthController;
 use App\Controllers\FotoController;
@@ -58,6 +59,8 @@ $router->post('/visitas/{id}/fotos', [FotoController::class, 'subir'], ['auth'])
 $router->get('/fotos/{id}', [FotoController::class, 'ver'], ['auth']);
 $router->post('/fotos/{id}/eliminar', [FotoController::class, 'eliminar'], ['auth']);
 
+$router->get('/visitas/{id}/vencimientos', [VisitaVencimientoController::class, 'crear'], ['auth']);
+$router->post('/visitas/{id}/vencimientos', [VisitaVencimientoController::class, 'guardar'], ['auth']);
 $router->get('/visitas/{id}/promociones/crear', [VisitaPromocionController::class, 'crear'], ['auth']);
 $router->post('/visitas/{id}/promociones', [VisitaPromocionController::class, 'guardar'], ['auth']);
 $router->get('/visitas/{id}/conteo', [VisitaPromocionController::class, 'conteo'], ['auth']);

@@ -6,6 +6,7 @@
 !/storage/logs/.gitkeep
 /storage/productos/
 /storage/relevamientos/
+/storage/migraciones.version*
 
 # Sistema y editores
 .DS_Store

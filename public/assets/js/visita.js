@@ -64,6 +64,70 @@
         if (navigator.vibrate) navigator.vibrate(8);
     });
 
+    // ---------- Vencimientos: buscar el producto, tocarlo y ponerle fecha, cantidad y nota ----------
+    var venc = document.querySelector('[data-vencimientos]');
+    if (venc) {
+        var vBuscar = venc.querySelector('[data-venc-buscar]');
+        var vResultados = venc.querySelector('[data-venc-resultados]');
+        var vNuevos = venc.querySelector('[data-venc-nuevos]');
+        var vPlantilla = venc.querySelector('[data-venc-plantilla]');
+        var vIndice = 0;
+
+        var sinTildes = function (s) {
+            return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        };
+
+        var vActualizar = function () {
+            var q = sinTildes(vBuscar.value.trim());
+            var visibles = 0;
+            Array.prototype.forEach.call(vResultados.children, function (op) {
+                var ok = q !== '' && sinTildes(op.dataset.texto).indexOf(q) !== -1;
+                op.hidden = !ok;
+                if (ok) visibles++;
+            });
+            vResultados.hidden = visibles === 0;
+            venc.querySelector('[data-venc-sin-resultados]').hidden = visibles > 0 || q === '';
+
+            var n = vNuevos.children.length;
+            venc.querySelector('[data-venc-contador]').textContent = n;
+            venc.querySelector('[data-venc-vacio]').hidden = n > 0;
+            venc.querySelector('[data-venc-acciones]').hidden = n === 0;
+        };
+
+        vResultados.addEventListener('click', function (e) {
+            var op = e.target.closest('.venc-opcion');
+            if (!op) return;
+            var tarjeta = vPlantilla.content.firstElementChild.cloneNode(true);
+            var i = vIndice++;
+            tarjeta.querySelector('[data-venc-nombre]').textContent = op.dataset.nombre;
+            tarjeta.querySelectorAll('[data-campo]').forEach(function (campo) {
+                campo.name = 'venc[' + i + '][' + campo.dataset.campo + ']';
+            });
+            tarjeta.querySelector('[data-campo="producto"]').value = op.dataset.id;
+            vNuevos.appendChild(tarjeta);
+
+            vBuscar.value = '';
+            vActualizar();
+            tarjeta.querySelector('[data-campo="fecha"]').focus();
+        });
+
+        vNuevos.addEventListener('click', function (e) {
+            var quitar = e.target.closest('[data-venc-quitar]');
+            if (!quitar) return;
+            quitar.closest('.venc-nuevo').remove();
+            vActualizar();
+        });
+
+        vBuscar.addEventListener('input', vActualizar);
+        vBuscar.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                vBuscar.blur();
+            }
+        });
+        vActualizar();
+    }
+
     // ---------- Promos del finde: buscador + los marcados arriba ----------
     var promos = document.querySelector('[data-promos]');
     if (promos) {

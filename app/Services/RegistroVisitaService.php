@@ -29,12 +29,12 @@ final class RegistroVisitaService
         };
     }
 
-    public static function agregarVencimiento(array $visita, int $productoId, string $fecha, ?int $cantidad): int
+    public static function agregarVencimiento(array $visita, int $productoId, string $fecha, ?int $cantidad, ?string $nota = null): int
     {
-        return Database::transaction(function () use ($visita, $productoId, $fecha, $cantidad): int {
+        return Database::transaction(function () use ($visita, $productoId, $fecha, $cantidad, $nota): int {
             $rpId = RelevamientoProducto::asegurar((int) $visita['id'], $productoId);
             ProductoLocal::asegurar($productoId, (int) $visita['local_id']);
-            Vencimiento::crear($rpId, $fecha, $cantidad);
+            Vencimiento::crear($rpId, $fecha, $cantidad, $nota);
             return $rpId;
         });
     }
@@ -67,7 +67,7 @@ final class RegistroVisitaService
             $copiados = 0;
             foreach ($lotes as $lote) {
                 if (!in_array($lote['fecha_vencimiento'], $existentes, true)) {
-                    Vencimiento::crear($rpId, $lote['fecha_vencimiento'], $lote['cantidad'] !== null ? (int) $lote['cantidad'] : null);
+                    Vencimiento::crear($rpId, $lote['fecha_vencimiento'], $lote['cantidad'] !== null ? (int) $lote['cantidad'] : null, $lote['nota'] ?? null);
                     $copiados++;
                 }
             }

@@ -8,6 +8,7 @@
             <div class="flex-grow-1">
                 <div class="fw-semibold"><?= fecha($v['fecha_vencimiento']) ?></div>
                 <span class="venc-badge <?= $estado['clase'] ?>"><?= e($estado['etiqueta']) ?></span>
+                <?php if (!empty($v['nota'])): ?><div class="small text-body-secondary"><i class="bi bi-geo-alt"></i> <?= e($v['nota']) ?></div><?php endif; ?>
             </div>
             <div class="venc-cant"><?= $v['cantidad'] !== null ? (int) $v['cantidad'] : '—' ?> <small>u.</small></div>
             <?php if ($editable): ?>

@@ -44,6 +44,10 @@ final class Database
     public static function transaction(callable $callback): mixed
     {
         $pdo = self::connection();
+        // Dentro de otra transacción: forma parte de esa (se confirma o se deshace todo junto).
+        if ($pdo->inTransaction()) {
+            return $callback($pdo);
+        }
         $pdo->beginTransaction();
         try {
             $result = $callback($pdo);
