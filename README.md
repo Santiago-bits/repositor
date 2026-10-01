@@ -45,6 +45,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-10-01** · Detección del local más precisa: espera hasta tener una ubicación nueva y precisa (±25 m o lo mejor en 10 s) y muestra el margen de error · Gestión → Locales avisa si dos locales tienen la misma ubicación (casi seguro mal cargada).
 - **2026-10-01** · Dentro del local, la barra de abajo cambia a: Local, Vencimientos, Promos, Faltantes y Fotos · Fotos con tipo (Góndola, Heladera, Exhibición externa, Otra) y descripción de qué se ve (migración 010) · La imagen de cada producto aparece en las listas (buscador, faltantes, promos, vencimientos, fechas cortas y lo registrado).
 - **2026-09-30** · Se sacó «Registrar productos» de la visita (contaba stock de todo). Para buscar o escanear un código de barras está la pestaña **Productos**.
 - **2026-09-30** · «Registrado en esta visita» muestra solo lo que quedó anotado (faltantes, vencimientos sin retirar, promo vigente); si sacás algo, desaparece.

@@ -52,6 +52,7 @@ $tipoActual = $v('tipo', 'supermercado');
         <button type="button" class="btn btn-primary w-100 mb-2" data-geo-fill data-lat="latitud" data-lng="longitud" data-status="geo-status">
             <i class="bi bi-crosshair"></i> Usar mi ubicación actual
         </button>
+        <p class="small text-warning-emphasis mb-2"><i class="bi bi-exclamation-triangle"></i> Solo si estás en la puerta del local. Si no, pegá el link de Google Maps.</p>
         <div id="geo-status" class="small mb-2" role="status" aria-live="polite"></div>
         <div class="row g-2">
             <div class="col-6">

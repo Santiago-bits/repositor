@@ -7,6 +7,7 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Models\Local;
 use App\Requests\LocalRequest;
+use App\Services\DeteccionLocalService;
 use App\Services\UbicacionService;
 
 final class LocalController extends Controller
@@ -18,8 +19,30 @@ final class LocalController extends Controller
         $this->view('admin/locales/index', [
             'title'   => 'Locales',
             'buscar'  => $buscar,
-            'locales' => Local::all($buscar),
+            'locales' => self::marcarUbicacionesRepetidas(Local::all($buscar)),
         ]);
+    }
+
+    /**
+     * Locales a menos de 30 m de otro: casi seguro se cargaron desde el mismo lugar
+     * (por ejemplo con "Usar mi ubicación actual" sin estar en la puerta) y la detección falla.
+     */
+    private static function marcarUbicacionesRepetidas(array $locales): array
+    {
+        foreach ($locales as $i => $a) {
+            $locales[$i]['cerca_de'] = [];
+            if ($a['latitud'] === null) {
+                continue;
+            }
+            foreach ($locales as $j => $b) {
+                if ($i !== $j && $b['latitud'] !== null && DeteccionLocalService::distancia(
+                    (float) $a['latitud'], (float) $a['longitud'], (float) $b['latitud'], (float) $b['longitud']
+                ) < 30) {
+                    $locales[$i]['cerca_de'][] = $b['nombre'];
+                }
+            }
+        }
+        return $locales;
     }
 
     public function create(): void

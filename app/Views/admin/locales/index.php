@@ -29,7 +29,9 @@
                         <?php if ($l['direccion']): ?> · <?= e($l['direccion']) ?><?php endif; ?>
                     </div>
                     <div class="item-meta">
-                        <?php if ($l['latitud'] !== null): ?>
+                        <?php if ($l['latitud'] !== null && $l['cerca_de'] !== []): ?>
+                            <span class="text-warning-emphasis"><i class="bi bi-exclamation-triangle"></i> Misma ubicación que <?= e(implode(', ', $l['cerca_de'])) ?>: revisala</span>
+                        <?php elseif ($l['latitud'] !== null): ?>
                             <span><i class="bi bi-geo-alt"></i> Radio <?= (int) $l['radio_m'] ?> m</span>
                         <?php else: ?>
                             <span class="text-warning-emphasis"><i class="bi bi-geo"></i> Sin ubicación</span>

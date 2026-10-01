@@ -137,17 +137,17 @@
             var local = data.locales[0];
             var cab = cabecera('bi-geo-alt-fill', 'Local detectado', null, 'ok');
             var nombre = el('div', 'deteccion-local', local.nombre);
-            var dist = el('div', 'small text-body-secondary', 'Distancia aproximada: ' + local.texto);
+            var dist = el('div', 'small text-body-secondary', 'A ' + local.texto + ' · tu ubicación ±' + data.precision + ' m');
             var otro = el('a', 'btn btn-link btn-sm w-100 mt-1', 'No es este local');
             otro.href = '#locales';
-            mostrar(cab, nombre, dist, el('div', 'mt-3'), accionLocal(local, true), otro);
+            mostrar(cab, nombre, dist, el('div', 'mt-3'), accionLocal(local, true), otro, botonReintentar());
             return;
         }
 
         if (data.estado === 'varios') {
             var lista = el('div', 'deteccion-lista');
             data.locales.forEach(function (l) { lista.appendChild(filaLocal(l)); });
-            mostrar(cabecera('bi-geo-alt-fill', 'Hay varios locales cerca', 'Elegí en cuál estás.', 'ok'), lista, botonReintentar());
+            mostrar(cabecera('bi-geo-alt-fill', 'Hay varios locales cerca', 'Elegí en cuál estás. Tu ubicación ±' + data.precision + ' m.', 'ok'), lista, botonReintentar());
             return;
         }
 
@@ -174,15 +174,54 @@
         3: 'La ubicación tardó demasiado.'
     };
 
+    /**
+     * La primera ubicación que da el celular suele ser aproximada (wifi/antena, cientos de metros)
+     * o vieja. Se escucha unos segundos y se usa la más precisa: corta apenas llega a ±25 m
+     * o, como mucho, a los 10 segundos con la mejor que haya.
+     */
+    var PRECISION_BUENA = 25;
+    var ESPERA_MAXIMA = 10000;
+
     function detectar() {
-        cargando('Buscando el local…');
-        navigator.geolocation.getCurrentPosition(function (pos) {
-            ultimaPosicion = pos.coords;
-            completarFormulariosManuales(pos.coords);
-            consultar(pos.coords);
+        cargando('Buscando tu ubicación…');
+        var mejor = null;
+        var terminado = false;
+        var vigilancia = null;
+        var reloj = null;
+
+        var cortar = function () {
+            terminado = true;
+            if (vigilancia !== null) navigator.geolocation.clearWatch(vigilancia);
+            clearTimeout(reloj);
+        };
+
+        var terminar = function () {
+            if (terminado) return;
+            cortar();
+            if (!mejor) {
+                aviso(ERRORES[3], true);
+                return;
+            }
+            ultimaPosicion = mejor;
+            completarFormulariosManuales(mejor);
+            cargando('Buscando el local…');
+            consultar(mejor);
+        };
+
+        vigilancia = navigator.geolocation.watchPosition(function (pos) {
+            if (terminado) return;
+            if (!mejor || pos.coords.accuracy < mejor.accuracy) mejor = pos.coords;
+            cargando('Afinando tu ubicación (±' + Math.round(mejor.accuracy) + ' m)…');
+            if (mejor.accuracy <= PRECISION_BUENA) terminar();
         }, function (err) {
-            aviso(ERRORES[err.code] || 'No se pudo obtener tu ubicación.', err.code !== 1);
-        }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 });
+            if (terminado) return;
+            if (err.code === 1 || !mejor) {
+                cortar();
+                aviso(ERRORES[err.code] || 'No se pudo obtener tu ubicación.', err.code !== 1);
+            }
+        }, { enableHighAccuracy: true, timeout: ESPERA_MAXIMA, maximumAge: 0 });
+
+        reloj = setTimeout(terminar, ESPERA_MAXIMA);
     }
 
     function consultar(coords) {
