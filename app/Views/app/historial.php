@@ -6,10 +6,7 @@ use App\Models\Relevamiento;
     <h1>Historial</h1>
 </div>
 
-<div class="d-grid gap-2 mb-3" style="grid-template-columns: 1fr 1fr">
-    <a class="btn btn-primary" href="<?= url('/mensaje') ?>"><i class="bi bi-chat-square-text"></i> Mensaje de hoy</a>
-    <a class="btn btn-outline-primary" href="<?= url('/reportes') ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Reportes</a>
-</div>
+<a class="btn btn-primary w-100 mb-3" href="<?= url('/mensaje') ?>"><i class="bi bi-chat-square-text"></i> Mensaje de hoy</a>
 
 <?php if ($porFecha === []): ?>
     <div class="empty-state card-soft">

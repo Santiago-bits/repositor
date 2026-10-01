@@ -133,7 +133,10 @@ final class VisitaProductoController extends VisitaBaseController
             }
         }
 
-        RegistroVisitaService::agregarVencimiento($visita, $productoId, $fecha, $cantidad);
+        $nota = trim((string) Request::input('nota', ''));
+        $nota = $nota === '' || !mb_check_encoding($nota, 'UTF-8') ? null : mb_substr($nota, 0, 120);
+
+        RegistroVisitaService::agregarVencimiento($visita, $productoId, $fecha, $cantidad, $nota);
         $this->responder('Vencimiento agregado', ['html' => $this->htmlVencimientos($id, $productoId)]);
     }
 

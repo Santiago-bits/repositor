@@ -1,7 +1,5 @@
 <?php
 use App\Models\Local;
-use App\Models\Producto;
-use App\Services\VencimientoService;
 
 $abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
 ?>
@@ -74,6 +72,9 @@ $abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
                 <div class="item-body">
                     <div class="item-title"><?= e($local['nombre']) ?></div>
                     <div class="item-sub"><?= e($local['direccion'] ?: Local::TIPOS[$local['tipo']]) ?></div>
+                    <?php if ($local['para_contar'] > 0): ?>
+                        <div class="small fw-semibold text-warning-emphasis"><i class="bi bi-123"></i> <?= (int) $local['para_contar'] ?> promo<?= $local['para_contar'] > 1 ? 's' : '' ?> para contar</div>
+                    <?php endif; ?>
                 </div>
                 <?php if ($abiertaHoy && (int) $abierta['local_id'] === (int) $local['id']): ?>
                     <a class="btn btn-primary btn-sm" href="<?= url('/visitas/' . $abierta['id']) ?>">Continuar</a>
@@ -90,21 +91,7 @@ $abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
     <p class="small text-body-secondary"><i class="bi bi-check-circle text-success"></i> No hay nada por vencer. Se cargan con el botón «Vencimientos» en la visita.</p>
 <?php else: ?>
     <?php
-    $fila = function (array $v): string {
-        $estado = VencimientoService::estado($v['fecha_vencimiento']);
-        $detalle = array_filter([$v['local'], $v['cantidad'] !== null ? (int) $v['cantidad'] . ' u.' : null, $v['nota']]);
-        $nombre = Producto::nombreCompleto($v);
-        return '<div class="corta-row">'
-            . '<div class="corta-fecha ' . $estado['clase'] . '">' . fecha($v['fecha_vencimiento'], 'd/m') . '</div>'
-            . '<a class="min-w-0 flex-grow-1 text-reset text-decoration-none" href="' . url('/productos/' . (int) $v['producto_id']) . '">'
-            . '<div class="fw-semibold text-truncate">' . e($nombre) . '</div>'
-            . '<div class="small text-body-secondary text-truncate">' . e(implode(' · ', $detalle)) . '</div>'
-            . '<span class="venc-badge ' . $estado['clase'] . '">' . e($estado['etiqueta']) . '</span></a>'
-            . '<form method="post" action="' . url('/vencimientos/' . (int) $v['id'] . '/retirar') . '"'
-            . ' data-confirm="' . e("¿Ya retiraste {$nombre} de {$v['local']}?") . '">' . csrf_field()
-            . '<button class="btn btn-outline-danger btn-sm" type="submit"><i class="bi bi-box-arrow-up"></i> Retirar</button></form>'
-            . '</div>';
-    };
+    $fila = fn (array $v): string => partial('fecha-corta', ['v' => $v]);
     $primeras = array_slice($cortas, 0, 6);
     $resto = array_slice($cortas, 6);
     ?>

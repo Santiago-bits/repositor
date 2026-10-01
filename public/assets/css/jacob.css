@@ -1447,3 +1447,12 @@ body.escaner-abierto { overflow: hidden; }
     color: var(--bs-secondary-color);
 }
 .registro-lote strong { color: var(--bs-body-color); }
+
+/* Visita: "Contar promos" resaltado los lunes o cuando hay promos terminadas para contar. */
+.accion-alerta {
+    border-color: var(--jacob-warn);
+    background: rgba(217, 119, 6, .12);
+}
+.accion-alerta .bi { color: var(--jacob-warn); }
+.venc-form .venc-nota { grid-column: 1 / -1; }
+.corta-row form .btn { white-space: nowrap; }

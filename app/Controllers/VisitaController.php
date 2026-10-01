@@ -50,6 +50,11 @@ final class VisitaController extends VisitaBaseController
             'observaciones' => Observacion::deVisita($id),
             'promos'        => Promocion::vigentesEnLocal((int) $visita['local_id'], $visita['fecha']),
             'conteo'        => ConteoService::items($visita),
+            // Para acomodar la heladera: lo que vence primero en este local (próximos 60 días y vencidos recientes).
+            'cortasLocal'   => array_values(array_filter(
+                Vencimiento::proximos(auth(), 60),
+                fn ($v) => (int) $v['local_id'] === (int) $visita['local_id']
+            )),
             'scripts'       => ['assets/js/visita.js'],
         ]);
     }

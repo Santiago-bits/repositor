@@ -44,14 +44,43 @@ $registrado = $rp && ($rp['stock'] !== null || $rp['estado_stock'] !== null);
     </p>
 <?php endif; ?>
 
+<!-- Vencimientos -->
+<section class="card-soft p-3 mb-3">
+    <h2 class="card-title-sm"><i class="bi bi-calendar-event"></i> Vencimientos</h2>
+    <div id="vencimientos"><?= partial('vencimientos-lista', ['vencimientos' => $vencimientos, 'visitaId' => $vid, 'editable' => true]) ?></div>
+
+    <form class="venc-form mt-2" method="post" action="<?= url("/visitas/{$vid}/productos/{$pid}/vencimientos") ?>" data-venc-form data-destino="#vencimientos">
+        <?= csrf_field() ?>
+        <input class="form-control" type="date" name="fecha" required aria-label="Fecha de vencimiento">
+        <input class="form-control" type="number" name="cantidad" min="0" max="99999" inputmode="numeric" placeholder="Cant." aria-label="Cantidad">
+        <button class="btn btn-primary" type="submit" aria-label="Agregar vencimiento"><i class="bi bi-plus-lg"></i></button>
+        <input class="form-control venc-nota" name="nota" maxlength="120" placeholder="Ubicación / nota (ej: depósito)" aria-label="Nota">
+    </form>
+
+    <?php if ($lotesAnteriores !== []): ?>
+        <div class="lotes-anteriores mt-3">
+            <div class="small text-body-secondary mb-1">La vez anterior:</div>
+            <div class="small mb-2">
+                <?php foreach ($lotesAnteriores as $l): ?>
+                    <span class="me-2"><?= fecha($l['fecha_vencimiento']) ?> → <?= $l['cantidad'] !== null ? (int) $l['cantidad'] . ' u.' : '—' ?></span>
+                <?php endforeach; ?>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-primary"
+                    data-accion="<?= url("/visitas/{$vid}/productos/{$pid}/vencimientos/copiar") ?>" data-destino="#vencimientos">
+                <i class="bi bi-copy"></i> Copiar esos lotes
+            </button>
+        </div>
+    <?php endif; ?>
+</section>
+
 <!-- Stock -->
 <form class="card-soft p-3 mb-3" method="post" action="<?= url("/visitas/{$vid}/productos/{$pid}/stock") ?>" data-stock-form>
     <?= csrf_field() ?>
-    <label class="form-label fw-semibold" for="stock">Stock encontrado</label>
+    <label class="form-label fw-semibold" for="stock">Stock encontrado <span class="fw-normal text-body-secondary small">(opcional)</span></label>
     <div class="stepper">
         <button type="button" data-paso="-1" aria-label="Restar uno"><i class="bi bi-dash-lg"></i></button>
         <input id="stock" name="stock" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="99999"
-               value="<?= e($rp['stock'] ?? '') ?>" placeholder="0" <?= $registrado ? '' : 'autofocus' ?>>
+               value="<?= e($rp['stock'] ?? '') ?>" placeholder="0">
         <button type="button" data-paso="1" aria-label="Sumar uno"><i class="bi bi-plus-lg"></i></button>
     </div>
 
@@ -81,34 +110,6 @@ $registrado = $rp && ($rp['stock'] !== null || $rp['estado_stock'] !== null);
         <button class="btn btn-link btn-sm text-danger" type="submit"><i class="bi bi-trash3"></i> Quitar de esta visita</button>
     </form>
 <?php endif; ?>
-
-<!-- Vencimientos -->
-<section class="card-soft p-3 mb-3">
-    <h2 class="card-title-sm"><i class="bi bi-calendar-event"></i> Vencimientos</h2>
-    <div id="vencimientos"><?= partial('vencimientos-lista', ['vencimientos' => $vencimientos, 'visitaId' => $vid, 'editable' => true]) ?></div>
-
-    <form class="venc-form mt-2" method="post" action="<?= url("/visitas/{$vid}/productos/{$pid}/vencimientos") ?>" data-venc-form data-destino="#vencimientos">
-        <?= csrf_field() ?>
-        <input class="form-control" type="date" name="fecha" required aria-label="Fecha de vencimiento">
-        <input class="form-control" type="number" name="cantidad" min="0" max="99999" inputmode="numeric" placeholder="Cant." aria-label="Cantidad">
-        <button class="btn btn-primary" type="submit" aria-label="Agregar vencimiento"><i class="bi bi-plus-lg"></i></button>
-    </form>
-
-    <?php if ($lotesAnteriores !== []): ?>
-        <div class="lotes-anteriores mt-3">
-            <div class="small text-body-secondary mb-1">La vez anterior:</div>
-            <div class="small mb-2">
-                <?php foreach ($lotesAnteriores as $l): ?>
-                    <span class="me-2"><?= fecha($l['fecha_vencimiento']) ?> → <?= $l['cantidad'] !== null ? (int) $l['cantidad'] . ' u.' : '—' ?></span>
-                <?php endforeach; ?>
-            </div>
-            <button type="button" class="btn btn-sm btn-outline-primary"
-                    data-accion="<?= url("/visitas/{$vid}/productos/{$pid}/vencimientos/copiar") ?>" data-destino="#vencimientos">
-                <i class="bi bi-copy"></i> Copiar esos lotes
-            </button>
-        </div>
-    <?php endif; ?>
-</section>
 
 <!-- Fotos -->
 <section class="card-soft p-3 mb-3">

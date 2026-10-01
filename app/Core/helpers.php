@@ -158,13 +158,11 @@ function nav_admin(): array
 {
     return [
         ['/admin', 'bi-speedometer2', 'Resumen'],
-        ['/reportes', 'bi-file-earmark-bar-graph', 'Reportes'],
         ['/admin/fotos', 'bi-images', 'Fotos'],
         ['/admin/locales', 'bi-shop', 'Locales'],
         ['/admin/productos', 'bi-box-seam', 'Productos'],
         ['/admin/categorias', 'bi-tags', 'Categorías'],
         ['/admin/promociones', 'bi-megaphone', 'Promociones'],
-        ['/admin/usuarios', 'bi-people', 'Usuarios'],
         ['/admin/configuracion', 'bi-gear', 'Configuración'],
     ];
 }

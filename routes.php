@@ -8,7 +8,6 @@ use App\Controllers\Admin\ProductoController as AdminProductoController;
 use App\Controllers\Admin\PromocionController as AdminPromocionController;
 use App\Controllers\VisitaPromocionController;
 use App\Controllers\VisitaVencimientoController;
-use App\Controllers\Admin\UsuarioController;
 use App\Controllers\AuthController;
 use App\Controllers\FotoController;
 use App\Controllers\ObservacionController;
@@ -20,7 +19,6 @@ use App\Controllers\Admin\FotoController as AdminFotoController;
 use App\Controllers\Admin\ConfiguracionController;
 use App\Controllers\HistorialController;
 use App\Controllers\PwaController;
-use App\Controllers\ReporteController;
 use App\Controllers\VisitaController;
 
 // App instalable (PWA): sin sesión, el navegador los pide solo
@@ -78,8 +76,6 @@ $router->get('/productos/{id}/imagen', [ProductoController::class, 'imagen'], ['
 $router->get('/historial', [HistorialController::class, 'index'], ['auth']);
 $router->get('/mensaje', [HistorialController::class, 'mensajeDelDia'], ['auth']);
 $router->get('/visitas/{id}/mensaje', [HistorialController::class, 'mensajeDeVisita'], ['auth']);
-$router->get('/reportes', [ReporteController::class, 'index'], ['auth']);
-$router->get('/reportes/csv', [ReporteController::class, 'csv'], ['auth']);
 
 // Administración
 $admin = ['auth', 'admin'];
@@ -124,10 +120,3 @@ $router->get('/admin/categorias/{id}/editar', [CategoriaController::class, 'edit
 $router->post('/admin/categorias/{id}', [CategoriaController::class, 'update'], $admin);
 $router->post('/admin/categorias/{id}/eliminar', [CategoriaController::class, 'eliminar'], $admin);
 
-$router->get('/admin/usuarios', [UsuarioController::class, 'index'], $admin);
-$router->get('/admin/usuarios/crear', [UsuarioController::class, 'create'], $admin);
-$router->post('/admin/usuarios', [UsuarioController::class, 'store'], $admin);
-$router->get('/admin/usuarios/{id}/editar', [UsuarioController::class, 'edit'], $admin);
-$router->post('/admin/usuarios/{id}', [UsuarioController::class, 'update'], $admin);
-$router->post('/admin/usuarios/{id}/estado', [UsuarioController::class, 'toggle'], $admin);
-$router->post('/admin/usuarios/{id}/eliminar', [UsuarioController::class, 'eliminar'], $admin);

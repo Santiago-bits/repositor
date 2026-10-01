@@ -27,12 +27,37 @@ $vid = (int) $visita['id'];
     <?php endif; ?>
 </div>
 
+<?php if ($editable || $cortasLocal !== []): ?>
+    <h2 class="section-title mt-0">Vence primero en este local</h2>
+    <?php if ($cortasLocal === []): ?>
+        <p class="small text-body-secondary"><i class="bi bi-check-circle text-success"></i> No hay fechas cortas anotadas acá. Cargalas con «Vencimientos».</p>
+    <?php else: ?>
+        <p class="small text-body-secondary mb-2">Ponelos adelante en la heladera. Si ya los sacaste, tocá Retirar.</p>
+        <div class="card-soft mb-3">
+            <?php foreach (array_slice($cortasLocal, 0, 8) as $v): ?>
+                <?= partial('fecha-corta', ['v' => $v, 'conLocal' => false]) ?>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>
+
 <?php if ($editable): ?>
+    <?php
+    $sinContar = count(array_filter($conteo, fn ($i) => $i['rp_id'] === null));
+    $esLunes = date('N') === '1';
+    ?>
     <div class="accion-grid mb-2" data-foto-subir
          data-endpoint="<?= url("/visitas/{$vid}/fotos") ?>" data-producto="" data-scope="visita"
          data-destino="#fotos-lista" data-estado="#foto-estado">
-        <a class="accion accion-principal" href="<?= url("/visitas/{$vid}/productos") ?>">
-            <i class="bi bi-box-seam"></i><span>Registrar productos</span>
+        <a class="accion accion-principal" href="<?= url("/visitas/{$vid}/vencimientos") ?>">
+            <i class="bi bi-calendar-event"></i><span>Vencimientos</span>
+        </a>
+        <a class="accion" href="<?= url("/visitas/{$vid}/promociones/crear") ?>">
+            <i class="bi bi-megaphone"></i><span>Promos del finde</span>
+        </a>
+        <a class="accion<?= $sinContar > 0 || $esLunes ? ' accion-alerta' : '' ?>" href="<?= url("/visitas/{$vid}/conteo") ?>">
+            <i class="bi bi-123"></i>
+            <span>Contar promos<?= $sinContar > 0 ? " ({$sinContar})" : '' ?></span>
         </a>
         <label class="accion">
             <i class="bi bi-camera"></i><span>Sacar foto</span>
@@ -41,37 +66,32 @@ $vid = (int) $visita['id'];
         <a class="accion" href="#observaciones">
             <i class="bi bi-chat-left-text"></i><span>Observación</span>
         </a>
+        <a class="accion" href="<?= url("/visitas/{$vid}/productos") ?>">
+            <i class="bi bi-box-seam"></i><span>Stock</span>
+        </a>
     </div>
     <div id="foto-estado"></div>
 <?php endif; ?>
 
-<?php if ($editable || $promos !== [] || $conteo !== []): ?>
-    <h2 class="section-title" id="promociones">Promociones</h2>
-
-    <?php if ($promos !== []): ?>
-        <div class="card-soft mb-2">
-            <?php foreach ($promos as $p): ?>
-                <div class="historial-row">
-                    <div class="min-w-0">
-                        <div class="fw-semibold text-truncate"><i class="bi bi-tag text-primary"></i> <?= e(trim($p['nombre'] . ' ' . $p['presentacion'])) ?></div>
-                        <?php if ($p['observaciones']): ?><div class="small text-body-secondary"><?= e($p['observaciones']) ?></div><?php endif; ?>
-                    </div>
-                    <?php if ($p['precio_promo'] !== null): ?><div class="fw-bold"><?= precio($p['precio_promo']) ?></div><?php endif; ?>
-                    <?php if ($editable && ((int) $p['created_by'] === (int) auth()['id'] || is_admin())): ?>
-                        <form method="post" action="<?= url("/visitas/{$vid}/promociones/{$p['id']}/eliminar") ?>" data-confirm="¿Borrar esta promoción?">
-                            <?= csrf_field() ?>
-                            <button class="btn-icon" type="submit" aria-label="Borrar promoción"><i class="bi bi-trash3"></i></button>
-                        </form>
-                    <?php endif; ?>
+<?php if ($promos !== []): ?>
+    <h2 class="section-title" id="promociones">Promos vigentes acá</h2>
+    <div class="card-soft mb-2">
+        <?php foreach ($promos as $p): ?>
+            <div class="historial-row">
+                <div class="min-w-0">
+                    <div class="fw-semibold text-truncate"><i class="bi bi-tag text-primary"></i> <?= e(trim($p['nombre'] . ' ' . $p['presentacion'])) ?></div>
+                    <?php if ($p['observaciones']): ?><div class="small text-body-secondary"><?= e($p['observaciones']) ?></div><?php endif; ?>
                 </div>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
-
-    <?php if ($editable): ?>
-        <a class="btn btn-primary btn-xl w-100" href="<?= url("/visitas/{$vid}/promociones/crear") ?>"><i class="bi bi-megaphone me-1"></i> Promos del finde</a>
-        <a class="btn btn-outline-primary btn-xl w-100 mt-2" href="<?= url("/visitas/{$vid}/vencimientos") ?>"><i class="bi bi-calendar-event me-1"></i> Vencimientos</a>
-    <?php endif; ?>
+                <?php if ($p['precio_promo'] !== null): ?><div class="fw-bold"><?= precio($p['precio_promo']) ?></div><?php endif; ?>
+                <?php if ($editable && ((int) $p['created_by'] === (int) auth()['id'] || is_admin())): ?>
+                    <form method="post" action="<?= url("/visitas/{$vid}/promociones/{$p['id']}/eliminar") ?>" data-confirm="¿Borrar esta promoción?">
+                        <?= csrf_field() ?>
+                        <button class="btn-icon" type="submit" aria-label="Borrar promoción"><i class="bi bi-trash3"></i></button>
+                    </form>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
 <?php endif; ?>
 
 <?php if ($registrados !== []): ?>

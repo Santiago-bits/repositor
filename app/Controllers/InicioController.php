@@ -9,6 +9,7 @@ use App\Models\Local;
 use App\Models\Configuracion;
 use App\Models\Relevamiento;
 use App\Models\Vencimiento;
+use App\Services\ConteoService;
 use App\Services\DeteccionLocalService;
 use App\Services\VisitaService;
 
@@ -24,7 +25,11 @@ final class InicioController extends Controller
             'user'    => $user,
             'abierta' => VisitaService::abierta((int) $user['id']),
             'hoy'     => Relevamiento::finalizadasHoy((int) $user['id']),
-            'locales' => Local::paraUsuario($user),
+            // Cada local con cuántas promos terminadas falta contar (lo que se anota el lunes).
+            'locales' => array_map(
+                fn ($l) => $l + ['para_contar' => ConteoService::pendientes((int) $l['id'])],
+                Local::paraUsuario($user)
+            ),
             'cortas'  => Vencimiento::proximos($user, $dias),
             'diasCortas' => $dias,
             'scripts' => ['assets/js/inicio.js'],
@@ -41,7 +46,7 @@ final class InicioController extends Controller
 
         Vencimiento::retirar($id);
         flash('success', 'Retirado: ' . trim($lote['nombre'] . ' ' . $lote['presentacion']) . ' (' . fecha($lote['fecha_vencimiento'], 'd/m') . ').');
-        redirect('/#fechas-cortas');
+        back(); // vuelve a Inicio o a la visita, según de dónde se tocó
     }
 
     /** Recibe la ubicación del celular y devuelve el/los locales cercanos (JSON). No guarda nada. */
