@@ -43,6 +43,44 @@ final class ProductoController extends Controller
         ], null);
     }
 
+    /** Productos sin código de barras para asociarles el que se acaba de escanear (JSON). */
+    public function sinCodigo(): never
+    {
+        $q = trim((string) Request::input('q', ''));
+        $lista = $q === '' ? [] : Producto::buscarSinCodigo($q);
+        $this->json(['productos' => array_map(fn ($p) => [
+            'id'     => (int) $p['id'],
+            'nombre' => Producto::nombreCompleto($p),
+            'marca'  => $p['marca'],
+        ], $lista)]);
+    }
+
+    /** "Esta lata es Andes Oro": guarda el código escaneado en un producto que no tenía (JSON). */
+    public function asociarCodigo(int $id): never
+    {
+        $codigo = preg_replace('/\s+/', '', (string) Request::input('codigo', ''));
+        if (!preg_match(ProductoRequest::CODIGO_REGEX, $codigo)) {
+            $this->json(['ok' => false, 'message' => 'El código leído no es válido.'], 422);
+        }
+        $producto = Producto::find($id);
+        if ($producto === null) {
+            $this->json(['ok' => false, 'message' => 'Ese producto no existe.'], 404);
+        }
+        if (Producto::codigoExiste($codigo, $id)) {
+            $this->json(['ok' => false, 'message' => 'Ese código ya está asociado a otro producto.'], 409);
+        }
+        if (!Producto::asociarCodigo($id, $codigo)) {
+            $this->json(['ok' => false, 'message' => 'Ese producto ya tiene otro código de barras.'], 409);
+        }
+
+        $this->json([
+            'ok'      => true,
+            'id'      => $id,
+            'url'     => url('/productos/' . $id),
+            'message' => 'Listo: la próxima vez que escanees este código vas a ver ' . Producto::nombreCompleto($producto) . '.',
+        ]);
+    }
+
     /** Resultado de un código escaneado (JSON). */
     public function porCodigo(): never
     {

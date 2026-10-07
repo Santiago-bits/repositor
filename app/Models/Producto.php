@@ -125,6 +125,22 @@ final class Producto extends Model
         self::execute('UPDATE promociones SET deleted_at = NOW() WHERE producto_id = ? AND deleted_at IS NULL', [$id]);
     }
 
+    /** Para asociar un código escaneado: solo productos activos que todavía no tienen código de barras. */
+    public static function buscarSinCodigo(string $q, int $limite = 15): array
+    {
+        $sinCodigo = array_filter(self::buscar($q, true, 60), fn ($p) => $p['codigo_barras'] === null || $p['codigo_barras'] === '');
+        return array_slice(array_values($sinCodigo), 0, $limite);
+    }
+
+    /** Asocia el código solo si el producto no tenía uno (nunca pisa un código cargado). */
+    public static function asociarCodigo(int $id, string $codigo): bool
+    {
+        return self::execute(
+            "UPDATE productos SET codigo_barras = ? WHERE id = ? AND deleted_at IS NULL AND (codigo_barras IS NULL OR codigo_barras = '')",
+            [$codigo, $id]
+        ) > 0;
+    }
+
     /** Por código de artículo de Chess (idArticulo). */
     public static function findByCodigoInterno(string $codigo): ?array
     {

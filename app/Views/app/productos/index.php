@@ -14,6 +14,7 @@
         <input type="search" id="buscar-producto" name="q" value="<?= e($q) ?>" placeholder="Buscar producto"
                autocomplete="off" autocapitalize="off" enterkeyhint="search" aria-label="Buscar producto"
                data-endpoint="<?= url('/productos/buscar') ?>" data-codigo-endpoint="<?= url('/productos/codigo') ?>"
+               data-sin-codigo-endpoint="<?= url('/productos/sin-codigo') ?>" data-asociar-endpoint="<?= url('/productos/{id}/codigo') ?>"
                <?= $q === '' ? 'autofocus' : '' ?>>
     </div>
     <button class="btn btn-primary btn-scan" type="button" data-escanear>

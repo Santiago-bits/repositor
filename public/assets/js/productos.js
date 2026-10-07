@@ -63,17 +63,84 @@
         input.blur(); // cierra el teclado en el celular
     });
 
-    // ---------- Escanear → abrir el producto o proponer crearlo ----------
+    // ---------- Escanear → abrir el producto, o asociar el código a uno que ya existe ----------
+    var token = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
+
+    /** Código desconocido: "¿Qué producto es?" para guardarlo en uno sin código (ej. Andes Oro de Chess). */
     function noRegistrado(codigo, urlCrear) {
         resultados.innerHTML =
-            '<div class="empty-state card-soft">' +
-            '  <i class="bi bi-upc-scan"></i>' +
-            '  <p class="fw-semibold mb-1">Producto no registrado</p>' +
-            '  <p class="font-monospace" data-codigo></p>' +
-            '  <a class="btn btn-primary btn-xl" data-crear><i class="bi bi-plus-lg me-1"></i> Crear producto</a>' +
-            '</div>';
+            '<div class="card-soft p-3">' +
+            '  <div class="d-flex align-items-center gap-2 mb-1"><i class="bi bi-upc-scan fs-4 text-primary"></i>' +
+            '    <span class="fw-semibold">Código nuevo</span> <span class="font-monospace small text-body-secondary" data-codigo></span></div>' +
+            '  <p class="small text-body-secondary mb-2">¿Qué producto es? Buscalo y tocalo: queda asociado y la próxima vez lo reconoce solo.</p>' +
+            '  <div class="search-input mb-2"><i class="bi bi-search"></i>' +
+            '    <input type="search" placeholder="Ej: andes oro" autocomplete="off" autocapitalize="off" aria-label="Buscar el producto" data-asociar-buscar></div>' +
+            '  <div class="promo-grupo" data-asociar-lista></div>' +
+            '  <p class="small text-body-secondary mb-0 mt-2" data-asociar-estado></p>' +
+            '</div>' +
+            '<a class="btn btn-outline-primary w-100 mt-2" data-crear><i class="bi bi-plus-lg me-1"></i> No está: crear producto nuevo</a>';
         resultados.querySelector('[data-codigo]').textContent = codigo;
         resultados.querySelector('[data-crear]').href = urlCrear;
+
+        var buscador = resultados.querySelector('[data-asociar-buscar]');
+        var lista = resultados.querySelector('[data-asociar-lista]');
+        var estado = resultados.querySelector('[data-asociar-estado]');
+        var esperaAsociar = null;
+
+        var mostrarOpciones = function (productos, q) {
+            lista.innerHTML = '';
+            estado.textContent = q && !productos.length ? 'No hay productos sin código con ese nombre.' : '';
+            productos.forEach(function (p) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'venc-opcion';
+                var texto = document.createElement('span');
+                texto.className = 'min-w-0 flex-grow-1 text-start';
+                var nombre = document.createElement('span');
+                nombre.className = 'd-block fw-semibold';
+                nombre.textContent = p.nombre;
+                texto.appendChild(nombre);
+                if (p.marca) {
+                    var marca = document.createElement('span');
+                    marca.className = 'small text-body-secondary';
+                    marca.textContent = p.marca;
+                    texto.appendChild(marca);
+                }
+                var icono = document.createElement('i');
+                icono.className = 'bi bi-link-45deg text-primary fs-5';
+                b.append(texto, icono);
+                b.addEventListener('click', function () { asociar(p, codigo); });
+                lista.appendChild(b);
+            });
+        };
+
+        buscador.addEventListener('input', function () {
+            var q = buscador.value.trim();
+            clearTimeout(esperaAsociar);
+            if (q.length < 2) { mostrarOpciones([], ''); return; }
+            esperaAsociar = setTimeout(function () {
+                fetch(input.dataset.sinCodigoEndpoint + '?q=' + encodeURIComponent(q), { headers: { Accept: 'application/json' } })
+                    .then(function (r) { return r.json(); })
+                    .then(function (d) { mostrarOpciones(d.productos || [], q); })
+                    .catch(function () { estado.textContent = 'No se pudo buscar. Revisá la conexión.'; });
+            }, 200);
+        });
+        buscador.focus();
+
+        function asociar(p, cod) {
+            estado.textContent = 'Guardando…';
+            fetch(input.dataset.asociarEndpoint.replace('{id}', p.id), {
+                method: 'POST',
+                headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                body: new URLSearchParams({ _token: token, codigo: cod })
+            }).then(function (r) { return r.json(); }).then(function (d) {
+                if (!d.ok) { estado.textContent = '⚠️ ' + (d.message || 'No se pudo asociar.'); return; }
+                estado.textContent = '✅ ' + d.message;
+                setTimeout(function () {
+                    window.location.href = input.dataset.productoUrl ? input.dataset.productoUrl.replace('{id}', d.id) : d.url;
+                }, 900);
+            }).catch(function () { estado.textContent = '⚠️ No se pudo guardar. Revisá la conexión.'; });
+        }
     }
 
     function resolverCodigo(codigo) {

@@ -31,6 +31,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 ## Cómo se usa
 
 - **Productos:** el catálogo es único y vale para todos los locales (una Quilmes es la misma en cualquier súper o chino). Se cargan de a uno, escaneando, o todos juntos desde un Excel.
+- **Códigos de barras:** el JSON de Chess no los trae. En Productos → Escanear, si el código es nuevo, buscás el producto (ej. "andes oro") y lo tocás: queda asociado para siempre. Volver a subir el JSON no lo borra.
 - **Productos de Chess:** Gestión → Productos → Excel y subí el JSON del maestro de artículos (ej. `bebidas_ravsa.json`). Volvé a subirlo cuando cambien los precios: actualiza sin duplicar y desactiva lo anulado.
 - **Subir Excel:** Gestión → Productos → **Excel** (o el botón Excel en Productos). Acepta `.xlsx` o `.csv` con los títulos *Nombre, Marca, Presentación, Código, Categoría, Subcategoría* (solo Nombre es obligatorio). Si el producto ya existe se actualiza, no se duplica; las celdas vacías no borran nada; las categorías se crean solas y la unidad (ml, cc, L) se saca de la presentación. Hay una plantilla para descargar.
 - **En el local:** arriba ves lo que vence primero (ponelo adelante en la heladera; si ya lo sacaste, Retirar). Después: Vencimientos, Promos del finde y Faltantes.
@@ -46,6 +47,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-10-07** · Escáner: si el código no está asociado, te pregunta qué producto es (busca entre los que no tienen código) y lo guarda; la próxima vez lo reconoce solo.
 - **2026-10-07** · Importar el maestro de artículos de **Chess** (JSON): nombres legibles (marca + sabor + envase), categoría por división, código de artículo, unidades por bulto y precios (consumidor final y base, por unidad y por bulto). Se ven en la ficha del producto y en la visita. Se busca también por código de artículo (migración 011).
 - **2026-10-01** · Detección del local más precisa: espera hasta tener una ubicación nueva y precisa (±25 m o lo mejor en 10 s) y muestra el margen de error · Gestión → Locales avisa si dos locales tienen la misma ubicación (casi seguro mal cargada).
 - **2026-10-01** · Dentro del local, la barra de abajo cambia a: Local, Vencimientos, Promos, Faltantes y Fotos · Fotos con tipo (Góndola, Heladera, Exhibición externa, Otra) y descripción de qué se ve (migración 010) · La imagen de cada producto aparece en las listas (buscador, faltantes, promos, vencimientos, fechas cortas y lo registrado).

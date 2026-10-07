@@ -70,6 +70,8 @@ $router->get('/perfil', [PerfilController::class, 'show'], ['auth']);
 $router->get('/productos', [ProductoController::class, 'index'], ['auth']);
 $router->get('/productos/buscar', [ProductoController::class, 'buscar'], ['auth']);
 $router->get('/productos/codigo', [ProductoController::class, 'porCodigo'], ['auth']);
+$router->get('/productos/sin-codigo', [ProductoController::class, 'sinCodigo'], ['auth']);
+$router->post('/productos/{id}/codigo', [ProductoController::class, 'asociarCodigo'], ['auth']);
 $router->get('/productos/crear', [ProductoController::class, 'create'], ['auth']);
 $router->post('/productos', [ProductoController::class, 'store'], ['auth']);
 $router->get('/productos/{id}', [ProductoController::class, 'show'], ['auth']);
