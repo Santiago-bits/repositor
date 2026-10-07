@@ -28,7 +28,10 @@ $estados = [
     </div>
 </div>
 
-<?php if ($producto['descripcion']): ?>
+<?= partial('producto-precios', ['producto' => $producto]) ?>
+
+<?php // Los de Chess muestran su descripción original junto a los precios. ?>
+<?php if ($producto['descripcion'] && !$producto['codigo_interno']): ?>
     <p class="text-body-secondary"><?= nl2br(e($producto['descripcion'])) ?></p>
 <?php endif; ?>
 

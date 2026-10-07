@@ -26,6 +26,7 @@ $registrado = $rp && ($rp['stock'] !== null || $rp['estado_stock'] !== null);
         </div>
     </div>
 </div>
+<?= partial('producto-precios', ['producto' => $producto, 'compacto' => true]) ?>
 
 <?php if ($promo): ?>
     <div class="promo-aviso mb-2">

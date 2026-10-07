@@ -13,8 +13,10 @@ final class Producto extends Model
         'u'  => 'Unidades',
     ];
 
-    private const SELECT = 'SELECT p.id, p.nombre, p.marca, p.codigo_barras, p.categoria_id, p.presentacion,
-                                   p.unidad_medida, p.imagen_path, p.descripcion, p.activo, p.created_at,
+    private const SELECT = 'SELECT p.id, p.nombre, p.marca, p.codigo_barras, p.codigo_interno, p.categoria_id, p.presentacion,
+                                   p.unidad_medida, p.unidades_bulto, p.presentacion_bulto, p.precio_unidad, p.precio_bulto,
+                                   p.precio_base_unidad, p.precio_base_bulto, p.precio_vigente,
+                                   p.imagen_path, p.descripcion, p.activo, p.created_at,
                                    c.nombre AS categoria, cp.nombre AS categoria_padre
                             FROM productos p
                             LEFT JOIN categorias c ON c.id = p.categoria_id
@@ -49,8 +51,8 @@ final class Producto extends Model
         foreach ($terminos as $t) {
             $like = '%' . addcslashes($t, '%_\\') . '%';
             $where[] = '(p.nombre LIKE ? OR p.marca LIKE ? OR p.presentacion LIKE ? OR p.codigo_barras LIKE ?
-                         OR c.nombre LIKE ? OR cp.nombre LIKE ?)';
-            array_push($params, $like, $like, $like, $like, $like, $like);
+                         OR p.codigo_interno = ? OR p.descripcion LIKE ? OR c.nombre LIKE ? OR cp.nombre LIKE ?)';
+            array_push($params, $like, $like, $like, $like, $t, $like, $like, $like);
         }
 
         // Primero el código exacto, después los que empiezan con la primera palabra.
@@ -119,8 +121,43 @@ final class Producto extends Model
      */
     public static function eliminar(int $id): void
     {
-        self::execute('UPDATE productos SET deleted_at = NOW(), activo = 0, codigo_barras = NULL WHERE id = ?', [$id]);
+        self::execute('UPDATE productos SET deleted_at = NOW(), activo = 0, codigo_barras = NULL, codigo_interno = NULL WHERE id = ?', [$id]);
         self::execute('UPDATE promociones SET deleted_at = NOW() WHERE producto_id = ? AND deleted_at IS NULL', [$id]);
+    }
+
+    /** Por código de artículo de Chess (idArticulo). */
+    public static function findByCodigoInterno(string $codigo): ?array
+    {
+        return self::fetch(self::SELECT . ' WHERE p.codigo_interno = ? AND p.deleted_at IS NULL', [$codigo]);
+    }
+
+    /**
+     * Alta o actualización desde el maestro de Chess. No toca el código de barras, la imagen
+     * ni si está activo (eso lo decide quien usa la app), salvo que el artículo esté anulado.
+     *
+     * @param array{nombre: string, marca: ?string, presentacion: ?string, categoria_id: ?int, unidad_medida: ?string,
+     *              descripcion: ?string, codigo_interno: string, unidades_bulto: ?int, presentacion_bulto: ?string,
+     *              precio_unidad: ?float, precio_bulto: ?float, precio_base_unidad: ?float, precio_base_bulto: ?float,
+     *              precio_vigente: ?string} $d
+     */
+    public static function guardarDesdeChess(?int $id, array $d): int
+    {
+        $campos = ['nombre', 'marca', 'presentacion', 'categoria_id', 'unidad_medida', 'descripcion', 'codigo_interno',
+                   'unidades_bulto', 'presentacion_bulto', 'precio_unidad', 'precio_bulto', 'precio_base_unidad',
+                   'precio_base_bulto', 'precio_vigente'];
+        $valores = array_map(fn ($c) => $d[$c] ?? null, $campos);
+
+        if ($id === null) {
+            return self::insert(
+                'INSERT INTO productos (' . implode(', ', $campos) . ', activo) VALUES (' . implode(', ', array_fill(0, count($campos), '?')) . ', 1)',
+                $valores
+            );
+        }
+        self::execute(
+            'UPDATE productos SET ' . implode(', ', array_map(fn ($c) => "{$c} = ?", $campos)) . ' WHERE id = ?',
+            [...$valores, $id]
+        );
+        return $id;
     }
 
     public static function setActivo(int $id, bool $activo): void

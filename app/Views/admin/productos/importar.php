@@ -11,6 +11,9 @@
             <li><strong><?= (int) $resultado['creados'] ?></strong> productos nuevos</li>
             <li><strong><?= (int) $resultado['actualizados'] ?></strong> actualizados</li>
             <li><strong><?= (int) $resultado['sin_cambios'] ?></strong> ya estaban igual</li>
+            <?php if (!empty($resultado['desactivados'])): ?>
+                <li><strong><?= (int) $resultado['desactivados'] ?></strong> desactivados (anulados en Chess)</li>
+            <?php endif; ?>
             <?php if ($resultado['total_errores']): ?>
                 <li class="text-danger"><strong><?= (int) $resultado['total_errores'] ?></strong> filas con problemas (no se cargaron)</li>
             <?php endif; ?>
@@ -18,7 +21,7 @@
         <?php if ($resultado['errores'] !== []): ?>
             <div class="import-errores mt-2">
                 <?php foreach ($resultado['errores'] as $fila => $error): ?>
-                    <div class="small"><span class="text-body-secondary">Fila <?= (int) $fila ?>:</span> <?= e($error) ?></div>
+                    <div class="small"><span class="text-body-secondary"><?= is_int($fila) ? 'Fila ' . $fila : e((string) $fila) ?>:</span> <?= e($error) ?></div>
                 <?php endforeach; ?>
                 <?php if ($resultado['total_errores'] > count($resultado['errores'])): ?>
                     <div class="small text-body-secondary">…y <?= $resultado['total_errores'] - count($resultado['errores']) ?> más.</div>
@@ -31,11 +34,21 @@
 
 <form method="post" action="<?= url('/admin/productos/importar') ?>" enctype="multipart/form-data" class="card-soft p-3 mb-3">
     <?= csrf_field() ?>
-    <label class="form-label" for="archivo">Archivo de Excel (.xlsx) o .csv</label>
+    <label class="form-label" for="archivo">Archivo de Chess (.json), Excel (.xlsx) o .csv</label>
     <input class="form-control mb-3" type="file" id="archivo" name="archivo" required
-           accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv">
+           accept=".json,.xlsx,.csv,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv">
     <button class="btn btn-primary btn-xl w-100" type="submit"><i class="bi bi-upload me-1"></i> Subir productos</button>
 </form>
+
+<h2 class="section-title">Desde Chess (lo más completo)</h2>
+<div class="card-soft p-3 small mb-3">
+    <p class="mb-2">Subí el <strong>JSON del maestro de artículos</strong> (por ejemplo <code>bebidas_ravsa.json</code>). Se cargan todos los productos con:</p>
+    <ul class="mb-2 ps-3">
+        <li>Nombre armado con marca, sabor y envase (ej: <em>Paso de los Toros Pomelo · 500 cc</em>) y la categoría (Cervezas, Gaseosas, Aguas…).</li>
+        <li>Código de artículo, unidades por bulto y precios (consumidor final y base, por unidad y por bulto).</li>
+    </ul>
+    <p class="mb-0">Volvé a subirlo cuando cambien los precios: se actualizan sin duplicar, y lo anulado en Chess se desactiva. El código de barras, la foto y lo que cargaste en las visitas no se tocan.</p>
+</div>
 
 <h2 class="section-title">Cómo tiene que estar el Excel</h2>
 <div class="card-soft p-3 small">

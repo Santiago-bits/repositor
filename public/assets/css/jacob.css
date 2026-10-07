@@ -1507,3 +1507,14 @@ body.escaner-abierto { overflow: hidden; }
 
 /* Barra del local: 5 accesos, etiquetas un poco más chicas para que entren. */
 .bottom-nav-visita span { font-size: .68rem; }
+
+/* Precios del maestro de Chess. */
+.precio-grid {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    gap: 4px 12px;
+    align-items: baseline;
+    text-align: right;
+}
+.precio-grid > :nth-child(3n + 1) { text-align: left; }
+.precio-linea { font-size: .9rem; }
