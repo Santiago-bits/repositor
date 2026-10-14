@@ -33,8 +33,6 @@ if (PHP_OS_FAMILY === 'Windows') {
     define('DB_PASS', 'CAMBIAR_EN_EL_SERVIDOR');
 }
 
-define('APP_NAME', 'JACOB');
-define('APP_TAGLINE', 'Gestión inteligente de reposición');
 define('APP_TIMEZONE', 'America/Argentina/Buenos_Aires');
 define('DB_TIMEZONE', '-03:00');
 

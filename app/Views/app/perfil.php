@@ -38,13 +38,13 @@
 
 <h2 class="section-title">App</h2>
 <button class="btn btn-primary btn-xl w-100" type="button" data-instalar hidden>
-    <i class="bi bi-phone me-1"></i> Instalar JACOB en el celular
+    <i class="bi bi-phone me-1"></i> Instalar la app en el celular
 </button>
 <div class="notice" data-ios-instalar hidden>
     <i class="bi bi-box-arrow-up"></i>
     <div>En iPhone: tocá <strong>Compartir</strong> <i class="bi bi-box-arrow-up"></i> y después <strong>Agregar a inicio</strong>.</div>
 </div>
-<p class="small text-body-secondary mt-2 mb-0">Instalada, JACOB se abre como una app, a pantalla completa y más rápido.</p>
+<p class="small text-body-secondary mt-2 mb-0">Instalada, se abre como una app, a pantalla completa y más rápido.</p>
 
 <?php if (is_admin()): ?>
     <h2 class="section-title">Gestión</h2>

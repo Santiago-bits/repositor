@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#7C3AED">
-    <title>Sin conexión · <?= e(APP_NAME) ?></title>
+    <meta name="theme-color" content="#1570B8">
+    <title>Sin conexión · <?= e(MARCA) ?></title>
     <link rel="stylesheet" href="<?= url('assets/vendor/bootstrap/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/vendor/bootstrap-icons/bootstrap-icons.min.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/jacob.css') ?>">

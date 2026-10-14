@@ -68,7 +68,7 @@ final class UbicacionService
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_TIMEOUT        => 8,
                 CURLOPT_PROTOCOLS      => CURLPROTO_HTTPS | CURLPROTO_HTTP,
-                CURLOPT_USERAGENT      => 'Mozilla/5.0 (JACOB)',
+                CURLOPT_USERAGENT      => 'Mozilla/5.0 (repositores.rv)',
             ]);
             curl_exec($ch);
             $destino = curl_getinfo($ch, CURLINFO_REDIRECT_URL);

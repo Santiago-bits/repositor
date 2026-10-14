@@ -1,4 +1,4 @@
-# JACOB · Gestión inteligente de reposición
+# repositores.rv · Reposición RAVSA
 
 App web mobile-first para repositores: detección del local por GPS, registro de stock, vencimientos, fotos y observaciones, conteo de promociones, tareas programadas, historial, reportes CSV y mensaje para el supervisor. Se instala en el celular como app (PWA).
 
@@ -49,6 +49,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-10-14** · La app pasa a llamarse **repositores.rv** y usa los colores de RAVSA (azul #1570B8) en modo claro y oscuro, con ícono nuevo «rv». El nombre ahora está en `app/bootstrap.php` (ya no en `config.php`), así llega solo al servidor. En el celular, si ya estaba instalada, puede tardar en cambiar el ícono: desinstalar y volver a instalar.
 - **2026-10-14** · Vuelve **Gestión → Usuarios**: el administrador puede crear usuarios nuevos, editarlos, desactivarlos o borrarlos. Se ve quién entra con Google.
 - **2026-10-14** · **Iniciar sesión con Google**: botón en el login; cada usuario vincula su Gmail en Perfil (migración 012). El ID de cliente se carga en Configuración.
 - **2026-10-07** · Escáner: si el código no está asociado, te pregunta qué producto es (busca entre los que no tienen código) y lo guarda; la próxima vez lo reconoce solo.

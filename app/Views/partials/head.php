@@ -1,13 +1,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#7C3AED">
+<meta name="theme-color" content="#1570B8">
 <meta name="csrf-token" content="<?= e(App\Core\Csrf::token()) ?>">
-<title><?= e(!empty($title) ? $title . ' · ' . APP_NAME : APP_NAME) ?></title>
+<title><?= e(!empty($title) ? $title . ' · ' . MARCA : MARCA) ?></title>
 <meta name="base-url" content="<?= e(url('/')) ?>">
-<meta name="description" content="<?= e(APP_TAGLINE) ?>">
+<meta name="description" content="<?= e(MARCA_LEMA) ?>">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="<?= e(APP_NAME) ?>">
+<meta name="apple-mobile-web-app-title" content="<?= e(MARCA) ?>">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="<?= url('/manifest.webmanifest') ?>">
 <link rel="icon" href="<?= asset('assets/img/logo.svg') ?>" type="image/svg+xml">

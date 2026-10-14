@@ -33,16 +33,16 @@ final class PwaController extends Controller
         header('Content-Type: application/manifest+json; charset=utf-8');
         echo json_encode([
             'id'               => url('/'),
-            'name'             => 'JACOB · ' . APP_TAGLINE,
-            'short_name'       => APP_NAME,
-            'description'      => APP_TAGLINE,
+            'name'             => MARCA . ' · ' . MARCA_LEMA,
+            'short_name'       => MARCA,
+            'description'      => MARCA_LEMA,
             'lang'             => 'es-AR',
             'start_url'        => url('/'),
             'scope'            => url('/'),
             'display'          => 'standalone',
             'orientation'      => 'portrait',
-            'background_color' => '#F7F6FB',
-            'theme_color'      => '#7C3AED',
+            'background_color' => '#F4F7FA',
+            'theme_color'      => '#1570B8',
             'icons'            => [
                 ['src' => url('assets/icons/icon-192.png'), 'sizes' => '192x192', 'type' => 'image/png', 'purpose' => 'any'],
                 ['src' => url('assets/icons/icon-512.png'), 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'any'],

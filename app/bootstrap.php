@@ -5,6 +5,10 @@ defined('BASE_PATH') || define('BASE_PATH', dirname(__DIR__));
 
 require BASE_PATH . '/config/config.php';
 
+// Nombre de la app (acá y no en config.php, así llega al servidor con cada deploy)
+const MARCA = 'repositores.rv';
+const MARCA_LEMA = 'Reposición · RAVSA';
+
 date_default_timezone_set(APP_TIMEZONE);
 mb_internal_encoding('UTF-8');
 

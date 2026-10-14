@@ -1,8 +1,8 @@
 <div class="auth-card">
     <div class="text-center mb-4">
         <img src="<?= asset('assets/img/logo.svg') ?>" alt="" width="64" height="64" class="mb-3">
-        <h1 class="h3 fw-bold mb-0 brand-title"><?= e(APP_NAME) ?></h1>
-        <p class="text-body-secondary mb-0"><?= e(APP_TAGLINE) ?></p>
+        <h1 class="h3 fw-bold mb-0 brand-title"><?= e(MARCA) ?></h1>
+        <p class="text-body-secondary mb-0"><?= e(MARCA_LEMA) ?></p>
     </div>
 
     <?= partial('flash') ?>

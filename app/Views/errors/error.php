@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#7C3AED">
-    <title><?= (int) $code ?> · <?= e(APP_NAME) ?></title>
+    <meta name="theme-color" content="#1570B8">
+    <title><?= (int) $code ?> · <?= e(MARCA) ?></title>
     <script>
         (function () {
             var t = 'auto';

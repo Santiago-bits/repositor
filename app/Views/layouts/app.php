@@ -9,8 +9,8 @@
     <a class="brand" href="<?= url('/') ?>">
         <img src="<?= asset('assets/img/logo.svg') ?>" alt="" width="34" height="34">
         <span>
-            <strong><?= e(APP_NAME) ?></strong>
-            <small class="d-none d-sm-block"><?= e(APP_TAGLINE) ?></small>
+            <strong><?= e(MARCA) ?></strong>
+            <small class="d-none d-sm-block"><?= e(MARCA_LEMA) ?></small>
         </span>
     </a>
     <?php if ($user): ?>
