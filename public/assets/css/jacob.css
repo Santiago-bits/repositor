@@ -1561,3 +1561,16 @@ body.escaner-abierto { overflow: hidden; }
 .equipo-numeros strong { font-size: 1.35rem; line-height: 1.2; }
 .equipo-numeros span { font-size: .75rem; color: var(--app-muted); }
 @media (min-width: 576px) { .equipo-numeros { grid-template-columns: repeat(5, 1fr); } }
+
+/* ---------- Diseño centrado: saludo, títulos de pantalla y de sección ---------- */
+
+.hero { text-align: center; }
+
+.page-head { flex-direction: column; justify-content: center; text-align: center; gap: 4px; }
+.page-head > * { max-width: 100%; }
+.page-head > .d-flex, .page-head > div:not(.min-w-0) { justify-content: center; }
+
+.section-title { text-align: center; }
+.section-title.d-flex { justify-content: center !important; gap: 12px; }
+.section-title-accion { display: flex; justify-content: center; align-items: baseline; gap: 12px; }
+.section-title-accion a { font-size: .75rem; text-decoration: none; letter-spacing: 0; text-transform: none; }

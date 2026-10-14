@@ -38,6 +38,9 @@ $router->post('/logout', [AuthController::class, 'logout'], ['auth']);
 // Repositor
 $router->get('/', [InicioController::class, 'index'], ['auth']);
 $router->post('/locales/detectar', [InicioController::class, 'detectar'], ['auth']);
+$router->get('/locales/crear', [LocalController::class, 'create'], ['auth']);
+$router->post('/locales', [LocalController::class, 'store'], ['auth']);
+$router->post('/locales/ubicacion', [LocalController::class, 'ubicacion'], ['auth']);
 $router->post('/vencimientos/{id}/retirar', [InicioController::class, 'retirar'], ['auth']);
 
 $router->post('/visitas', [VisitaController::class, 'iniciar'], ['auth']);

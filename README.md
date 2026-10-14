@@ -45,6 +45,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 - **Faltantes:** botón «Faltantes» en el local. Buscás el producto, lo tocás y elegís «Sin stock» o «Poco». Con «Guardar y armar lista para el vendedor» sale la lista agrupada por categoría (Cervezas, Gaseosas, Agua…) para copiar o mandar por WhatsApp. También desde la visita: «Lista vendedor».
 - **Conteo de promos:** cuando quieras, desde «Promos del finde» → «Anotar cuánto quedó de las promos que terminaron».
 - **Visitas:** no hay que finalizarlas. Entrás al local, cargás lo que quieras y listo: se cierra sola cuando el GPS ve que te fuiste, cuando entrás a otro local o al día siguiente. Si volvés el mismo día, seguís en la misma visita.
+- **Locales:** son de todos (como los productos). Cualquier repositor crea uno desde Inicio → Locales → **+ Nuevo**, y le aparece a todo el equipo. Lo que cada uno carga adentro (fechas, promos, faltantes) es suyo. Editar, desactivar y borrar locales: solo el admin.
 - **Ubicación de un local:** en Gestión → Locales, pegá el link de Google Maps (Compartir → copiar link), un Plus Code (ej: JX3M+PF) o las coordenadas. Se completa al tocar «Buscar» o al guardar.
 - **Vencimientos:** en la visita, botón «Vencimientos». Tocás **Escanear** y el producto aparece con la fecha lista para poner (si el código es nuevo, lo buscás por nombre una vez y queda asociado). También podés buscarlo escribiendo, lo tocás y le ponés la fecha, la cantidad (opcional) y una nota con la ubicación (ej: depósito). Podés agregar varios (también el mismo producto con otro lote) y guardar todo junto.
 - **Fechas cortas:** en Inicio, debajo de tus locales, ves lo que vence en los próximos días (según Configuración, 15 por defecto) y lo vencido en la última semana, con local, cantidad y nota. Se toma el último relevamiento de cada producto en cada local. Con **Retirar** marcás que ya lo sacaste y deja de aparecer.
@@ -52,6 +53,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-10-14** · Los repositores pueden **crear locales** (Inicio → Locales → + Nuevo) y los locales son de todos: ya no se asignan por usuario · Diseño **centrado**: saludo, títulos de cada pantalla y títulos de sección.
 - **2026-10-14** · Datos separados por usuario: fechas cortas, promos (salvo las que carga el admin), historial de stock de un producto y Retirar son de cada uno. Antes se mezclaban si dos repositores iban al mismo local. El admin sigue viendo todo.
 - **2026-10-14** · Configuración: el ID de cliente de Google ya no se muestra (solo «Configurado»). Para cambiarlo se pega uno nuevo; dejándolo vacío se conserva; con «Quitar» se saca el botón de Google.
 - **2026-10-14** · Supervisión: nueva sección **Gestión → Equipo** (última vez activo de cada uno, visitas, faltantes, vencimientos y fotos por período, y el detalle de cada persona) · Fotos: filtro por persona y quién la sacó · Resumen: las últimas visitas dicen quién las hizo (migración 014).

@@ -35,34 +35,16 @@ final class Local extends Model
     }
 
     /** Locales que puede trabajar el usuario: el admin ve todos, el repositor solo los asignados. */
+    /** Los locales son de todos (cualquiera puede crearlos y visitarlos); lo que se carga en cada visita es de cada uno. */
     public static function paraUsuario(array $user): array
     {
-        if ($user['role_slug'] === 'admin') {
-            return self::fetchAll('SELECT ' . self::COLUMNS . ' FROM locales WHERE activo = 1 AND deleted_at IS NULL ORDER BY nombre');
-        }
-        return self::fetchAll(
-            'SELECT l.' . str_replace(', ', ', l.', self::COLUMNS) . '
-             FROM locales l
-             JOIN local_user lu ON lu.local_id = l.id AND lu.user_id = ?
-             WHERE l.activo = 1 AND l.deleted_at IS NULL
-             ORDER BY l.nombre',
-            [$user['id']]
-        );
+        return self::fetchAll('SELECT ' . self::COLUMNS . ' FROM locales WHERE activo = 1 AND deleted_at IS NULL ORDER BY nombre');
     }
 
-    /** Local activo que el usuario puede trabajar (admin: cualquiera; repositor: asignado). */
+    /** Local activo que el usuario puede trabajar (cualquiera de los activos). */
     public static function accesible(array $user, int $id): ?array
     {
-        if ($user['role_slug'] === 'admin') {
-            return self::fetch('SELECT ' . self::COLUMNS . ' FROM locales WHERE id = ? AND activo = 1 AND deleted_at IS NULL', [$id]);
-        }
-        return self::fetch(
-            'SELECT l.' . str_replace(', ', ', l.', self::COLUMNS) . '
-             FROM locales l
-             JOIN local_user lu ON lu.local_id = l.id AND lu.user_id = ?
-             WHERE l.id = ? AND l.activo = 1 AND l.deleted_at IS NULL',
-            [$user['id'], $id]
-        );
+        return self::fetch('SELECT ' . self::COLUMNS . ' FROM locales WHERE id = ? AND activo = 1 AND deleted_at IS NULL', [$id]);
     }
 
     public static function find(int $id): ?array

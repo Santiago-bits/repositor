@@ -52,17 +52,16 @@ $abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
     <a class="btn btn-outline-primary w-100 mb-2" href="<?= url('/mensaje') ?>"><i class="bi bi-chat-square-text"></i> Generar mensaje del día</a>
 <?php endif; ?>
 
-<h2 class="section-title" id="locales">Tus locales</h2>
+<h2 class="section-title section-title-accion" id="locales">
+    <span>Locales</span>
+    <a href="<?= url('/locales/crear') ?>"><i class="bi bi-plus-lg"></i> Nuevo</a>
+</h2>
 
 <?php if ($locales === []): ?>
     <div class="empty-state card-soft">
         <i class="bi bi-shop"></i>
-        <?php if (is_admin()): ?>
-            <p>Todavía no hay locales cargados.</p>
-            <a class="btn btn-primary btn-xl" href="<?= url('/admin/locales/crear') ?>"><i class="bi bi-plus-lg me-1"></i> Crear local</a>
-        <?php else: ?>
-            <p class="mb-0">Todavía no tenés locales asignados. Pedile al administrador que te asigne.</p>
-        <?php endif; ?>
+        <p>Todavía no hay locales cargados.</p>
+        <a class="btn btn-primary btn-xl" href="<?= url('/locales/crear') ?>"><i class="bi bi-plus-lg me-1"></i> Crear local</a>
     </div>
 <?php else: ?>
     <div class="item-list">

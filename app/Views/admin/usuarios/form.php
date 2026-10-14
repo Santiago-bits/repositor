@@ -56,23 +56,6 @@ $esYo = $usuario && (int) $usuario['id'] === App\Core\Auth::id();
         <?= field_error('role_id') ?>
     </div>
 
-    <div class="mb-3">
-        <span class="form-label d-block">Locales asignados</span>
-        <?php if ($locales === []): ?>
-            <p class="text-body-secondary small">No hay locales cargados todavía.</p>
-        <?php else: ?>
-            <div class="card-soft check-list">
-                <?php foreach ($locales as $l): ?>
-                    <label class="form-check check-row">
-                        <input class="form-check-input" type="checkbox" name="locales[]" value="<?= $l['id'] ?>" <?= in_array((int) $l['id'], $asignados, true) ? 'checked' : '' ?>>
-                        <span class="form-check-label"><?= e($l['nombre']) ?><?php if (!$l['activo']): ?> <span class="badge text-bg-secondary">Inactivo</span><?php endif; ?></span>
-                    </label>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-        <div class="form-text">Los administradores y vendedores ven todos los locales. El vendedor solo ve faltantes, fechas cortas y productos (no hace visitas).</div>
-    </div>
-
     <div class="card-soft px-3 py-2 mb-3">
         <div class="form-check form-switch py-2">
             <input class="form-check-input" type="checkbox" role="switch" id="activo" name="activo" value="1" <?= $activo ? 'checked' : '' ?> <?= $esYo ? 'disabled' : '' ?>>

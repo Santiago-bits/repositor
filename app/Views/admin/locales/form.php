@@ -8,10 +8,10 @@ $tipoActual = $v('tipo', 'supermercado');
 
 <div class="page-head">
     <h1><?= e($title) ?></h1>
-    <a class="btn btn-link" href="<?= url('/admin/locales') ?>">Cancelar</a>
+    <a class="btn btn-link" href="<?= url($base === '/locales' ? '/' : $base) ?>">Cancelar</a>
 </div>
 
-<form method="post" action="<?= url($local ? "/admin/locales/{$local['id']}" : '/admin/locales') ?>" novalidate>
+<form method="post" action="<?= url($local ? "/admin/locales/{$local['id']}" : $base) ?>" novalidate>
     <?= csrf_field() ?>
 
     <div class="mb-3">
@@ -47,7 +47,7 @@ $tipoActual = $v('tipo', 'supermercado');
             <input class="form-control" id="maps_link" name="maps_link" value="<?= e(old('maps_link', '')) ?>" inputmode="url"
                    placeholder="https://maps.app.goo.gl/…" autocomplete="off">
             <button class="btn btn-outline-primary" type="button" data-maps-buscar="maps_link" data-lat="latitud" data-lng="longitud"
-                    data-status="geo-status" data-endpoint="<?= url('/admin/locales/ubicacion') ?>">Buscar</button>
+                    data-status="geo-status" data-endpoint="<?= url($base . '/ubicacion') ?>">Buscar</button>
         </div>
         <button type="button" class="btn btn-primary w-100 mb-2" data-geo-fill data-lat="latitud" data-lng="longitud" data-status="geo-status">
             <i class="bi bi-crosshair"></i> Usar mi ubicación actual

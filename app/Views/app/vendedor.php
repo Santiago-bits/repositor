@@ -2,10 +2,10 @@
 /** Inicio del vendedor: qué falta en cada local (para ir a venderlo) y lo que vence pronto. Solo lectura. */
 use App\Models\Producto;
 ?>
-<div class="mb-3">
-    <div class="small text-primary fw-semibold"><?= e(dia_semana() . ' ' . date('d/m')) ?></div>
-    <h1 class="h3 fw-bold mb-0">Hola, <?= e($user['nombre']) ?> 👋</h1>
-</div>
+<section class="hero">
+    <p class="hero-date"><?= e(dia_semana()) ?> <?= date('d/m') ?></p>
+    <h1>Hola, <?= e($user['nombre']) ?> 👋</h1>
+</section>
 
 <h2 class="section-title mt-0">Faltantes por local</h2>
 <?php if ($locales === []): ?>

@@ -47,25 +47,31 @@ final class LocalController extends Controller
 
     public function create(): void
     {
-        $this->view('admin/locales/form', ['title' => 'Nuevo local', 'local' => null]);
+        $this->view('admin/locales/form', ['title' => 'Nuevo local', 'local' => null, 'base' => self::base()]);
+    }
+
+    /** El repositor crea locales desde Inicio (/locales); el admin desde Gestión (/admin/locales). */
+    private static function base(): string
+    {
+        return str_starts_with(Request::path(), '/admin/') ? '/admin/locales' : '/locales';
     }
 
     public function store(): void
     {
         [$data, $errors] = LocalRequest::validate($post = self::completarUbicacion($_POST));
         if ($errors) {
-            $this->backWithErrors($errors, $post, '/admin/locales/crear');
+            $this->backWithErrors($errors, $post, self::base() . '/crear');
         }
 
         Local::create($data);
-        flash('success', "Local «{$data['nombre']}» creado.");
-        redirect('/admin/locales');
+        flash('success', "Local «{$data['nombre']}» creado. Ya lo ven todos.");
+        redirect(self::base() === '/locales' ? '/#locales' : '/admin/locales');
     }
 
     public function edit(int $id): void
     {
         $local = $this->notFoundUnless(Local::find($id));
-        $this->view('admin/locales/form', ['title' => 'Editar local', 'local' => $local]);
+        $this->view('admin/locales/form', ['title' => 'Editar local', 'local' => $local, 'base' => '/admin/locales']);
     }
 
     public function update(int $id): void
