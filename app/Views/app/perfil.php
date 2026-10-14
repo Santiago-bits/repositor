@@ -12,6 +12,30 @@
     <button type="button" class="btn btn-outline-primary" data-theme-set="auto"><i class="bi bi-circle-half"></i> Auto</button>
 </div>
 
+<?php if ($googleClientId !== ''): ?>
+    <h2 class="section-title">Cuenta de Google</h2>
+    <div class="card-soft p-3">
+        <?php if (!empty($user['google_email'])): ?>
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-google fs-4 text-primary"></i>
+                <div class="min-w-0 flex-grow-1">
+                    <div class="fw-semibold">Vinculada</div>
+                    <div class="small text-body-secondary text-truncate"><?= e($user['google_email']) ?></div>
+                </div>
+                <form method="post" action="<?= url('/perfil/google/quitar') ?>">
+                    <?= csrf_field() ?>
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Quitar</button>
+                </form>
+            </div>
+        <?php else: ?>
+            <p class="small text-body-secondary mb-2">Vinculá tu Gmail y la próxima vez entrás con un toque, sin contraseña.</p>
+            <div class="google-btn" data-google data-texto="continue_with" data-client-id="<?= e($googleClientId) ?>" data-endpoint="<?= url('/perfil/google') ?>"></div>
+            <p class="small text-danger mt-2 mb-0" data-google-estado role="status"></p>
+            <script src="<?= asset('assets/js/google.js') ?>" defer></script>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+
 <h2 class="section-title">App</h2>
 <button class="btn btn-primary btn-xl w-100" type="button" data-instalar hidden>
     <i class="bi bi-phone me-1"></i> Instalar JACOB en el celular

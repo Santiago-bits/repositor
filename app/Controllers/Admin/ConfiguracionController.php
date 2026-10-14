@@ -21,6 +21,7 @@ final class ConfiguracionController extends Controller
         foreach (array_keys(self::CAMPOS) as $clave) {
             $valores[$clave] = Configuracion::get($clave, '');
         }
+        $valores['google_client_id'] = Configuracion::get('google_client_id', '');
         $this->view('admin/configuracion', ['title' => 'Configuración', 'campos' => self::CAMPOS, 'valores' => $valores]);
     }
 
@@ -36,7 +37,14 @@ final class ConfiguracionController extends Controller
                 $datos[$clave] = $valor;
             }
         }
-        if (!$errores && $datos['vencimiento_dias_proximo'] < $datos['vencimiento_dias_critico']) {
+        // ID de cliente de Google (vacío = sin botón de Google en el login)
+        $googleId = trim((string) ($_POST['google_client_id'] ?? ''));
+        if ($googleId !== '' && !preg_match('/^[\w-]+\.apps\.googleusercontent\.com$/', $googleId)) {
+            $errores['google_client_id'] = 'El ID de cliente termina en .apps.googleusercontent.com. Copialo entero desde Google Cloud.';
+        }
+        $datos['google_client_id'] = $googleId;
+
+        if (isset($datos['vencimiento_dias_proximo'], $datos['vencimiento_dias_critico']) && $datos['vencimiento_dias_proximo'] < $datos['vencimiento_dias_critico']) {
             $errores['vencimiento_dias_proximo'] = '"Vence próximamente" tiene que ser mayor o igual que "vence en pocos días".';
         }
         if ($errores) {

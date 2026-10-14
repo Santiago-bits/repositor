@@ -526,6 +526,10 @@ a.stat-card:hover { border-color: var(--jacob-400); color: inherit; }
 
 .brand-title { letter-spacing: .16em; color: var(--bs-primary-text-emphasis); }
 
+.auth-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0 16px; color: var(--app-muted); font-size: .875rem; }
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-top: 1px solid var(--app-border); }
+.google-btn { display: flex; justify-content: center; min-height: 44px; }
+
 /* ---------- Productos ---------- */
 
 .search-bar { display: flex; gap: 8px; }

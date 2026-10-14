@@ -37,4 +37,12 @@
             Ingresar <i class="bi bi-arrow-right ms-1"></i>
         </button>
     </form>
+
+    <?php $googleId = \App\Services\GoogleAuthService::clientId(); ?>
+    <?php if ($googleId !== ''): ?>
+        <div class="auth-divider"><span>o</span></div>
+        <div class="google-btn" data-google data-client-id="<?= e($googleId) ?>" data-endpoint="<?= url('/login/google') ?>"></div>
+        <p class="small text-danger text-center mt-2 mb-0" data-google-estado role="status"></p>
+        <script src="<?= asset('assets/js/google.js') ?>" defer></script>
+    <?php endif; ?>
 </div>

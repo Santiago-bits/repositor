@@ -5,7 +5,7 @@ namespace App\Models;
 
 final class User extends Model
 {
-    private const SELECT = 'SELECT u.id, u.role_id, u.nombre, u.apellido, u.email, u.activo, u.last_login_at, u.created_at,
+    private const SELECT = 'SELECT u.id, u.role_id, u.nombre, u.apellido, u.email, u.google_email, u.activo, u.last_login_at, u.created_at,
                                    r.slug AS role_slug, r.nombre AS role_nombre
                             FROM users u
                             JOIN roles r ON r.id = u.role_id';
@@ -27,6 +27,30 @@ final class User extends Model
             'SELECT id, activo, password_hash FROM users WHERE email = ? AND deleted_at IS NULL',
             [$email]
         );
+    }
+
+    /** Login con Google: el Gmail vinculado en Perfil, o el mismo email del usuario. */
+    public static function findForGoogle(string $email): ?array
+    {
+        return self::fetch(
+            'SELECT id, activo FROM users WHERE (google_email = ? OR email = ?) AND deleted_at IS NULL
+             ORDER BY google_email = ? DESC LIMIT 1',
+            [$email, $email, $email]
+        );
+    }
+
+    /** ¿Ese Gmail ya está vinculado a otro usuario? */
+    public static function googleEmailEnUso(string $email, int $exceptId): bool
+    {
+        return (int) self::value(
+            'SELECT COUNT(*) FROM users WHERE (google_email = ? OR email = ?) AND id <> ? AND deleted_at IS NULL',
+            [$email, $email, $exceptId]
+        ) > 0;
+    }
+
+    public static function setGoogleEmail(int $id, ?string $email): void
+    {
+        self::execute('UPDATE users SET google_email = ? WHERE id = ?', [$email, $id]);
     }
 
     public static function all(): array

@@ -42,6 +42,16 @@
         <div class="form-text"><?= e($ayuda) ?></div>
     </div>
 
+    <h2 class="section-title">Entrar con Google</h2>
+    <div class="card-soft p-3 mb-3">
+        <label class="form-label" for="google_client_id">ID de cliente de Google</label>
+        <input class="form-control font-monospace small<?= invalid('google_client_id') ?>" type="text" id="google_client_id" name="google_client_id"
+               value="<?= e(old('google_client_id', $valores['google_client_id'])) ?>" placeholder="123456-abc.apps.googleusercontent.com"
+               autocomplete="off" autocapitalize="off" spellcheck="false">
+        <?= field_error('google_client_id') ?>
+        <div class="form-text">Con esto aparece el botón «Iniciar sesión con Google». Vacío = sin botón. Cada usuario vincula su Gmail en Perfil.</div>
+    </div>
+
     <div class="form-actions">
         <button class="btn btn-primary btn-xl flex-grow-1" type="submit"><i class="bi bi-check-lg me-1"></i> Guardar</button>
     </div>

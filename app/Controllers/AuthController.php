@@ -9,6 +9,7 @@ use App\Core\Request;
 use App\Core\Session;
 use App\Models\LoginIntento;
 use App\Models\User;
+use App\Services\GoogleAuthService;
 
 final class AuthController extends Controller
 {
@@ -49,6 +50,35 @@ final class AuthController extends Controller
 
         Auth::login((int) $user['id'], $remember);
         redirect(Session::pull('intended', '/'));
+    }
+
+    /** Botón "Iniciar sesión con Google": solo entra quien ya tiene usuario (JSON). */
+    public function loginGoogle(): never
+    {
+        $ip = Request::ip();
+        if (LoginIntento::recientes($ip, LOGIN_BLOQUEO_MINUTOS) >= LOGIN_MAX_INTENTOS) {
+            $this->json(['ok' => false, 'message' => 'Demasiados intentos. Esperá ' . LOGIN_BLOQUEO_MINUTOS . ' minutos.'], 429);
+        }
+
+        $google = GoogleAuthService::verifyIdToken((string) Request::input('credential', ''));
+        if ($google === null) {
+            LoginIntento::registrar($ip, '');
+            $this->json(['ok' => false, 'message' => 'No se pudo verificar la cuenta de Google. Probá de nuevo.'], 401);
+        }
+
+        $email = mb_strtolower($google['email']);
+        $user = User::findForGoogle($email);
+        if ($user === null) {
+            LoginIntento::registrar($ip, $email);
+            $this->json(['ok' => false, 'message' => 'Esa cuenta de Google no está vinculada a ningún usuario. Entrá con tu email y vinculala en Perfil.'], 403);
+        }
+        if (!$user['activo']) {
+            $this->json(['ok' => false, 'message' => 'Tu usuario está desactivado. Consultá con el administrador.'], 403);
+        }
+
+        LoginIntento::limpiar($ip);
+        Auth::login((int) $user['id'], true);
+        $this->json(['ok' => true, 'redirect' => url(Session::pull('intended', '/'))]);
     }
 
     public function logout(): void
