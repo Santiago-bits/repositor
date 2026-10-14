@@ -30,7 +30,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cómo se usa
 
-- **Mi cuenta:** tocando tu círculo (arriba a la derecha). Tocá la foto para cambiarla (sale en el círculo, en Equipo y en Usuarios); cambiá nombre, apellido y teléfono; cambiá la contraseña (pide la actual); apariencia; instalar la app; y «Cerrar sesión en los otros dispositivos» si entraste desde otro celular o lo perdiste. **Gestión** (solo admin): pestaña de abajo en el celular, menú de la izquierda en la PC.
+- **Mi cuenta:** tocando tu círculo (arriba a la derecha). Tocá la foto para cambiarla (sale en el círculo, en Equipo y en Usuarios); cambiá nombre y apellido; cambiá tu Gmail (con el que entrás; pide tu contraseña); cambiá la contraseña (pide la actual); apariencia; instalar la app; y «Cerrar sesión en los otros dispositivos» si entraste desde otro celular o lo perdiste. **Gestión** (solo admin): pestaña de abajo en el celular, menú de la izquierda en la PC.
 - **Usuarios:** Gestión → Usuarios → Nuevo. Nombre, email, contraseña (mínimo 8) y rol (Administrador, Repositor o Vendedor). Se pueden editar, desactivar o borrar (sus visitas quedan).
 - **Cada uno lo suyo:** cada repositor ve solo sus fechas cortas, sus promos y su historial; solo puede retirar los lotes que cargó él. Las promos que carga el admin en Gestión → Promociones las ven todos. El admin ve todo.
 - **Supervisar (admin):** Gestión → **Equipo**. Cada persona con la última vez que abrió la app (punto verde = hoy) y lo que hizo en el período (Hoy / 7 / 30 días): visitas, faltantes, vencimientos y fotos. Tocando a alguien ves sus visitas día por día (con horario) y «Sus fotos». En **Fotos** se puede filtrar por persona y cada foto dice quién la sacó.
@@ -54,6 +54,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-10-14** · Mi cuenta: se sacó el teléfono y se puede **cambiar el Gmail** con el que se entra (pide la contraseña).
 - **2026-10-14** · Mi cuenta: **foto de perfil**, nombre, apellido y teléfono, **cambiar contraseña** y **cerrar sesión en los otros dispositivos** (también pasa al cambiar la contraseña). Migración 015.
 - **2026-10-14** · «Perfil» pasa a ser **Mi cuenta** (se abre desde el círculo de arriba) y solo tiene tus ajustes. **Gestión** sale de ahí: en el celular es una pestaña de la barra de abajo (solo admin).
 - **2026-10-14** · Google: ya no se vincula desde Perfil. El admin carga el «Gmail para entrar con Google» al crear o editar el usuario (opcional si el email ya es ese Gmail).

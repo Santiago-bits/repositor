@@ -29,7 +29,6 @@ final class PerfilController extends Controller
     {
         $nombre = trim((string) Request::input('nombre', ''));
         $apellido = trim((string) Request::input('apellido', ''));
-        $telefono = trim((string) Request::input('telefono', ''));
 
         $errores = [];
         if ($nombre === '' || mb_strlen($nombre) > 80) {
@@ -38,15 +37,39 @@ final class PerfilController extends Controller
         if ($apellido === '' || mb_strlen($apellido) > 80) {
             $errores['apellido'] = 'Escribí tu apellido (hasta 80 letras).';
         }
-        if ($telefono !== '' && !preg_match('/^[\d\s()+-]{6,40}$/', $telefono)) {
-            $errores['telefono'] = 'El teléfono solo puede tener números, espacios, + y guiones.';
-        }
         if ($errores) {
             $this->backWithErrors($errores, $_POST, '/perfil');
         }
 
-        User::actualizarDatos((int) Auth::id(), $nombre, $apellido, $telefono === '' ? null : $telefono);
+        User::actualizarDatos((int) Auth::id(), $nombre, $apellido);
         flash('success', 'Datos guardados.');
+        redirect('/perfil');
+    }
+
+    /** Cambiar el email con el que se entra (con contraseña o con Google). Pide la contraseña actual. */
+    public function email(): void
+    {
+        $id = (int) Auth::id();
+        $email = mb_strtolower(trim((string) Request::input('email', '')));
+        $password = (string) Request::input('email_password', '');
+
+        $errores = [];
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($email) > 150) {
+            $errores['email'] = 'Escribí un email válido (ej: tunombre@gmail.com).';
+        } elseif ($email === mb_strtolower((string) auth()['email'])) {
+            $errores['email'] = 'Es el mismo que ya tenés.';
+        } elseif (User::emailExists($email, $id) || User::googleEmailEnUso($email, $id)) {
+            $errores['email'] = 'Ese email ya lo usa otro usuario.';
+        }
+        if (!$errores && !password_verify($password, User::passwordHash($id))) {
+            $errores['email_password'] = 'La contraseña no es correcta.';
+        }
+        if ($errores) {
+            $this->backWithErrors($errores, ['email' => $email], '/perfil#gmail');
+        }
+
+        User::cambiarEmail($id, $email);
+        flash('success', "Listo: ahora entrás con {$email}.");
         redirect('/perfil');
     }
 

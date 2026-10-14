@@ -91,7 +91,7 @@ final class Router
 
     /** Lo único que puede abrir un vendedor: ver faltantes, productos y su perfil. */
     private const VENDEDOR_PERMITIDO = '#^/(productos(/buscar|/codigo|/\d+(/imagen)?)?|perfil|usuarios/\d+/foto)?$#';
-    private const VENDEDOR_PERMITIDO_POST = '#^/(logout|perfil/(datos|foto|foto/quitar|password|sesiones))$#';
+    private const VENDEDOR_PERMITIDO_POST = '#^/(logout|perfil/(datos|email|foto|foto/quitar|password|sesiones))$#';
 
     private function requireAuth(): void
     {

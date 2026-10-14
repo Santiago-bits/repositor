@@ -75,6 +75,7 @@ $router->post('/observaciones/{id}/eliminar', [ObservacionController::class, 'el
 $router->get('/perfil', [PerfilController::class, 'show'], ['auth']);
 $router->get('/gestion', [PerfilController::class, 'gestion'], ['auth', 'admin']);
 $router->post('/perfil/datos', [PerfilController::class, 'datos'], ['auth']);
+$router->post('/perfil/email', [PerfilController::class, 'email'], ['auth']);
 $router->post('/perfil/foto', [PerfilController::class, 'foto'], ['auth']);
 $router->post('/perfil/foto/quitar', [PerfilController::class, 'quitarFoto'], ['auth']);
 $router->post('/perfil/password', [PerfilController::class, 'password'], ['auth']);

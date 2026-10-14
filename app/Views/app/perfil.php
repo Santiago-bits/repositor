@@ -43,13 +43,28 @@ $v = fn (string $campo) => old($campo, $user[$campo] ?? '');
             <?= field_error('apellido') ?>
         </div>
     </div>
-    <div class="mb-3">
-        <label class="form-label small" for="telefono">Teléfono / WhatsApp <span class="text-body-secondary">(opcional)</span></label>
-        <input class="form-control<?= invalid('telefono') ?>" type="tel" id="telefono" name="telefono" value="<?= e($v('telefono')) ?>" maxlength="40" inputmode="tel" autocomplete="tel" placeholder="Ej: 345 412-3456">
-        <?= field_error('telefono') ?>
-    </div>
-    <button class="btn btn-primary w-100" type="submit"><i class="bi bi-check-lg me-1"></i> Guardar datos</button>
+    <button class="btn btn-primary w-100 mt-2" type="submit"><i class="bi bi-check-lg me-1"></i> Guardar datos</button>
 </form>
+
+<h2 class="section-title" id="gmail">Gmail</h2>
+<details class="card-soft cuenta-plegable"<?= error_for('email') || error_for('email_password') ? ' open' : '' ?>>
+    <summary><i class="bi bi-envelope"></i> Cambiar Gmail</summary>
+    <form method="post" action="<?= url('/perfil/email') ?>" class="pt-2" novalidate>
+        <?= csrf_field() ?>
+        <p class="small text-body-secondary mb-2">Ahora entrás con <strong><?= e($user['email']) ?></strong>. Con el Gmail nuevo vas a entrar con contraseña o con el botón de Google.</p>
+        <div class="mb-2">
+            <label class="form-label small" for="email">Gmail nuevo</label>
+            <input class="form-control<?= invalid('email') ?>" type="email" id="email" name="email" value="<?= e(old('email')) ?>" maxlength="150" inputmode="email" autocapitalize="off" autocomplete="email" placeholder="tunombre@gmail.com" required>
+            <?= field_error('email') ?>
+        </div>
+        <div class="mb-3">
+            <label class="form-label small" for="email_password">Tu contraseña</label>
+            <input class="form-control<?= invalid('email_password') ?>" type="password" id="email_password" name="email_password" autocomplete="current-password" required>
+            <?= field_error('email_password') ?>
+        </div>
+        <button class="btn btn-primary w-100" type="submit">Cambiar Gmail</button>
+    </form>
+</details>
 
 <h2 class="section-title" id="password">Contraseña</h2>
 <details class="card-soft cuenta-plegable"<?= error_for('actual') || error_for('nueva') || error_for('repetir') ? ' open' : '' ?>>

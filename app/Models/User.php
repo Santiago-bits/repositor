@@ -94,9 +94,15 @@ final class User extends Model
     }
 
     /** Mi cuenta: lo que cada uno puede cambiar de sí mismo. */
-    public static function actualizarDatos(int $id, string $nombre, string $apellido, ?string $telefono): void
+    public static function actualizarDatos(int $id, string $nombre, string $apellido): void
     {
-        self::execute('UPDATE users SET nombre = ?, apellido = ?, telefono = ? WHERE id = ?', [$nombre, $apellido, $telefono, $id]);
+        self::execute('UPDATE users SET nombre = ?, apellido = ? WHERE id = ?', [$nombre, $apellido, $id]);
+    }
+
+    /** Si el Gmail para Google era el mismo que el email nuevo, ya no hace falta repetirlo. */
+    public static function cambiarEmail(int $id, string $email): void
+    {
+        self::execute('UPDATE users SET email = ?, google_email = IF(google_email = ?, NULL, google_email) WHERE id = ?', [$email, $email, $id]);
     }
 
     public static function setFoto(int $id, ?string $path): void
