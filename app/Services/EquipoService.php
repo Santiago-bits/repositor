@@ -25,7 +25,7 @@ final class EquipoService
     public static function miembros(int $dias = 7): array
     {
         return self::consultar(
-            "SELECT u.id, u.nombre, u.apellido, u.email, u.last_seen_at, r.slug AS role_slug, r.nombre AS role_nombre, " . self::ACTIVIDAD . "
+            "SELECT u.id, u.nombre, u.apellido, u.foto_path, u.email, u.last_seen_at, r.slug AS role_slug, r.nombre AS role_nombre, " . self::ACTIVIDAD . "
              FROM users u JOIN roles r ON r.id = u.role_id
              WHERE u.activo = 1 AND u.deleted_at IS NULL
              ORDER BY FIELD(r.slug, 'repositor', 'vendedor', 'admin'), u.last_seen_at IS NULL, u.last_seen_at DESC, u.nombre",
@@ -36,7 +36,7 @@ final class EquipoService
     public static function miembro(int $id, int $dias): ?array
     {
         return self::consultar(
-            "SELECT u.id, u.nombre, u.apellido, u.email, u.activo, u.last_seen_at, u.last_login_at, r.slug AS role_slug, r.nombre AS role_nombre, " . self::ACTIVIDAD . "
+            "SELECT u.id, u.nombre, u.apellido, u.foto_path, u.email, u.activo, u.last_seen_at, u.last_login_at, r.slug AS role_slug, r.nombre AS role_nombre, " . self::ACTIVIDAD . "
              FROM users u JOIN roles r ON r.id = u.role_id
              WHERE u.id = :id AND u.deleted_at IS NULL",
             self::desde($dias) + ['id' => $id]

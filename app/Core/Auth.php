@@ -23,6 +23,10 @@ final class Auth
         $id = Session::get('user_id');
         if ($id !== null) {
             self::$user = User::findActive((int) $id);
+            // Sesión cerrada desde otro dispositivo ("cerrar las demás sesiones" o cambio de contraseña).
+            if (self::$user !== null && (int) Session::get('sv', 0) !== (int) self::$user['sesion_version']) {
+                self::$user = null;
+            }
             if (self::$user === null) {
                 Session::pull('user_id');
             }
@@ -65,7 +69,16 @@ final class Auth
             self::issueRememberToken($userId);
         }
         self::$user = User::findActive($userId);
+        Session::set('sv', (int) (self::$user['sesion_version'] ?? 0));
         self::$resolved = true;
+    }
+
+    /** Deja afuera a los demás dispositivos y mantiene abierta esta sesión (con "recordarme" nuevo). */
+    public static function cerrarOtrasSesiones(int $userId): void
+    {
+        UserToken::deleteForUser($userId);
+        User::subirVersionSesion($userId);
+        self::login($userId, true);
     }
 
     public static function logout(): void
@@ -119,6 +132,7 @@ final class Auth
 
         Session::regenerate();
         Session::set('user_id', (int) $user['id']);
+        Session::set('sv', (int) $user['sesion_version']);
         self::issueRememberToken((int) $user['id']);
 
         return $user;

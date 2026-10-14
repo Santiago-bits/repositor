@@ -261,4 +261,10 @@
         lng.addEventListener('input', update);
         update();
     });
+    // ---------- Elegir un archivo y que se envíe solo (foto de perfil) ----------
+    document.addEventListener('change', function (e) {
+        var input = e.target.closest('[data-autosubmit]');
+        if (input && input.files && input.files.length) input.form.requestSubmit ? input.form.requestSubmit() : input.form.submit();
+    });
+
 })();

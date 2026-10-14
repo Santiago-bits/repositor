@@ -1576,3 +1576,33 @@ body.escaner-abierto { overflow: hidden; }
 .section-title-accion a { font-size: .75rem; text-decoration: none; letter-spacing: 0; text-transform: none; }
 
 .avatar.active { box-shadow: 0 0 0 2px #fff; }
+
+/* ---------- Mi cuenta: foto de perfil ---------- */
+
+.avatar-foto { object-fit: cover; padding: 0; background: var(--app-border); }
+.avatar-link { display: block; border-radius: 50%; text-decoration: none; }
+.avatar-link.active .avatar { box-shadow: 0 0 0 2px #fff; }
+img.avatar { display: block; }
+img.item-avatar { flex-shrink: 0; }
+
+.cuenta-foto { position: relative; display: block; width: 72px; cursor: pointer; }
+.cuenta-foto .avatar-lg { width: 72px; height: 72px; border-radius: 50%; }
+.cuenta-foto-cam {
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bs-primary);
+    color: #fff;
+    font-size: .8rem;
+    box-shadow: 0 0 0 3px var(--app-surface);
+}
+
+.cuenta-plegable { padding: 12px 16px; }
+.cuenta-plegable summary { font-weight: 600; cursor: pointer; list-style: none; text-align: center; color: var(--bs-primary); }
+.cuenta-plegable summary::-webkit-details-marker { display: none; }
+.cuenta-plegable[open] summary { margin-bottom: 4px; }

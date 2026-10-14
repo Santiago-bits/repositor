@@ -17,7 +17,7 @@ foreach ($grupos as $slug => $titulo):
         <?php foreach ($lista as $m): ?>
             <?php $activoHoy = $m['last_seen_at'] && date('Y-m-d', strtotime($m['last_seen_at'])) === date('Y-m-d'); ?>
             <a class="item-card" href="<?= url("/admin/equipo/{$m['id']}?dias={$dias}") ?>">
-                <div class="item-avatar"><?= e(initials($m)) ?></div>
+                <?= avatar($m) ?>
                 <div class="item-body">
                     <div class="item-title"><?= e($m['nombre'] . ' ' . $m['apellido']) ?></div>
                     <div class="item-sub">

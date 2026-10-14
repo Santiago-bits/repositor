@@ -5,7 +5,7 @@ namespace App\Models;
 
 final class User extends Model
 {
-    private const SELECT = 'SELECT u.id, u.role_id, u.nombre, u.apellido, u.email, u.google_email, u.activo, u.last_login_at, u.last_seen_at, u.created_at,
+    private const SELECT = 'SELECT u.id, u.role_id, u.nombre, u.apellido, u.foto_path, u.email, u.telefono, u.google_email, u.activo, u.sesion_version, u.last_login_at, u.last_seen_at, u.created_at,
                                    r.slug AS role_slug, r.nombre AS role_nombre
                             FROM users u
                             JOIN roles r ON r.id = u.role_id';
@@ -56,7 +56,7 @@ final class User extends Model
     public static function all(): array
     {
         return self::fetchAll(
-            'SELECT u.id, u.nombre, u.apellido, u.email, u.google_email, u.activo, u.last_login_at,
+            'SELECT u.id, u.nombre, u.apellido, u.foto_path, u.email, u.google_email, u.activo, u.last_login_at,
                     r.slug AS role_slug, r.nombre AS role_nombre,
                     (SELECT COUNT(*) FROM local_user lu WHERE lu.user_id = u.id) AS locales_count
              FROM users u
@@ -91,6 +91,28 @@ final class User extends Model
         if (!empty($d['password'])) {
             self::updatePassword($id, $d['password']);
         }
+    }
+
+    /** Mi cuenta: lo que cada uno puede cambiar de sí mismo. */
+    public static function actualizarDatos(int $id, string $nombre, string $apellido, ?string $telefono): void
+    {
+        self::execute('UPDATE users SET nombre = ?, apellido = ?, telefono = ? WHERE id = ?', [$nombre, $apellido, $telefono, $id]);
+    }
+
+    public static function setFoto(int $id, ?string $path): void
+    {
+        self::execute('UPDATE users SET foto_path = ? WHERE id = ?', [$path, $id]);
+    }
+
+    public static function passwordHash(int $id): string
+    {
+        return (string) self::value('SELECT password_hash FROM users WHERE id = ?', [$id]);
+    }
+
+    /** Invalida las sesiones abiertas en otros dispositivos. */
+    public static function subirVersionSesion(int $id): void
+    {
+        self::execute('UPDATE users SET sesion_version = sesion_version + 1 WHERE id = ?', [$id]);
     }
 
     public static function updatePassword(int $id, string $password): void

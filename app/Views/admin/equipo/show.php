@@ -14,7 +14,7 @@ $numeros = [
 <a class="back-link" href="<?= url('/admin/equipo?dias=' . $dias) ?>"><i class="bi bi-arrow-left"></i> Equipo</a>
 
 <div class="card-soft p-3 mb-3 d-flex align-items-center gap-3">
-    <div class="item-avatar"><?= e(initials($m)) ?></div>
+    <?= avatar($m) ?>
     <div class="min-w-0 flex-grow-1">
         <h1 class="h5 fw-bold mb-0"><?= e($m['nombre'] . ' ' . $m['apellido']) ?></h1>
         <div class="small text-body-secondary"><?= e($m['role_nombre']) ?> · activo <?= e(hace($m['last_seen_at'])) ?></div>

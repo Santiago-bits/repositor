@@ -115,6 +115,16 @@ function active(string $path, bool $exact = false): string
     return $match ? 'active' : '';
 }
 
+/** Círculo del usuario: su foto, o las iniciales si no subió una. $clase: avatar, avatar-lg o item-avatar. */
+function avatar(array $user, string $clase = 'item-avatar'): string
+{
+    if (!empty($user['foto_path'])) {
+        $src = url('/usuarios/' . (int) $user['id'] . '/foto') . '?v=' . substr(md5($user['foto_path']), 0, 8);
+        return '<img class="' . $clase . ' avatar-foto" src="' . e($src) . '" alt="" loading="lazy">';
+    }
+    return '<span class="' . $clase . '">' . e(initials($user)) . '</span>';
+}
+
 function initials(?array $user): string
 {
     if (!$user) {

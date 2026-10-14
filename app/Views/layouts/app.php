@@ -14,7 +14,7 @@
         </span>
     </a>
     <?php if ($user): ?>
-        <a class="avatar <?= active('/perfil') ?>" href="<?= url('/perfil') ?>" title="Mi cuenta" aria-label="Mi cuenta"><?= e(initials($user)) ?></a>
+        <a class="avatar-link <?= active('/perfil') ?>" href="<?= url('/perfil') ?>" title="Mi cuenta" aria-label="Mi cuenta"><?= avatar($user, 'avatar') ?></a>
     <?php endif; ?>
 </header>
 

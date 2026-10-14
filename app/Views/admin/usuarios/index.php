@@ -6,7 +6,7 @@
 <div class="item-list">
     <?php foreach ($usuarios as $u): ?>
         <a class="item-card<?= $u['activo'] ? '' : ' is-inactive' ?>" href="<?= url("/admin/usuarios/{$u['id']}/editar") ?>">
-            <div class="item-avatar"><?= e(initials($u)) ?></div>
+            <?= avatar($u) ?>
             <div class="item-body">
                 <div class="item-title"><?= e($u['nombre'] . ' ' . $u['apellido']) ?></div>
                 <div class="item-sub"><?= e($u['email']) ?></div>
