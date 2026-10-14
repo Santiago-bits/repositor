@@ -4,7 +4,9 @@
         <?php if (is_admin()): ?>
             <a class="btn btn-link" href="<?= url('/admin/productos/importar') ?>"><i class="bi bi-file-earmark-excel"></i> Excel</a>
         <?php endif; ?>
-        <a class="btn btn-link" href="<?= url('/productos/crear') ?>"><i class="bi bi-plus-lg"></i> Nuevo</a>
+        <?php if (!is_vendedor()): ?>
+            <a class="btn btn-link" href="<?= url('/productos/crear') ?>"><i class="bi bi-plus-lg"></i> Nuevo</a>
+        <?php endif; ?>
     </div>
 </div>
 

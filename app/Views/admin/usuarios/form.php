@@ -49,7 +49,7 @@ $esYo = $usuario && (int) $usuario['id'] === App\Core\Auth::id();
             <?php foreach ($roles as $rol): ?>
                 <input type="radio" class="btn-check" name="role_id" id="rol-<?= $rol['id'] ?>" value="<?= $rol['id'] ?>" <?= $rolActual === (int) $rol['id'] ? 'checked' : '' ?>>
                 <label class="btn btn-outline-primary" for="rol-<?= $rol['id'] ?>">
-                    <i class="bi <?= $rol['slug'] === 'admin' ? 'bi-shield-lock' : 'bi-person-badge' ?>"></i> <?= e($rol['nombre']) ?>
+                    <i class="bi <?= ['admin' => 'bi-shield-lock', 'vendedor' => 'bi-briefcase'][$rol['slug']] ?? 'bi-person-badge' ?>"></i> <?= e($rol['nombre']) ?>
                 </label>
             <?php endforeach; ?>
         </div>
@@ -70,7 +70,7 @@ $esYo = $usuario && (int) $usuario['id'] === App\Core\Auth::id();
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
-        <div class="form-text">Los administradores ven todos los locales, tengan asignación o no.</div>
+        <div class="form-text">Los administradores y vendedores ven todos los locales. El vendedor solo ve faltantes, fechas cortas y productos (no hace visitas).</div>
     </div>
 
     <div class="card-soft px-3 py-2 mb-3">

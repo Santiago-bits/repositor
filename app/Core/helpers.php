@@ -85,6 +85,11 @@ function is_admin(): bool
     return Auth::isAdmin();
 }
 
+function is_vendedor(): bool
+{
+    return Auth::isVendedor();
+}
+
 function partial(string $name, array $data = []): string
 {
     return View::partial($name, $data);
@@ -156,6 +161,13 @@ function dia_semana(?int $timestamp = null): string
 /** Navegación principal (barra inferior en celular, menú lateral en PC). */
 function nav_principal(): array
 {
+    if (is_vendedor()) {
+        return [
+            ['/', 'bi-cart-x', 'Faltantes'],
+            ['/productos', 'bi-box-seam', 'Productos'],
+            ['/perfil', 'bi-person-circle', 'Perfil'],
+        ];
+    }
     return [
         ['/', 'bi-house-door', 'Inicio'],
         ['/productos', 'bi-box-seam', 'Productos'],

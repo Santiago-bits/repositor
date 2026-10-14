@@ -89,9 +89,17 @@ final class Router
         }
     }
 
+    /** Lo único que puede abrir un vendedor: ver faltantes, productos y su perfil. */
+    private const VENDEDOR_PERMITIDO = '#^/(productos(/buscar|/codigo|/\d+(/imagen)?)?|perfil)?$#';
+    private const VENDEDOR_PERMITIDO_POST = '#^/(logout|perfil/google(/quitar)?)$#';
+
     private function requireAuth(): void
     {
         if (Auth::check()) {
+            $permitido = Request::method() === 'GET' ? self::VENDEDOR_PERMITIDO : self::VENDEDOR_PERMITIDO_POST;
+            if (Auth::isVendedor() && !preg_match($permitido, Request::path())) {
+                Request::wantsJson() ? View::error(403) : redirect('/');
+            }
             return;
         }
         if (Request::wantsJson()) {

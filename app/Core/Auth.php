@@ -48,6 +48,11 @@ final class Auth
         return (self::user()['role_slug'] ?? null) === 'admin';
     }
 
+    public static function isVendedor(): bool
+    {
+        return (self::user()['role_slug'] ?? null) === 'vendedor';
+    }
+
     public static function login(int $userId, bool $remember): void
     {
         Session::regenerate();

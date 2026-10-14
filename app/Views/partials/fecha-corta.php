@@ -22,9 +22,11 @@ $detalle = array_filter([
         <?php if ($detalle): ?><div class="small text-body-secondary text-truncate"><?= e(implode(' · ', $detalle)) ?></div><?php endif; ?>
         <span class="venc-badge <?= $estado['clase'] ?>"><?= e($estado['etiqueta']) ?></span>
     </a>
+    <?php if (empty($soloVer)): ?>
     <form method="post" action="<?= url('/vencimientos/' . (int) $v['id'] . '/retirar') ?>"
           data-confirm="<?= e("¿Ya retiraste {$nombre} de {$v['local']}?") ?>">
         <?= csrf_field() ?>
         <button class="btn btn-outline-danger btn-sm" type="submit"><i class="bi bi-box-arrow-up"></i> Retirar</button>
     </form>
+    <?php endif; ?>
 </div>

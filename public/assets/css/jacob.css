@@ -1522,3 +1522,21 @@ body.escaner-abierto { overflow: hidden; }
 }
 .precio-grid > :nth-child(3n + 1) { text-align: left; }
 .precio-linea { font-size: .9rem; }
+
+/* ---------- Vendedor: faltantes por local ---------- */
+
+.falta-chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.falta-chip.falta-sin { background: rgba(220, 38, 38, .12); color: var(--jacob-danger); }
+.falta-chip.falta-poco { background: rgba(217, 119, 6, .14); color: #B45309; }
+[data-bs-theme=dark] .falta-chip.falta-poco { color: #FBBF24; }
+.text-end .falta-chip { margin: 0 0 4px 4px; }
+
+.vend-fila { display: flex; align-items: center; gap: 10px; padding: 6px 0; }
+.vend-fila + .vend-fila { border-top: 1px solid var(--app-border); }

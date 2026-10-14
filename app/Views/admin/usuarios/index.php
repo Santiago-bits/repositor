@@ -12,7 +12,7 @@
                 <div class="item-sub"><?= e($u['email']) ?></div>
                 <div class="item-meta">
                     <span class="badge <?= $u['role_slug'] === 'admin' ? 'badge-soft' : 'badge-muted' ?>"><?= e($u['role_nombre']) ?></span>
-                    <?php if ($u['role_slug'] !== 'admin'): ?>
+                    <?php if ($u['role_slug'] === 'repositor'): ?>
                         <span><i class="bi bi-shop"></i> <?= (int) $u['locales_count'] ?> locales</span>
                     <?php endif; ?>
                     <?php if (!empty($u['google_email'])): ?><span title="Entra con Google"><i class="bi bi-google"></i> Google</span><?php endif; ?>

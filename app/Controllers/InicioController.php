@@ -10,6 +10,7 @@ use App\Models\Configuracion;
 use App\Models\Relevamiento;
 use App\Models\Vencimiento;
 use App\Services\DeteccionLocalService;
+use App\Services\VendedorService;
 use App\Services\VisitaService;
 
 final class InicioController extends Controller
@@ -18,6 +19,17 @@ final class InicioController extends Controller
     {
         $user = auth();
         $dias = (int) Configuracion::get('vencimiento_dias_proximo', '15');
+
+        if (is_vendedor()) {
+            $this->view('app/vendedor', [
+                'title'      => 'Faltantes',
+                'user'       => $user,
+                'locales'    => VendedorService::faltantesPorLocal(),
+                'cortas'     => Vencimiento::proximos(['id' => 0, 'role_slug' => 'admin'], $dias), // todos los locales
+                'diasCortas' => $dias,
+            ]);
+            return;
+        }
 
         $this->view('app/inicio', [
             'title'   => 'Inicio',

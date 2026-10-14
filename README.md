@@ -30,7 +30,8 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cómo se usa
 
-- **Usuarios:** Gestión → Usuarios → Nuevo. Nombre, email, contraseña (mínimo 8) y rol (Administrador o Repositor). Se pueden editar, desactivar o borrar (sus visitas quedan).
+- **Usuarios:** Gestión → Usuarios → Nuevo. Nombre, email, contraseña (mínimo 8) y rol (Administrador, Repositor o Vendedor). Se pueden editar, desactivar o borrar (sus visitas quedan).
+- **Vendedor:** al entrar ve **Faltantes**: por cada local, lo que faltaba en la última visita del repositor (sin stock o poco), agrupado por categoría, para ir a venderlo. También ve las fechas cortas y los productos con precios. No hace visitas ni carga nada.
 - **Entrar con Google:** (una sola vez) el admin pega el *ID de cliente* en Gestión → Configuración → Entrar con Google. Después cada uno entra con su email, va a **Perfil → Cuenta de Google** y toca el botón: desde ahí puede entrar con Google sin contraseña. Solo entran usuarios que ya existen.
 - **Productos:** el catálogo es único y vale para todos los locales (una Quilmes es la misma en cualquier súper o chino). Se cargan de a uno, escaneando, o todos juntos desde un Excel.
 - **Códigos de barras:** el JSON de Chess no los trae. En Productos → Escanear, si el código es nuevo, buscás el producto (ej. "andes oro") y lo tocás: queda asociado para siempre. Volver a subir el JSON no lo borra.
@@ -49,6 +50,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-10-14** · Rol **Vendedor** (migración 013): ve los faltantes de cada local según la última visita, las fechas cortas y los productos. No puede hacer visitas ni entrar a Gestión.
 - **2026-10-14** · Vencimientos: botón **Escanear**. El producto se agrega solo y queda abierta la fecha; si el código no estaba asociado, lo buscás por nombre y queda guardado para la próxima.
 - **2026-10-14** · La app pasa a llamarse **repositores.rv** y usa los colores de RAVSA (azul #1570B8) en modo claro y oscuro, con ícono nuevo «rv». El nombre ahora está en `app/bootstrap.php` (ya no en `config.php`), así llega solo al servidor. En el celular, si ya estaba instalada, puede tardar en cambiar el ícono: desinstalar y volver a instalar.
 - **2026-10-14** · Vuelve **Gestión → Usuarios**: el administrador puede crear usuarios nuevos, editarlos, desactivarlos o borrarlos. Se ve quién entra con Google.
