@@ -35,7 +35,7 @@ final class VisitaProductoController extends VisitaBaseController
             'lotesAnteriores' => RegistroVisitaService::lotesAnteriores($visita, $productoId),
             'fotos'           => Foto::deVisita($id, $productoId),
             'observaciones'   => Observacion::deVisita($id, $productoId),
-            'promo'           => Promocion::vigentesEnLocal((int) $visita['local_id'], $visita['fecha'])[$productoId] ?? null,
+            'promo'           => Promocion::vigentesEnLocal((int) $visita['local_id'], $visita['fecha'], (int) $visita['user_id'])[$productoId] ?? null,
             'scripts'         => ['assets/js/visita.js'],
         ]);
     }

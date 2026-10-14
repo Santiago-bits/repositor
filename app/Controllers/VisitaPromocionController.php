@@ -27,7 +27,7 @@ final class VisitaPromocionController extends VisitaBaseController
             'visitaBar' => ['id' => $id, 'activo' => 'promos'],
             'visita'    => $visita,
             'productos' => ProductoLocal::productosDeLocal((int) $visita['local_id'], $id),
-            'enPromo'   => Promocion::vigentesEnLocal((int) $visita['local_id'], $visita['fecha']),
+            'enPromo'   => Promocion::vigentesEnLocal((int) $visita['local_id'], $visita['fecha'], (int) $visita['user_id']),
             'marcado'   => (int) Request::input('producto', 0),
             'scripts'   => ['assets/js/visita.js'],
         ]);
@@ -47,7 +47,7 @@ final class VisitaPromocionController extends VisitaBaseController
         $guardadas = 0;
 
         Database::transaction(function () use ($visita, $id, $userId, $localId, $marcados, $stocks, &$guardadas): void {
-            $enPromo = Promocion::vigentesEnLocal($localId, $visita['fecha']);
+            $enPromo = Promocion::vigentesEnLocal($localId, $visita['fecha'], $userId);
 
             foreach (ProductoLocal::productosDeLocal($localId, $id) as $p) {
                 $pid = (int) $p['id'];

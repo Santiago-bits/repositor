@@ -31,7 +31,7 @@ final class MensajeService
     private static function visitas(string $where, array $params): array
     {
         $stmt = Database::connection()->prepare(
-            "SELECT r.id, r.estado, r.local_id, l.nombre AS local
+            "SELECT r.id, r.estado, r.local_id, r.user_id, l.nombre AS local
              FROM relevamientos r JOIN locales l ON l.id = r.local_id
              WHERE {$where} AND r.estado <> 'cancelado'
              ORDER BY r.inicio_at"
@@ -77,7 +77,7 @@ final class MensajeService
                     array_filter(self::productos((int) $v['id']), fn ($p) => $p['promocion_id'] !== null),
                     'producto_id'
                 ));
-                foreach (Promocion::vigentesEnLocal((int) $v['local_id'], $fecha) as $pid => $promo) {
+                foreach (Promocion::vigentesEnLocal((int) $v['local_id'], $fecha, (int) $v['user_id']) as $pid => $promo) {
                     if (!in_array((int) $pid, $conStock, true)) {
                         $lineas[] = '- ' . Producto::nombreCompleto($promo) . ': en promo';
                     }

@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Core\Database;
 use App\Models\Configuracion;
+use App\Models\Promocion;
 
 /**
  * Conteo de promociones: al terminar una promo (o hasta N días después, configurable)
@@ -18,7 +19,7 @@ final class ConteoService
      */
     public static function items(array $visita): array
     {
-        return self::consultar((int) $visita['local_id'], $visita['fecha'], (int) $visita['id']);
+        return self::consultar((int) $visita['local_id'], $visita['fecha'], (int) $visita['id'], (int) $visita['user_id']);
     }
 
     /** Cuántas promos faltan contar en un local (sin importar la visita). */
@@ -34,7 +35,7 @@ final class ConteoService
 
     }
 
-    private static function consultar(int $localId, string $fecha, int $relevamientoId): array
+    private static function consultar(int $localId, string $fecha, int $relevamientoId, ?int $userId = null): array
     {
         $gracia = max(0, (int) Configuracion::get('conteo_promos_dias_gracia', '2'));
 
@@ -52,9 +53,10 @@ final class ConteoService
                     SELECT 1 FROM relevamiento_productos x
                     JOIN relevamientos r ON r.id = x.relevamiento_id
                     WHERE x.promocion_id = p.id AND r.local_id = ? AND r.estado <> 'cancelado' AND r.fecha >= p.fecha_fin))
+             " . ($userId ? ' AND ' . Promocion::VISIBLE_PARA : '') . "
              ORDER BY pr.nombre, pr.presentacion"
         );
-        $stmt->execute([$localId, $relevamientoId, $fecha, $gracia, $fecha, $localId]);
+        $stmt->execute(array_merge([$localId, $relevamientoId, $fecha, $gracia, $fecha, $localId], $userId ? [$userId] : []));
         return $stmt->fetchAll();
     }
 }

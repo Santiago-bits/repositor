@@ -46,13 +46,18 @@ final class Promocion extends Model
     }
 
     /** Promos activas de un local en una fecha, indexadas por producto_id. */
-    public static function vigentesEnLocal(int $localId, string $fecha): array
+    /** Promos que ve un usuario: las que cargó él y las que cargó un admin (de la empresa, valen para todos). */
+    public const VISIBLE_PARA = "(p.created_by = ? OR p.created_by IN (SELECT ua.id FROM users ua JOIN roles ra ON ra.id = ua.role_id WHERE ra.slug = 'admin'))";
+
+    /** $userId: dueño de la visita (null = todas, para el admin). */
+    public static function vigentesEnLocal(int $localId, string $fecha, ?int $userId = null): array
     {
         $filas = self::fetchAll(
             self::SELECT . " WHERE p.deleted_at IS NULL AND p.estado = 'activa' AND ? BETWEEN p.fecha_inicio AND p.fecha_fin
-               AND EXISTS (SELECT 1 FROM promocion_local pl WHERE pl.promocion_id = p.id AND pl.local_id = ?)
+               AND EXISTS (SELECT 1 FROM promocion_local pl WHERE pl.promocion_id = p.id AND pl.local_id = ?)"
+               . ($userId ? ' AND ' . self::VISIBLE_PARA : '') . "
              ORDER BY pr.nombre, pr.presentacion",
-            [$fecha, $localId]
+            $userId ? [$fecha, $localId, $userId] : [$fecha, $localId]
         );
         return array_column($filas, null, 'producto_id');
     }

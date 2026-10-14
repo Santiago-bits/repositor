@@ -15,7 +15,8 @@ final class Vencimiento extends Model
     }
 
     /**
-     * Fechas cortas: lotes que vencen hasta dentro de $dias (y los vencidos hace poco), en los locales del usuario.
+     * Fechas cortas: lotes que vencen hasta dentro de $dias (y los vencidos hace poco) que cargó el usuario.
+     * Cada repositor ve solo lo suyo; el admin ve todo.
      * De cada producto en cada local se usa solo el último relevamiento: los lotes viejos ya se habrán vendido.
      */
     public static function proximos(array $user, int $dias, int $vencidosHace = 7): array
@@ -32,9 +33,8 @@ final class Vencimiento extends Model
                        DENSE_RANK() OVER (PARTITION BY r.local_id, rp.producto_id ORDER BY r.fecha DESC, r.id DESC) AS ultimo
                 FROM vencimientos v
                 JOIN relevamiento_productos rp ON rp.id = v.relevamiento_producto_id
-                JOIN relevamientos r ON r.id = rp.relevamiento_id AND r.estado <> \'cancelado\'
+                JOIN relevamientos r ON r.id = rp.relevamiento_id AND r.estado <> \'cancelado\'' . ($esAdmin ? '' : ' AND r.user_id = ?') . '
                 JOIN locales l ON l.id = r.local_id AND l.activo = 1 AND l.deleted_at IS NULL
-                ' . ($esAdmin ? '' : 'JOIN local_user lu ON lu.local_id = l.id AND lu.user_id = ?') . '
                 JOIN productos p ON p.id = rp.producto_id AND p.deleted_at IS NULL
              ) t
              WHERE t.ultimo = 1 AND t.retirado_at IS NULL AND t.fecha_vencimiento BETWEEN ? AND ?
@@ -83,7 +83,7 @@ final class Vencimiento extends Model
     public static function conLocal(int $id): ?array
     {
         return self::fetch(
-            'SELECT v.id, v.fecha_vencimiento, v.retirado_at, r.local_id, p.nombre, p.presentacion
+            'SELECT v.id, v.fecha_vencimiento, v.retirado_at, r.local_id, r.user_id, p.nombre, p.presentacion
              FROM vencimientos v
              JOIN relevamiento_productos rp ON rp.id = v.relevamiento_producto_id
              JOIN relevamientos r ON r.id = rp.relevamiento_id

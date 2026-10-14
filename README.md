@@ -31,6 +31,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 ## Cómo se usa
 
 - **Usuarios:** Gestión → Usuarios → Nuevo. Nombre, email, contraseña (mínimo 8) y rol (Administrador, Repositor o Vendedor). Se pueden editar, desactivar o borrar (sus visitas quedan).
+- **Cada uno lo suyo:** cada repositor ve solo sus fechas cortas, sus promos y su historial; solo puede retirar los lotes que cargó él. Las promos que carga el admin en Gestión → Promociones las ven todos. El admin ve todo.
 - **Supervisar (admin):** Gestión → **Equipo**. Cada persona con la última vez que abrió la app (punto verde = hoy) y lo que hizo en el período (Hoy / 7 / 30 días): visitas, faltantes, vencimientos y fotos. Tocando a alguien ves sus visitas día por día (con horario) y «Sus fotos». En **Fotos** se puede filtrar por persona y cada foto dice quién la sacó.
 - **Vendedor:** al entrar ve **Faltantes**: por cada local, lo que faltaba en la última visita del repositor (sin stock o poco), agrupado por categoría, para ir a venderlo. También ve las fechas cortas y los productos con precios. No hace visitas ni carga nada.
 - **Entrar con Google:** (una sola vez) el admin pega el *ID de cliente* en Gestión → Configuración → Entrar con Google. Después cada uno entra con su email, va a **Perfil → Cuenta de Google** y toca el botón: desde ahí puede entrar con Google sin contraseña. Solo entran usuarios que ya existen.
@@ -51,6 +52,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-10-14** · Datos separados por usuario: fechas cortas, promos (salvo las que carga el admin), historial de stock de un producto y Retirar son de cada uno. Antes se mezclaban si dos repositores iban al mismo local. El admin sigue viendo todo.
 - **2026-10-14** · Configuración: el ID de cliente de Google ya no se muestra (solo «Configurado»). Para cambiarlo se pega uno nuevo; dejándolo vacío se conserva; con «Quitar» se saca el botón de Google.
 - **2026-10-14** · Supervisión: nueva sección **Gestión → Equipo** (última vez activo de cada uno, visitas, faltantes, vencimientos y fotos por período, y el detalle de cada persona) · Fotos: filtro por persona y quién la sacó · Resumen: las últimas visitas dicen quién las hizo (migración 014).
 - **2026-10-14** · Rol **Vendedor** (migración 013): ve los faltantes de cada local según la última visita, las fechas cortas y los productos. No puede hacer visitas ni entrar a Gestión.

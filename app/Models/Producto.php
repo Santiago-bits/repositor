@@ -181,19 +181,18 @@ final class Producto extends Model
         self::execute('UPDATE productos SET activo = ? WHERE id = ?', [(int) $activo, $id]);
     }
 
-    /** Stock registrado en visitas. Para el repositor, solo de sus locales. */
+    /** Stock registrado en visitas. Para el repositor, solo de sus propias visitas. */
     public static function historial(int $productoId, array $user, int $limite = 15): array
     {
         $esAdmin = $user['role_slug'] === 'admin';
-        $params = $esAdmin ? [$productoId] : [$user['id'], $productoId];
+        $params = $esAdmin ? [$productoId] : [$productoId, $user['id']];
 
         return self::fetchAll(
             "SELECT r.fecha, l.nombre AS local, rp.stock, rp.estado_stock
              FROM relevamiento_productos rp
              JOIN relevamientos r ON r.id = rp.relevamiento_id
              JOIN locales l ON l.id = r.local_id
-             " . ($esAdmin ? '' : 'JOIN local_user lu ON lu.local_id = r.local_id AND lu.user_id = ?') . "
-             WHERE rp.producto_id = ? AND r.estado <> 'cancelado'
+             WHERE rp.producto_id = ? AND r.estado <> 'cancelado'" . ($esAdmin ? '' : ' AND r.user_id = ?') . "
              ORDER BY r.inicio_at DESC
              LIMIT " . max(1, $limite),
             $params

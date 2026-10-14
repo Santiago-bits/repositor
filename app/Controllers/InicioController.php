@@ -47,7 +47,7 @@ final class InicioController extends Controller
     public function retirar(int $id): void
     {
         $lote = $this->notFoundUnless(Vencimiento::conLocal($id));
-        if (Local::accesible(auth(), (int) $lote['local_id']) === null) {
+        if ((int) $lote['user_id'] !== (int) auth()['id'] && !is_admin()) {
             $this->notFoundUnless(null);
         }
 

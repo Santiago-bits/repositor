@@ -35,7 +35,7 @@ final class VisitaController extends VisitaBaseController
     public function show(int $id): void
     {
         $visita = $this->visitaVisible($id);
-        $promos = Promocion::vigentesEnLocal((int) $visita['local_id'], $visita['fecha']);
+        $promos = Promocion::vigentesEnLocal((int) $visita['local_id'], $visita['fecha'], (int) $visita['user_id']);
 
         // Lotes que siguen en el local (los retirados ya no cuentan), agrupados por producto.
         $lotes = [];
