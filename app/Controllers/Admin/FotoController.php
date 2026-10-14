@@ -7,6 +7,7 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Models\Foto;
 use App\Models\Local;
+use App\Models\User;
 
 /** Galería de todas las fotos de relevamientos. */
 final class FotoController extends Controller
@@ -19,6 +20,7 @@ final class FotoController extends Controller
             'desde'    => fecha_valida($desde) ? $desde : date('Y-m-d', strtotime('-6 days')),
             'hasta'    => fecha_valida($hasta) ? $hasta : date('Y-m-d'),
             'local_id' => (int) Request::input('local_id', 0) ?: null,
+            'user_id'  => (int) Request::input('user_id', 0) ?: null,
         ];
 
         $this->view('admin/fotos', [
@@ -26,6 +28,7 @@ final class FotoController extends Controller
             'filtros' => $filtros,
             'fotos'   => Foto::buscar($filtros),
             'locales' => Local::all(),
+            'usuarios' => User::all(),
         ]);
     }
 }

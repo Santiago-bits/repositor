@@ -65,6 +65,10 @@ final class Foto extends Model
             $sql .= ' AND r.local_id = ?';
             $params[] = $f['local_id'];
         }
+        if (!empty($f['user_id'])) {
+            $sql .= ' AND r.user_id = ?';
+            $params[] = $f['user_id'];
+        }
         return self::fetchAll($sql . ' ORDER BY f.created_at DESC LIMIT ' . max(1, $limite), $params);
     }
 

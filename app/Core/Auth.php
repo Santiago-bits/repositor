@@ -30,6 +30,9 @@ final class Auth
             self::$user = self::fromRememberCookie((string) $_COOKIE[self::COOKIE]);
         }
 
+        if (self::$user !== null && (self::$user['last_seen_at'] === null || strtotime(self::$user['last_seen_at']) < time() - 300)) {
+            User::touchSeen((int) self::$user['id']);
+        }
         return self::$user;
     }
 

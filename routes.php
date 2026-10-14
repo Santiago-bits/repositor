@@ -19,6 +19,7 @@ use App\Controllers\ProductoController;
 use App\Controllers\Admin\FotoController as AdminFotoController;
 use App\Controllers\Admin\ConfiguracionController;
 use App\Controllers\Admin\UsuarioController;
+use App\Controllers\Admin\EquipoController;
 use App\Controllers\HistorialController;
 use App\Controllers\PwaController;
 use App\Controllers\VisitaController;
@@ -88,6 +89,8 @@ $router->get('/visitas/{id}/mensaje', [HistorialController::class, 'mensajeDeVis
 $admin = ['auth', 'admin'];
 $router->get('/admin', [DashboardController::class, 'index'], $admin);
 
+$router->get('/admin/equipo', [EquipoController::class, 'index'], $admin);
+$router->get('/admin/equipo/{id}', [EquipoController::class, 'show'], $admin);
 $router->get('/admin/fotos', [AdminFotoController::class, 'index'], $admin);
 $router->get('/admin/configuracion', [ConfiguracionController::class, 'index'], $admin);
 $router->post('/admin/configuracion', [ConfiguracionController::class, 'guardar'], $admin);

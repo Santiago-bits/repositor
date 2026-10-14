@@ -5,7 +5,7 @@ namespace App\Models;
 
 final class User extends Model
 {
-    private const SELECT = 'SELECT u.id, u.role_id, u.nombre, u.apellido, u.email, u.google_email, u.activo, u.last_login_at, u.created_at,
+    private const SELECT = 'SELECT u.id, u.role_id, u.nombre, u.apellido, u.email, u.google_email, u.activo, u.last_login_at, u.last_seen_at, u.created_at,
                                    r.slug AS role_slug, r.nombre AS role_nombre
                             FROM users u
                             JOIN roles r ON r.id = u.role_id';
@@ -110,6 +110,12 @@ final class User extends Model
             "UPDATE users SET deleted_at = NOW(), activo = 0, email = LEFT(CONCAT('eliminado', id, '.', email), 150) WHERE id = ?",
             [$id]
         );
+    }
+
+    /** "Última vez activo": se anota como mucho cada 5 minutos para no escribir en cada pedido. */
+    public static function touchSeen(int $id): void
+    {
+        self::execute('UPDATE users SET last_seen_at = NOW() WHERE id = ? AND (last_seen_at IS NULL OR last_seen_at < NOW() - INTERVAL 5 MINUTE)', [$id]);
     }
 
     public static function touchLogin(int $id): void

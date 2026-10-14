@@ -4,15 +4,24 @@
 
 <form class="card-soft p-3 mb-3" method="get" action="<?= url('/admin/fotos') ?>">
     <div class="row g-2">
-        <div class="col-6 col-md-3">
+        <div class="col-6 col-md-2">
             <label class="form-label small" for="desde">Desde</label>
             <input class="form-control" type="date" id="desde" name="desde" value="<?= e($filtros['desde']) ?>">
         </div>
-        <div class="col-6 col-md-3">
+        <div class="col-6 col-md-2">
             <label class="form-label small" for="hasta">Hasta</label>
             <input class="form-control" type="date" id="hasta" name="hasta" value="<?= e($filtros['hasta']) ?>">
         </div>
-        <div class="col-8 col-md-4">
+        <div class="col-6 col-md-3">
+            <label class="form-label small" for="user_id">Persona</label>
+            <select class="form-select" id="user_id" name="user_id">
+                <option value="">Todos</option>
+                <?php foreach ($usuarios as $u): ?>
+                    <option value="<?= $u['id'] ?>" <?= (int) $filtros['user_id'] === (int) $u['id'] ? 'selected' : '' ?>><?= e($u['nombre'] . ' ' . $u['apellido']) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
             <label class="form-label small" for="local_id">Local</label>
             <select class="form-select" id="local_id" name="local_id">
                 <option value="">Todos</option>
@@ -21,8 +30,8 @@
                 <?php endforeach; ?>
             </select>
         </div>
-        <div class="col-4 col-md-2 d-flex align-items-end">
-            <button class="btn btn-primary w-100" type="submit" style="min-height:48px"><i class="bi bi-funnel"></i></button>
+        <div class="col-12 col-md-2 d-flex align-items-end">
+            <button class="btn btn-primary w-100" type="submit" style="min-height:48px"><i class="bi bi-funnel"></i> Filtrar</button>
         </div>
     </div>
 </form>
@@ -44,6 +53,7 @@
                 <figcaption>
                     <a class="text-reset" href="<?= url('/visitas/' . $f['relevamiento_id']) ?>"><?= e($f['local']) ?></a>
                     · <?= fecha($f['created_at'], 'd/m H:i') ?><br>
+                    <i class="bi bi-person"></i> <?= e($f['usuario']) ?><br>
                     <?= $f['producto'] ? e(trim($f['producto'] . ' ' . $f['presentacion'])) : 'General' ?>
                 </figcaption>
             </figure>

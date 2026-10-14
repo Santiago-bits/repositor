@@ -81,11 +81,12 @@ final class DashboardService
     public static function actividadReciente(int $limite = 6): array
     {
         return self::lista(
-            "SELECT r.id, r.fecha, l.nombre AS local, l.tipo,
+            "SELECT r.id, r.fecha, l.nombre AS local, l.tipo, CONCAT(u.nombre, ' ', u.apellido) AS usuario,
                     (SELECT COUNT(*) FROM relevamiento_productos rp WHERE rp.relevamiento_id = r.id) AS productos,
                     (SELECT COUNT(*) FROM fotos f WHERE f.relevamiento_id = r.id AND f.deleted_at IS NULL) AS fotos
              FROM relevamientos r
              JOIN locales l ON l.id = r.local_id
+             JOIN users u ON u.id = r.user_id
              WHERE r.estado <> 'cancelado'
              ORDER BY r.inicio_at DESC
              LIMIT " . max(1, $limite)

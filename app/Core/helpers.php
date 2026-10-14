@@ -152,6 +152,23 @@ function duracion(?string $inicio, ?string $fin = null): string
     return $minutos < 60 ? "{$minutos} min" : sprintf('%d h %02d min', intdiv($minutos, 60), $minutos % 60);
 }
 
+/** "hace 5 min", "hace 3 h", "ayer 18:40", "lun 12/10" o "nunca". */
+function hace(?string $cuando): string
+{
+    if (!$cuando) {
+        return 'nunca';
+    }
+    $t = strtotime($cuando);
+    $seg = time() - $t;
+    return match (true) {
+        $seg < 120                                     => 'recién',
+        $seg < 3600                                    => 'hace ' . intdiv($seg, 60) . ' min',
+        date('Y-m-d', $t) === date('Y-m-d')           => 'hace ' . intdiv($seg, 3600) . ' h',
+        date('Y-m-d', $t) === date('Y-m-d', strtotime('-1 day')) => 'ayer ' . date('H:i', $t),
+        default                                        => mb_substr(dia_semana($t), 0, 3) . ' ' . date('d/m', $t),
+    };
+}
+
 function dia_semana(?int $timestamp = null): string
 {
     $dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -180,6 +197,7 @@ function nav_admin(): array
 {
     return [
         ['/admin', 'bi-speedometer2', 'Resumen'],
+        ['/admin/equipo', 'bi-person-lines-fill', 'Equipo'],
         ['/admin/fotos', 'bi-images', 'Fotos'],
         ['/admin/locales', 'bi-shop', 'Locales'],
         ['/admin/productos', 'bi-box-seam', 'Productos'],

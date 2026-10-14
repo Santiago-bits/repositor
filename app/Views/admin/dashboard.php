@@ -111,7 +111,7 @@ $t = $semana['totales'];
                 <div class="item-body">
                     <div class="item-title"><?= e($a['local']) ?></div>
                     <div class="item-sub">
-                        <?= $a['fecha'] === date('Y-m-d') ? 'Hoy' : fecha($a['fecha'], 'd/m') ?>
+                        <?= e($a['usuario']) ?> · <?= $a['fecha'] === date('Y-m-d') ? 'Hoy' : fecha($a['fecha'], 'd/m') ?>
                         · <?= (int) $a['productos'] ?> producto<?= (int) $a['productos'] === 1 ? '' : 's' ?>
                         <?php if ($a['fotos'] > 0): ?>· <i class="bi bi-camera"></i> <?= (int) $a['fotos'] ?><?php endif; ?>
                     </div>

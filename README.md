@@ -31,6 +31,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 ## Cómo se usa
 
 - **Usuarios:** Gestión → Usuarios → Nuevo. Nombre, email, contraseña (mínimo 8) y rol (Administrador, Repositor o Vendedor). Se pueden editar, desactivar o borrar (sus visitas quedan).
+- **Supervisar (admin):** Gestión → **Equipo**. Cada persona con la última vez que abrió la app (punto verde = hoy) y lo que hizo en el período (Hoy / 7 / 30 días): visitas, faltantes, vencimientos y fotos. Tocando a alguien ves sus visitas día por día (con horario) y «Sus fotos». En **Fotos** se puede filtrar por persona y cada foto dice quién la sacó.
 - **Vendedor:** al entrar ve **Faltantes**: por cada local, lo que faltaba en la última visita del repositor (sin stock o poco), agrupado por categoría, para ir a venderlo. También ve las fechas cortas y los productos con precios. No hace visitas ni carga nada.
 - **Entrar con Google:** (una sola vez) el admin pega el *ID de cliente* en Gestión → Configuración → Entrar con Google. Después cada uno entra con su email, va a **Perfil → Cuenta de Google** y toca el botón: desde ahí puede entrar con Google sin contraseña. Solo entran usuarios que ya existen.
 - **Productos:** el catálogo es único y vale para todos los locales (una Quilmes es la misma en cualquier súper o chino). Se cargan de a uno, escaneando, o todos juntos desde un Excel.
@@ -50,6 +51,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-10-14** · Supervisión: nueva sección **Gestión → Equipo** (última vez activo de cada uno, visitas, faltantes, vencimientos y fotos por período, y el detalle de cada persona) · Fotos: filtro por persona y quién la sacó · Resumen: las últimas visitas dicen quién las hizo (migración 014).
 - **2026-10-14** · Rol **Vendedor** (migración 013): ve los faltantes de cada local según la última visita, las fechas cortas y los productos. No puede hacer visitas ni entrar a Gestión.
 - **2026-10-14** · Vencimientos: botón **Escanear**. El producto se agrega solo y queda abierta la fecha; si el código no estaba asociado, lo buscás por nombre y queda guardado para la próxima.
 - **2026-10-14** · La app pasa a llamarse **repositores.rv** y usa los colores de RAVSA (azul #1570B8) en modo claro y oscuro, con ícono nuevo «rv». El nombre ahora está en `app/bootstrap.php` (ya no en `config.php`), así llega solo al servidor. En el celular, si ya estaba instalada, puede tardar en cambiar el ícono: desinstalar y volver a instalar.
