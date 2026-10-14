@@ -44,12 +44,27 @@
 
     <h2 class="section-title">Entrar con Google</h2>
     <div class="card-soft p-3 mb-3">
-        <label class="form-label" for="google_client_id">ID de cliente de Google</label>
-        <input class="form-control font-monospace small<?= invalid('google_client_id') ?>" type="text" id="google_client_id" name="google_client_id"
-               value="<?= e(old('google_client_id', $valores['google_client_id'])) ?>" placeholder="123456-abc.apps.googleusercontent.com"
+        <?php $googleOk = $valores['google_client_id'] !== ''; ?>
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="fw-semibold">ID de cliente de Google</span>
+            <?php if ($googleOk): ?>
+                <span class="badge text-bg-success"><i class="bi bi-check-lg"></i> Configurado</span>
+            <?php else: ?>
+                <span class="badge text-bg-secondary">Sin configurar</span>
+            <?php endif; ?>
+        </div>
+        <label class="visually-hidden" for="google_client_id">ID de cliente de Google</label>
+        <input class="form-control font-monospace small<?= invalid('google_client_id') ?>" type="password" id="google_client_id" name="google_client_id"
+               value="" placeholder="<?= $googleOk ? 'Pegá uno nuevo solo si querés cambiarlo' : 'Pegá el ID (termina en .apps.googleusercontent.com)' ?>"
                autocomplete="off" autocapitalize="off" spellcheck="false">
         <?= field_error('google_client_id') ?>
-        <div class="form-text">Con esto aparece el botón «Iniciar sesión con Google». Vacío = sin botón. Cada usuario vincula su Gmail en Perfil.</div>
+        <?php if ($googleOk): ?>
+            <div class="form-check mt-2">
+                <input class="form-check-input" type="checkbox" id="google_quitar" name="google_quitar" value="1">
+                <label class="form-check-label small" for="google_quitar">Quitar (sacar el botón de Google del login)</label>
+            </div>
+        <?php endif; ?>
+        <div class="form-text">Con esto aparece el botón «Iniciar sesión con Google». Cada usuario vincula su Gmail en Perfil.</div>
     </div>
 
     <div class="form-actions">

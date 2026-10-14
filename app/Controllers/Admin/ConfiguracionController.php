@@ -38,7 +38,11 @@ final class ConfiguracionController extends Controller
             }
         }
         // ID de cliente de Google (vacío = sin botón de Google en el login)
+        // No se muestra el ID guardado: campo vacío = dejar el que está (salvo que marquen "Quitar").
         $googleId = trim((string) ($_POST['google_client_id'] ?? ''));
+        if ($googleId === '' && empty($_POST['google_quitar'])) {
+            $googleId = (string) Configuracion::get('google_client_id', '');
+        }
         if ($googleId !== '' && !preg_match('/^[\w-]+\.apps\.googleusercontent\.com$/', $googleId)) {
             $errores['google_client_id'] = 'El ID de cliente termina en .apps.googleusercontent.com. Copialo entero desde Google Cloud.';
         }

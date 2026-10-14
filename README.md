@@ -51,6 +51,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-10-14** · Configuración: el ID de cliente de Google ya no se muestra (solo «Configurado»). Para cambiarlo se pega uno nuevo; dejándolo vacío se conserva; con «Quitar» se saca el botón de Google.
 - **2026-10-14** · Supervisión: nueva sección **Gestión → Equipo** (última vez activo de cada uno, visitas, faltantes, vencimientos y fotos por período, y el detalle de cada persona) · Fotos: filtro por persona y quién la sacó · Resumen: las últimas visitas dicen quién las hizo (migración 014).
 - **2026-10-14** · Rol **Vendedor** (migración 013): ve los faltantes de cada local según la última visita, las fechas cortas y los productos. No puede hacer visitas ni entrar a Gestión.
 - **2026-10-14** · Vencimientos: botón **Escanear**. El producto se agrega solo y queda abierta la fecha; si el código no estaba asociado, lo buscás por nombre y queda guardado para la próxima.
