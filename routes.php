@@ -73,8 +73,6 @@ $router->post('/visitas/{id}/observaciones', [ObservacionController::class, 'cre
 $router->post('/observaciones/{id}/eliminar', [ObservacionController::class, 'eliminar'], ['auth']);
 
 $router->get('/perfil', [PerfilController::class, 'show'], ['auth']);
-$router->post('/perfil/google', [PerfilController::class, 'vincularGoogle'], ['auth']);
-$router->post('/perfil/google/quitar', [PerfilController::class, 'desvincularGoogle'], ['auth']);
 $router->get('/productos', [ProductoController::class, 'index'], ['auth']);
 $router->get('/productos/buscar', [ProductoController::class, 'buscar'], ['auth']);
 $router->get('/productos/codigo', [ProductoController::class, 'porCodigo'], ['auth']);

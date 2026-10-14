@@ -34,6 +34,13 @@ $esYo = $usuario && (int) $usuario['id'] === App\Core\Auth::id();
     </div>
 
     <div class="mb-3">
+        <label class="form-label" for="google_email"><i class="bi bi-google"></i> Gmail para entrar con Google <span class="text-body-secondary small">(opcional)</span></label>
+        <input class="form-control<?= invalid('google_email') ?>" type="email" id="google_email" name="google_email" value="<?= e($v('google_email')) ?>" maxlength="190" inputmode="email" autocapitalize="off" autocomplete="off" placeholder="Solo si es distinto del email de arriba">
+        <?= field_error('google_email') ?>
+        <div class="form-text">Si el email de arriba ya es un Gmail, con eso alcanza para entrar con Google.</div>
+    </div>
+
+    <div class="mb-3">
         <label class="form-label" for="password">Contraseña</label>
         <div class="input-group">
             <input class="form-control<?= invalid('password') ?>" type="password" id="password" name="password" minlength="8" maxlength="72" autocomplete="new-password" <?= $usuario ? '' : 'required' ?>>

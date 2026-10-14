@@ -70,7 +70,7 @@ final class AuthController extends Controller
         $user = User::findForGoogle($email);
         if ($user === null) {
             LoginIntento::registrar($ip, $email);
-            $this->json(['ok' => false, 'message' => 'Esa cuenta de Google no está vinculada a ningún usuario. Entrá con tu email y vinculala en Perfil.'], 403);
+            $this->json(['ok' => false, 'message' => 'Esa cuenta de Google no tiene usuario. Pedile al administrador que cargue tu Gmail en tu usuario.'], 403);
         }
         if (!$user['activo']) {
             $this->json(['ok' => false, 'message' => 'Tu usuario está desactivado. Consultá con el administrador.'], 403);

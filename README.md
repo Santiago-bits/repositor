@@ -34,7 +34,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 - **Cada uno lo suyo:** cada repositor ve solo sus fechas cortas, sus promos y su historial; solo puede retirar los lotes que cargó él. Las promos que carga el admin en Gestión → Promociones las ven todos. El admin ve todo.
 - **Supervisar (admin):** Gestión → **Equipo**. Cada persona con la última vez que abrió la app (punto verde = hoy) y lo que hizo en el período (Hoy / 7 / 30 días): visitas, faltantes, vencimientos y fotos. Tocando a alguien ves sus visitas día por día (con horario) y «Sus fotos». En **Fotos** se puede filtrar por persona y cada foto dice quién la sacó.
 - **Vendedor:** al entrar ve **Faltantes**: por cada local, lo que faltaba en la última visita del repositor (sin stock o poco), agrupado por categoría, para ir a venderlo. También ve las fechas cortas y los productos con precios. No hace visitas ni carga nada.
-- **Entrar con Google:** (una sola vez) el admin pega el *ID de cliente* en Gestión → Configuración → Entrar con Google. Después cada uno entra con su email, va a **Perfil → Cuenta de Google** y toca el botón: desde ahí puede entrar con Google sin contraseña. Solo entran usuarios que ya existen.
+- **Entrar con Google:** (una sola vez) el admin pega el *ID de cliente* en Gestión → Configuración → Entrar con Google. Después cada uno toca «Iniciar sesión con Google» en el login: entra si su Gmail es el email de su usuario, o el «Gmail para entrar con Google» que le cargó el admin en Gestión → Usuarios. Solo entran usuarios que ya existen.
 - **Productos:** el catálogo es único y vale para todos los locales (una Quilmes es la misma en cualquier súper o chino). Se cargan de a uno, escaneando, o todos juntos desde un Excel.
 - **Códigos de barras:** el JSON de Chess no los trae. En Productos → Escanear, si el código es nuevo, buscás el producto (ej. "andes oro") y lo tocás: queda asociado para siempre. Volver a subir el JSON no lo borra.
 - **Productos de Chess:** Gestión → Productos → Excel y subí el JSON del maestro de artículos (ej. `bebidas_ravsa.json`). Volvé a subirlo cuando cambien los precios: actualiza sin duplicar y desactiva lo anulado.
@@ -53,6 +53,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-10-14** · Google: ya no se vincula desde Perfil. El admin carga el «Gmail para entrar con Google» al crear o editar el usuario (opcional si el email ya es ese Gmail).
 - **2026-10-14** · Los repositores pueden **crear locales** (Inicio → Locales → + Nuevo) y los locales son de todos: ya no se asignan por usuario · Diseño **centrado**: saludo, títulos de cada pantalla y títulos de sección.
 - **2026-10-14** · Datos separados por usuario: fechas cortas, promos (salvo las que carga el admin), historial de stock de un producto y Retirar son de cada uno. Antes se mezclaban si dos repositores iban al mismo local. El admin sigue viendo todo.
 - **2026-10-14** · Configuración: el ID de cliente de Google ya no se muestra (solo «Configurado»). Para cambiarlo se pega uno nuevo; dejándolo vacío se conserva; con «Quitar» se saca el botón de Google.

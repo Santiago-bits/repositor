@@ -77,16 +77,16 @@ final class User extends Model
     public static function create(array $d): int
     {
         return self::insert(
-            'INSERT INTO users (role_id, nombre, apellido, email, password_hash, activo) VALUES (?, ?, ?, ?, ?, ?)',
-            [$d['role_id'], $d['nombre'], $d['apellido'], $d['email'], password_hash($d['password'], PASSWORD_DEFAULT), (int) $d['activo']]
+            'INSERT INTO users (role_id, nombre, apellido, email, google_email, password_hash, activo) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [$d['role_id'], $d['nombre'], $d['apellido'], $d['email'], $d['google_email'] ?? null, password_hash($d['password'], PASSWORD_DEFAULT), (int) $d['activo']]
         );
     }
 
     public static function update(int $id, array $d): void
     {
         self::execute(
-            'UPDATE users SET role_id = ?, nombre = ?, apellido = ?, email = ?, activo = ? WHERE id = ?',
-            [$d['role_id'], $d['nombre'], $d['apellido'], $d['email'], (int) $d['activo'], $id]
+            'UPDATE users SET role_id = ?, nombre = ?, apellido = ?, email = ?, google_email = ?, activo = ? WHERE id = ?',
+            [$d['role_id'], $d['nombre'], $d['apellido'], $d['email'], $d['google_email'] ?? null, (int) $d['activo'], $id]
         );
         if (!empty($d['password'])) {
             self::updatePassword($id, $d['password']);

@@ -36,6 +36,18 @@ final class UsuarioRequest
                 $errors['email'] = 'Ya existe un usuario con ese email.';
             }
         }
+        // Gmail para "Iniciar sesión con Google" (opcional: si es el mismo que el email, no hace falta).
+        $google = mb_strtolower(trim((string) ($input['google_email'] ?? '')));
+        $data['google_email'] = null;
+        if ($google !== '' && (!filter_var($google, FILTER_VALIDATE_EMAIL) || mb_strlen($google) > 190)) {
+            $errors['google_email'] = 'Ese Gmail no es válido.';
+        } elseif ($google !== '' && $google !== ($data['email'] ?? '')) {
+            if (User::googleEmailEnUso($google, (int) $id)) {
+                $errors['google_email'] = 'Ese Gmail ya lo usa otro usuario.';
+            }
+            $data['google_email'] = $google;
+        }
+
         if (!isset($errors['role_id'])) {
             $data['role'] = Role::find($data['role_id']);
             if ($data['role'] === null) {
