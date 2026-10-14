@@ -30,6 +30,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cómo se usa
 
+- **Usuarios:** Gestión → Usuarios → Nuevo. Nombre, email, contraseña (mínimo 8) y rol (Administrador o Repositor). Se pueden editar, desactivar o borrar (sus visitas quedan).
 - **Entrar con Google:** (una sola vez) el admin pega el *ID de cliente* en Gestión → Configuración → Entrar con Google. Después cada uno entra con su email, va a **Perfil → Cuenta de Google** y toca el botón: desde ahí puede entrar con Google sin contraseña. Solo entran usuarios que ya existen.
 - **Productos:** el catálogo es único y vale para todos los locales (una Quilmes es la misma en cualquier súper o chino). Se cargan de a uno, escaneando, o todos juntos desde un Excel.
 - **Códigos de barras:** el JSON de Chess no los trae. En Productos → Escanear, si el código es nuevo, buscás el producto (ej. "andes oro") y lo tocás: queda asociado para siempre. Volver a subir el JSON no lo borra.
@@ -48,6 +49,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-10-14** · Vuelve **Gestión → Usuarios**: el administrador puede crear usuarios nuevos, editarlos, desactivarlos o borrarlos. Se ve quién entra con Google.
 - **2026-10-14** · **Iniciar sesión con Google**: botón en el login; cada usuario vincula su Gmail en Perfil (migración 012). El ID de cliente se carga en Configuración.
 - **2026-10-07** · Escáner: si el código no está asociado, te pregunta qué producto es (busca entre los que no tienen código) y lo guarda; la próxima vez lo reconoce solo.
 - **2026-10-07** · Importar el maestro de artículos de **Chess** (JSON): nombres legibles (marca + sabor + envase), categoría por división, código de artículo, unidades por bulto y precios (consumidor final y base, por unidad y por bulto). Se ven en la ficha del producto y en la visita. Se busca también por código de artículo (migración 011).

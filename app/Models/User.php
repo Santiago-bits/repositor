@@ -56,7 +56,7 @@ final class User extends Model
     public static function all(): array
     {
         return self::fetchAll(
-            'SELECT u.id, u.nombre, u.apellido, u.email, u.activo, u.last_login_at,
+            'SELECT u.id, u.nombre, u.apellido, u.email, u.google_email, u.activo, u.last_login_at,
                     r.slug AS role_slug, r.nombre AS role_nombre,
                     (SELECT COUNT(*) FROM local_user lu WHERE lu.user_id = u.id) AS locales_count
              FROM users u

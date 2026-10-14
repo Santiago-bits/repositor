@@ -18,6 +18,7 @@ use App\Controllers\PerfilController;
 use App\Controllers\ProductoController;
 use App\Controllers\Admin\FotoController as AdminFotoController;
 use App\Controllers\Admin\ConfiguracionController;
+use App\Controllers\Admin\UsuarioController;
 use App\Controllers\HistorialController;
 use App\Controllers\PwaController;
 use App\Controllers\VisitaController;
@@ -119,6 +120,14 @@ $router->post('/admin/promociones/{id}', [AdminPromocionController::class, 'upda
 $router->post('/admin/promociones/{id}/cancelar', [AdminPromocionController::class, 'cancelar'], $admin);
 $router->post('/admin/promociones/{id}/eliminar', [AdminPromocionController::class, 'eliminar'], $admin);
 
+
+$router->get('/admin/usuarios', [UsuarioController::class, 'index'], $admin);
+$router->get('/admin/usuarios/crear', [UsuarioController::class, 'create'], $admin);
+$router->post('/admin/usuarios', [UsuarioController::class, 'store'], $admin);
+$router->get('/admin/usuarios/{id}/editar', [UsuarioController::class, 'edit'], $admin);
+$router->post('/admin/usuarios/{id}', [UsuarioController::class, 'update'], $admin);
+$router->post('/admin/usuarios/{id}/estado', [UsuarioController::class, 'toggle'], $admin);
+$router->post('/admin/usuarios/{id}/eliminar', [UsuarioController::class, 'eliminar'], $admin);
 
 $router->get('/admin/categorias', [CategoriaController::class, 'index'], $admin);
 $router->post('/admin/categorias', [CategoriaController::class, 'store'], $admin);

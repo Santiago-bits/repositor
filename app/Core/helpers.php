@@ -173,6 +173,7 @@ function nav_admin(): array
         ['/admin/productos', 'bi-box-seam', 'Productos'],
         ['/admin/categorias', 'bi-tags', 'Categorías'],
         ['/admin/promociones', 'bi-megaphone', 'Promociones'],
+        ['/admin/usuarios', 'bi-people', 'Usuarios'],
         ['/admin/configuracion', 'bi-gear', 'Configuración'],
     ];
 }
