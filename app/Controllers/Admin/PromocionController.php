@@ -28,6 +28,7 @@ final class PromocionController extends Controller
             'localId'     => $localId,
             'locales'     => Local::all(),
             'promociones' => Promocion::listar($filtro, $localId),
+            'cuenta'      => Promocion::contar(array_keys(self::FILTROS), $localId),
         ]);
     }
 

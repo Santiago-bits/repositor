@@ -54,6 +54,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-10-14** · Diseño: **Promociones** con pestañas parejas y contador, tarjetas con foto, fechas, «quedan X días» y precio promo vs normal · **Usuarios** ordenado en Datos, Acceso y Rol (cada rol explica qué puede hacer) · La barra de Guardar fija ahora tiene fondo y no tapa lo de abajo.
 - **2026-10-14** · Mi cuenta: se sacó el teléfono y se puede **cambiar el Gmail** con el que se entra (pide la contraseña).
 - **2026-10-14** · Mi cuenta: **foto de perfil**, nombre, apellido y teléfono, **cambiar contraseña** y **cerrar sesión en los otros dispositivos** (también pasa al cambiar la contraseña). Migración 015.
 - **2026-10-14** · «Perfil» pasa a ser **Mi cuenta** (se abre desde el círculo de arriba) y solo tiene tus ajustes. **Gestión** sale de ahí: en el celular es una pestaña de la barra de abajo (solo admin).

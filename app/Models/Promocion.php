@@ -13,7 +13,7 @@ final class Promocion extends Model
     ];
 
     private const SELECT = "SELECT p.id, p.producto_id, p.fecha_inicio, p.fecha_fin, p.precio_normal, p.precio_promo,
-                                   p.observaciones, p.estado, p.created_by, pr.nombre, pr.presentacion, pr.marca,
+                                   p.observaciones, p.estado, p.created_by, pr.nombre, pr.presentacion, pr.marca, pr.imagen_path,
                                    CONCAT(u.nombre, ' ', u.apellido) AS creador,
                                    (SELECT GROUP_CONCAT(l.nombre ORDER BY l.nombre SEPARATOR ', ')
                                       FROM promocion_local pl JOIN locales l ON l.id = pl.local_id
@@ -30,7 +30,23 @@ final class Promocion extends Model
     /** $filtro: vigentes | proximas | terminadas | todas */
     public static function listar(string $filtro, ?int $localId = null): array
     {
-        $sql = self::SELECT . ' WHERE p.deleted_at IS NULL';
+        [$sql, $params] = self::filtrar(self::SELECT . ' WHERE p.deleted_at IS NULL', $filtro, $localId);
+        return self::fetchAll($sql . ' ORDER BY ' . ($filtro === 'proximas' ? 'p.fecha_inicio' : 'p.fecha_fin DESC') . ', pr.nombre LIMIT 300', $params);
+    }
+
+    /** Cuántas hay en cada pestaña (para mostrar el número al lado). */
+    public static function contar(array $filtros, ?int $localId = null): array
+    {
+        $cuenta = [];
+        foreach ($filtros as $filtro) {
+            [$sql, $params] = self::filtrar('SELECT COUNT(*) FROM promociones p WHERE p.deleted_at IS NULL', $filtro, $localId);
+            $cuenta[$filtro] = (int) self::value($sql, $params);
+        }
+        return $cuenta;
+    }
+
+    private static function filtrar(string $sql, string $filtro, ?int $localId): array
+    {
         $sql .= match ($filtro) {
             'vigentes'   => " AND p.estado = 'activa' AND CURDATE() BETWEEN p.fecha_inicio AND p.fecha_fin",
             'proximas'   => " AND p.estado = 'activa' AND p.fecha_inicio > CURDATE()",
@@ -42,7 +58,29 @@ final class Promocion extends Model
             $sql .= ' AND EXISTS (SELECT 1 FROM promocion_local pl WHERE pl.promocion_id = p.id AND pl.local_id = ?)';
             $params[] = $localId;
         }
-        return self::fetchAll($sql . ' ORDER BY p.fecha_fin DESC, pr.nombre LIMIT 300', $params);
+        return [$sql, $params];
+    }
+
+    /** "Termina hoy", "Quedan 3 días", "Empieza en 2 días", "Terminó hace 5 días". */
+    public static function cuando(array $p): string
+    {
+        $hoy = strtotime(date('Y-m-d'));
+        $dias = fn (string $f) => (int) round((strtotime($f) - $hoy) / 86400);
+        $plural = fn (int $n) => $n === 1 ? '1 día' : "{$n} días";
+        if ($p['estado'] === 'cancelada') {
+            return 'Cancelada';
+        }
+        if ($p['fecha_inicio'] > date('Y-m-d')) {
+            $n = $dias($p['fecha_inicio']);
+            return $n === 1 ? 'Empieza mañana' : 'Empieza en ' . $plural($n);
+        }
+        $n = $dias($p['fecha_fin']);
+        return match (true) {
+            $n === 0 => 'Termina hoy',
+            $n === 1 => 'Termina mañana',
+            $n > 1   => 'Quedan ' . $plural($n),
+            default  => 'Terminó hace ' . $plural(-$n),
+        };
     }
 
     /** Promos activas de un local en una fecha, indexadas por producto_id. */
