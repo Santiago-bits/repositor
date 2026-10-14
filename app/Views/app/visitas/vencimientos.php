@@ -16,16 +16,26 @@ $vid = (int) $visita['id'];
 <form method="post" action="<?= url("/visitas/{$vid}/vencimientos") ?>" data-vencimientos>
     <?= csrf_field() ?>
 
-    <div class="search-input mb-3">
-        <i class="bi bi-search"></i>
-        <input type="search" placeholder="Buscar bebida…" autocomplete="off" autocapitalize="off" enterkeyhint="search"
-               aria-label="Buscar producto" data-venc-buscar>
+    <div class="search-bar mb-3">
+        <div class="search-input">
+            <i class="bi bi-search"></i>
+            <input type="search" placeholder="Buscar bebida…" autocomplete="off" autocapitalize="off" enterkeyhint="search"
+                   aria-label="Buscar producto" data-venc-buscar>
+        </div>
+        <button class="btn btn-primary btn-scan" type="button" data-venc-escanear
+                data-asociar-endpoint="<?= url('/productos/{id}/codigo') ?>">
+            <i class="bi bi-upc-scan"></i><span>Escanear</span>
+        </button>
+    </div>
+    <div class="notice mb-3" data-venc-codigo-nuevo hidden>
+        <i class="bi bi-upc"></i>
+        <div class="flex-grow-1 min-w-0"></div>
     </div>
 
     <?php // Resultados: solo aparecen mientras se escribe. Tocar uno lo agrega abajo (se puede repetir: otro lote). ?>
     <div class="card-soft promo-grupo mb-3" data-venc-resultados hidden>
         <?php foreach ($productos as $p): ?>
-            <button type="button" class="venc-opcion" data-id="<?= (int) $p['id'] ?>"
+            <button type="button" class="venc-opcion" data-id="<?= (int) $p['id'] ?>" data-codigo="<?= e((string) $p['codigo_barras']) ?>"
                     data-nombre="<?= e(Producto::nombreCompleto($p)) ?>"
                     data-texto="<?= e(mb_strtolower(Producto::nombreCompleto($p) . ' ' . $p['marca'])) ?>">
                 <?= producto_thumb($p) ?>

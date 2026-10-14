@@ -43,12 +43,13 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 - **Conteo de promos:** cuando quieras, desde «Promos del finde» → «Anotar cuánto quedó de las promos que terminaron».
 - **Visitas:** no hay que finalizarlas. Entrás al local, cargás lo que quieras y listo: se cierra sola cuando el GPS ve que te fuiste, cuando entrás a otro local o al día siguiente. Si volvés el mismo día, seguís en la misma visita.
 - **Ubicación de un local:** en Gestión → Locales, pegá el link de Google Maps (Compartir → copiar link), un Plus Code (ej: JX3M+PF) o las coordenadas. Se completa al tocar «Buscar» o al guardar.
-- **Vencimientos:** en la visita, botón «Vencimientos». Buscás el producto, lo tocás y le ponés la fecha, la cantidad (opcional) y una nota con la ubicación (ej: depósito). Podés agregar varios (también el mismo producto con otro lote) y guardar todo junto.
+- **Vencimientos:** en la visita, botón «Vencimientos». Tocás **Escanear** y el producto aparece con la fecha lista para poner (si el código es nuevo, lo buscás por nombre una vez y queda asociado). También podés buscarlo escribiendo, lo tocás y le ponés la fecha, la cantidad (opcional) y una nota con la ubicación (ej: depósito). Podés agregar varios (también el mismo producto con otro lote) y guardar todo junto.
 - **Fechas cortas:** en Inicio, debajo de tus locales, ves lo que vence en los próximos días (según Configuración, 15 por defecto) y lo vencido en la última semana, con local, cantidad y nota. Se toma el último relevamiento de cada producto en cada local. Con **Retirar** marcás que ya lo sacaste y deja de aparecer.
 - **Promos del finde:** en la visita, escribís en el buscador, tocás el producto y queda abajo en "En promo". Sin buscar no se muestra la lista completa. El stock es opcional. Después, "Guardar y armar mensaje".
 
 ## Cambios
 
+- **2026-10-14** · Vencimientos: botón **Escanear**. El producto se agrega solo y queda abierta la fecha; si el código no estaba asociado, lo buscás por nombre y queda guardado para la próxima.
 - **2026-10-14** · La app pasa a llamarse **repositores.rv** y usa los colores de RAVSA (azul #1570B8) en modo claro y oscuro, con ícono nuevo «rv». El nombre ahora está en `app/bootstrap.php` (ya no en `config.php`), así llega solo al servidor. En el celular, si ya estaba instalada, puede tardar en cambiar el ícono: desinstalar y volver a instalar.
 - **2026-10-14** · Vuelve **Gestión → Usuarios**: el administrador puede crear usuarios nuevos, editarlos, desactivarlos o borrarlos. Se ve quién entra con Google.
 - **2026-10-14** · **Iniciar sesión con Google**: botón en el login; cada usuario vincula su Gmail en Perfil (migración 012). El ID de cliente se carga en Configuración.

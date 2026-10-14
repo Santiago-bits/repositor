@@ -94,9 +94,56 @@
             venc.querySelector('[data-venc-acciones]').hidden = n === 0;
         };
 
+        // Escanear: si el código es de un producto, se agrega y queda lista la fecha.
+        // Si es nuevo, se busca por nombre y al tocarlo el código le queda asociado.
+        var vEscanear = venc.querySelector('[data-venc-escanear]');
+        var vAviso = venc.querySelector('[data-venc-codigo-nuevo]');
+        var vCodigoPendiente = '';
+        var vToken = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
+
+        var vAvisar = function (texto) {
+            vAviso.querySelector('div').textContent = texto;
+            vAviso.hidden = texto === '';
+        };
+
+        vEscanear.addEventListener('click', function () {
+            window.JacobEscaner.abrir({
+                onCodigo: function (codigo) {
+                    var op = vResultados.querySelector('.venc-opcion[data-codigo="' + CSS.escape(codigo) + '"]');
+                    if (op) {
+                        vCodigoPendiente = '';
+                        vAvisar('');
+                        op.click();
+                        return;
+                    }
+                    vCodigoPendiente = codigo;
+                    vAvisar('Código nuevo (' + codigo + '). Buscá el producto por nombre y tocalo: queda asociado para la próxima.');
+                    vBuscar.value = '';
+                    vActualizar();
+                    vBuscar.focus();
+                }
+            });
+        });
+
+        var vAsociar = function (op, codigo) {
+            fetch(vEscanear.dataset.asociarEndpoint.replace('{id}', op.dataset.id), {
+                method: 'POST',
+                headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                body: new URLSearchParams({ _token: vToken, codigo: codigo })
+            }).then(function (r) { return r.json(); }).then(function (d) {
+                if (d.ok) op.dataset.codigo = codigo;
+                vAvisar(d.ok ? '' : '⚠️ ' + (d.message || 'No se pudo asociar el código.'));
+            }).catch(function () { vAvisar('⚠️ No se pudo asociar el código (sin conexión).'); });
+        };
+
         vResultados.addEventListener('click', function (e) {
             var op = e.target.closest('.venc-opcion');
             if (!op) return;
+            if (vCodigoPendiente) {
+                if (!op.dataset.codigo) vAsociar(op, vCodigoPendiente);
+                else vAvisar('');
+                vCodigoPendiente = '';
+            }
             var tarjeta = vPlantilla.content.firstElementChild.cloneNode(true);
             var i = vIndice++;
             tarjeta.querySelector('[data-venc-nombre]').textContent = op.dataset.nombre;
@@ -108,7 +155,10 @@
 
             vBuscar.value = '';
             vActualizar();
-            tarjeta.querySelector('[data-campo="fecha"]').focus();
+            var fecha = tarjeta.querySelector('[data-campo="fecha"]');
+            tarjeta.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            fecha.focus();
+            try { if (fecha.showPicker) fecha.showPicker(); } catch (err) { /* el navegador pide un toque: queda el foco */ }
         });
 
         vNuevos.addEventListener('click', function (e) {

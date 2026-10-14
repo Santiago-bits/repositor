@@ -22,7 +22,7 @@ final class VisitaVencimientoController extends VisitaBaseController
             'visita'    => $visita,
             'productos' => ProductoLocal::productosDeLocal((int) $visita['local_id'], $id),
             'cargados'  => Vencimiento::deVisita($id),
-            'scripts'   => ['assets/js/visita.js'],
+            'scripts'   => ['assets/js/escaner.js', 'assets/js/visita.js'],
         ]);
     }
 

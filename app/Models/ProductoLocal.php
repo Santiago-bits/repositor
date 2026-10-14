@@ -13,7 +13,7 @@ final class ProductoLocal extends Model
     public static function productosDeLocal(int $localId, int $relevamientoId): array
     {
         return self::fetchAll(
-            'SELECT p.id, p.nombre, p.marca, p.presentacion, p.imagen_path, pl.ubicacion_gondola,
+            'SELECT p.id, p.nombre, p.marca, p.presentacion, p.imagen_path, p.codigo_barras, pl.ubicacion_gondola,
                     rp.id AS rp_id, rp.stock, rp.estado_stock
              FROM productos p
              LEFT JOIN producto_local pl ON pl.producto_id = p.id AND pl.local_id = ?
