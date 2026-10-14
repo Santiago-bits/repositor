@@ -14,7 +14,7 @@
         </span>
     </a>
     <?php if ($user): ?>
-        <a class="avatar" href="<?= url('/perfil') ?>" title="Perfil"><?= e(initials($user)) ?></a>
+        <a class="avatar <?= active('/perfil') ?>" href="<?= url('/perfil') ?>" title="Mi cuenta" aria-label="Mi cuenta"><?= e(initials($user)) ?></a>
     <?php endif; ?>
 </header>
 
@@ -55,8 +55,9 @@
     </nav>
 <?php else: ?>
     <nav class="bottom-nav d-lg-none" aria-label="Navegación principal">
-        <?php foreach (nav_principal() as [$path, $icon, $label]): ?>
-            <a class="<?= active($path) ?>" href="<?= url($path) ?>"><i class="bi <?= $icon ?>"></i><span><?= $label ?></span></a>
+        <?php foreach (nav_principal(true) as [$path, $icon, $label]): ?>
+            <?php $on = $path === '/gestion' ? (active('/gestion') ?: active('/admin')) : active($path); ?>
+            <a class="<?= $on ?>" href="<?= url($path) ?>"><i class="bi <?= $icon ?>"></i><span><?= $label ?></span></a>
         <?php endforeach; ?>
     </nav>
 <?php endif; ?>

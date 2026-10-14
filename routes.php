@@ -73,6 +73,7 @@ $router->post('/visitas/{id}/observaciones', [ObservacionController::class, 'cre
 $router->post('/observaciones/{id}/eliminar', [ObservacionController::class, 'eliminar'], ['auth']);
 
 $router->get('/perfil', [PerfilController::class, 'show'], ['auth']);
+$router->get('/gestion', [PerfilController::class, 'gestion'], ['auth', 'admin']);
 $router->get('/productos', [ProductoController::class, 'index'], ['auth']);
 $router->get('/productos/buscar', [ProductoController::class, 'buscar'], ['auth']);
 $router->get('/productos/codigo', [ProductoController::class, 'porCodigo'], ['auth']);

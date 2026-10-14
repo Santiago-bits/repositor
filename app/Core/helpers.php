@@ -175,22 +175,23 @@ function dia_semana(?int $timestamp = null): string
     return $dias[(int) date('w', $timestamp ?? time())];
 }
 
-/** Navegación principal (barra inferior en celular, menú lateral en PC). */
-function nav_principal(): array
+/**
+ * Navegación principal (barra inferior en celular, menú lateral en PC). "Mi cuenta" va en el círculo de arriba.
+ * En el celular el admin tiene además la pestaña Gestión (en la PC está en el menú lateral).
+ */
+function nav_principal(bool $movil = false): array
 {
     if (is_vendedor()) {
         return [
             ['/', 'bi-cart-x', 'Faltantes'],
             ['/productos', 'bi-box-seam', 'Productos'],
-            ['/perfil', 'bi-person-circle', 'Perfil'],
         ];
     }
-    return [
+    return array_merge([
         ['/', 'bi-house-door', 'Inicio'],
         ['/productos', 'bi-box-seam', 'Productos'],
         ['/historial', 'bi-clock-history', 'Historial'],
-        ['/perfil', 'bi-person-circle', 'Perfil'],
-    ];
+    ], $movil && is_admin() ? [['/gestion', 'bi-grid', 'Gestión']] : []);
 }
 
 function nav_admin(): array

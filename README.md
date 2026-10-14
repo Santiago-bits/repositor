@@ -30,6 +30,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cómo se usa
 
+- **Mi cuenta:** tocando tu círculo con iniciales (arriba a la derecha): tus datos, apariencia, instalar la app y cerrar sesión. **Gestión** (solo admin): pestaña de abajo en el celular, menú de la izquierda en la PC.
 - **Usuarios:** Gestión → Usuarios → Nuevo. Nombre, email, contraseña (mínimo 8) y rol (Administrador, Repositor o Vendedor). Se pueden editar, desactivar o borrar (sus visitas quedan).
 - **Cada uno lo suyo:** cada repositor ve solo sus fechas cortas, sus promos y su historial; solo puede retirar los lotes que cargó él. Las promos que carga el admin en Gestión → Promociones las ven todos. El admin ve todo.
 - **Supervisar (admin):** Gestión → **Equipo**. Cada persona con la última vez que abrió la app (punto verde = hoy) y lo que hizo en el período (Hoy / 7 / 30 días): visitas, faltantes, vencimientos y fotos. Tocando a alguien ves sus visitas día por día (con horario) y «Sus fotos». En **Fotos** se puede filtrar por persona y cada foto dice quién la sacó.
@@ -53,6 +54,7 @@ Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Au
 
 ## Cambios
 
+- **2026-10-14** · «Perfil» pasa a ser **Mi cuenta** (se abre desde el círculo de arriba) y solo tiene tus ajustes. **Gestión** sale de ahí: en el celular es una pestaña de la barra de abajo (solo admin).
 - **2026-10-14** · Google: ya no se vincula desde Perfil. El admin carga el «Gmail para entrar con Google» al crear o editar el usuario (opcional si el email ya es ese Gmail).
 - **2026-10-14** · Los repositores pueden **crear locales** (Inicio → Locales → + Nuevo) y los locales son de todos: ya no se asignan por usuario · Diseño **centrado**: saludo, títulos de cada pantalla y títulos de sección.
 - **2026-10-14** · Datos separados por usuario: fechas cortas, promos (salvo las que carga el admin), historial de stock de un producto y Retirar son de cada uno. Antes se mezclaban si dos repositores iban al mismo local. El admin sigue viendo todo.

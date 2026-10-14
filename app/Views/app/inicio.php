@@ -102,8 +102,3 @@ $abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
     </div>
 <?php endif; ?>
 
-<?php if (is_admin()): ?>
-    <a class="btn btn-outline-primary btn-xl w-100 mt-4 d-lg-none" href="<?= url('/admin') ?>">
-        <i class="bi bi-gear me-1"></i> Gestión (locales, productos, promos…)
-    </a>
-<?php endif; ?>

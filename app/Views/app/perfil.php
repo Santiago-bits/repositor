@@ -1,3 +1,7 @@
+<div class="page-head">
+    <h1>Mi cuenta</h1>
+</div>
+
 <div class="card-soft p-4 text-center mb-4">
     <div class="avatar-lg mx-auto mb-3"><?= e(initials($user)) ?></div>
     <h1 class="h4 fw-bold mb-1"><?= e($user['nombre'] . ' ' . $user['apellido']) ?></h1>
@@ -20,20 +24,8 @@
     <i class="bi bi-box-arrow-up"></i>
     <div>En iPhone: tocá <strong>Compartir</strong> <i class="bi bi-box-arrow-up"></i> y después <strong>Agregar a inicio</strong>.</div>
 </div>
-<p class="small text-body-secondary mt-2 mb-0">Instalada, se abre como una app, a pantalla completa y más rápido.</p>
+<p class="small text-body-secondary text-center mt-2 mb-0">Instalada, se abre como una app, a pantalla completa y más rápido.</p>
 
-<?php if (is_admin()): ?>
-    <h2 class="section-title">Gestión</h2>
-    <div class="item-list">
-        <?php foreach (nav_admin() as [$path, $icon, $label]): ?>
-            <a class="item-card" href="<?= url($path) ?>">
-                <div class="item-icon"><i class="bi <?= $icon ?>"></i></div>
-                <div class="item-body"><div class="item-title"><?= $label ?></div></div>
-                <i class="bi bi-chevron-right text-body-secondary"></i>
-            </a>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
 
 <form method="post" action="<?= url('/logout') ?>" class="mt-4">
     <?= csrf_field() ?>

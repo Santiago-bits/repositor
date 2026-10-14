@@ -1574,3 +1574,5 @@ body.escaner-abierto { overflow: hidden; }
 .section-title.d-flex { justify-content: center !important; gap: 12px; }
 .section-title-accion { display: flex; justify-content: center; align-items: baseline; gap: 12px; }
 .section-title-accion a { font-size: .75rem; text-decoration: none; letter-spacing: 0; text-transform: none; }
+
+.avatar.active { box-shadow: 0 0 0 2px #fff; }
