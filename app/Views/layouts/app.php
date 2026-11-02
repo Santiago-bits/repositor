@@ -39,28 +39,12 @@
     </main>
 </div>
 
-<?php if (!empty($visitaBar)): ?>
-    <?php // Dentro de un local: lo que se usa ahí, siempre a mano. ?>
-    <nav class="bottom-nav bottom-nav-visita d-lg-none" aria-label="Acciones en el local">
-        <?php foreach ([
-            ['local', '', 'bi-shop', 'Local'],
-            ['vencimientos', '/vencimientos', 'bi-calendar-event', 'Vencimientos'],
-            ['promos', '/promociones/crear', 'bi-megaphone', 'Promos'],
-            ['faltantes', '/faltantes', 'bi-cart-x', 'Faltantes'],
-            ['fotos', '#fotos', 'bi-camera', 'Fotos'],
-        ] as [$clave, $ruta, $icon, $label]): ?>
-            <?php $href = $ruta === '#fotos' ? url('/visitas/' . (int) $visitaBar['id']) . '#fotos' : url('/visitas/' . (int) $visitaBar['id'] . $ruta); ?>
-            <a class="<?= ($visitaBar['activo'] ?? '') === $clave ? 'active' : '' ?>" href="<?= $href ?>"><i class="bi <?= $icon ?>"></i><span><?= $label ?></span></a>
-        <?php endforeach; ?>
-    </nav>
-<?php else: ?>
-    <nav class="bottom-nav d-lg-none" aria-label="Navegación principal">
-        <?php foreach (nav_principal(true) as [$path, $icon, $label]): ?>
-            <?php $on = $path === '/gestion' ? (active('/gestion') ?: active('/admin')) : active($path); ?>
-            <a class="<?= $on ?>" href="<?= url($path) ?>"><i class="bi <?= $icon ?>"></i><span><?= $label ?></span></a>
-        <?php endforeach; ?>
-    </nav>
-<?php endif; ?>
+<nav class="bottom-nav d-lg-none" aria-label="Navegación principal">
+    <?php foreach (nav_principal(true) as [$path, $icon, $label]): ?>
+        <?php $on = $path === '/gestion' ? (active('/gestion') ?: active('/admin')) : active($path); ?>
+        <a class="<?= $on ?>" href="<?= url($path) ?>"><i class="bi <?= $icon ?>"></i><span><?= $label ?></span></a>
+    <?php endforeach; ?>
+</nav>
 
 <script src="<?= asset('assets/vendor/bootstrap/bootstrap.bundle.min.js') ?>" defer></script>
 <script src="<?= asset('assets/js/app.js') ?>" defer></script>

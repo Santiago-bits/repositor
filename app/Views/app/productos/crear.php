@@ -1,6 +1,6 @@
 <div class="page-head">
     <h1>Nuevo producto</h1>
-    <a class="btn btn-link" href="<?= url($visitaId ? "/visitas/{$visitaId}" : '/productos') ?>">Cancelar</a>
+    <a class="btn btn-link" href="<?= url('/productos') ?>">Cancelar</a>
 </div>
 
 <?php if ($escaneado !== ''): ?>
@@ -15,7 +15,6 @@
 
 <form method="post" action="<?= url('/productos') ?>" novalidate>
     <?= csrf_field() ?>
-    <?php if ($visitaId): ?><input type="hidden" name="visita" value="<?= (int) $visitaId ?>"><?php endif; ?>
     <?= partial('producto-campos', ['producto' => $producto, 'categorias' => $categorias]) ?>
 
     <div class="form-actions">

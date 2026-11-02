@@ -29,18 +29,6 @@
         <?php endforeach; ?>
     </div>
 
-    <h2 class="section-title">Promociones</h2>
-    <div class="card-soft p-3 mb-3">
-        <?php [$etiqueta, $min, $max, $ayuda] = $campos['conteo_promos_dias_gracia']; ?>
-        <label class="form-label" for="conteo_promos_dias_gracia"><?= e($etiqueta) ?></label>
-        <div class="input-group">
-            <input class="form-control<?= invalid('conteo_promos_dias_gracia') ?>" type="number" id="conteo_promos_dias_gracia" name="conteo_promos_dias_gracia"
-                   min="<?= $min ?>" max="<?= $max ?>" value="<?= e(old('conteo_promos_dias_gracia', $valores['conteo_promos_dias_gracia'])) ?>" inputmode="numeric">
-            <span class="input-group-text">días</span>
-        </div>
-        <?= field_error('conteo_promos_dias_gracia') ?>
-        <div class="form-text"><?= e($ayuda) ?></div>
-    </div>
 
     <h2 class="section-title">Entrar con Google</h2>
     <div class="card-soft p-3 mb-3">

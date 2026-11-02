@@ -28,6 +28,24 @@ $v = fn (string $campo) => old($campo, $user[$campo] ?? '');
     <?php endif; ?>
 </div>
 
+<h2 class="section-title" id="avisos">Avisos</h2>
+<div class="card-soft p-3 text-center" data-avisos data-clave-url="<?= url('/avisos/clave') ?>" data-suscribir-url="<?= url('/avisos/suscribir') ?>"
+     data-apagar-url="<?= url('/avisos/desuscribir') ?>" data-probar-url="<?= url('/avisos/probar') ?>">
+    <p class="small mb-2" data-avisos-estado role="status">Revisando…</p>
+    <button class="btn btn-primary w-100" type="button" data-avisos-activar hidden><i class="bi bi-bell me-1"></i> Activar avisos en este celular</button>
+    <button class="btn btn-outline-primary w-100" type="button" data-avisos-probar hidden><i class="bi bi-send me-1"></i> Probar aviso</button>
+    <button class="btn btn-link btn-sm text-danger" type="button" data-avisos-apagar hidden>Apagar avisos en este celular</button>
+    <form method="post" action="<?= url('/perfil/avisos') ?>" class="d-flex align-items-center justify-content-center gap-2 mt-3">
+        <?= csrf_field() ?>
+        <label class="small" for="dias_aviso">Avisarme</label>
+        <select class="form-select form-select-sm w-auto" id="dias_aviso" name="dias_aviso" onchange="this.form.submit()">
+            <?php foreach ([1, 2, 3, 5, 7, 10, 15, 30] as $d): ?>
+                <option value="<?= $d ?>" <?= (int) ($user['dias_aviso'] ?? 7) === $d ? 'selected' : '' ?>><?= $d === 1 ? '1 día' : "{$d} días" ?> antes</option>
+            <?php endforeach; ?>
+        </select>
+    </form>
+</div>
+
 <h2 class="section-title">Tus datos</h2>
 <form class="card-soft p-3" method="post" action="<?= url('/perfil/datos') ?>" novalidate>
     <?= csrf_field() ?>

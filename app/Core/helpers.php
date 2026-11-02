@@ -191,29 +191,18 @@ function dia_semana(?int $timestamp = null): string
  */
 function nav_principal(bool $movil = false): array
 {
-    if (is_vendedor()) {
-        return [
-            ['/', 'bi-cart-x', 'Faltantes'],
-            ['/productos', 'bi-box-seam', 'Productos'],
-        ];
-    }
     return array_merge([
-        ['/', 'bi-house-door', 'Inicio'],
+        ['/', 'bi-pencil-square', 'Anotar'],
+        ['/fechas', 'bi-calendar-event', 'Fechas'],
         ['/productos', 'bi-box-seam', 'Productos'],
-        ['/historial', 'bi-clock-history', 'Historial'],
     ], $movil && is_admin() ? [['/gestion', 'bi-grid', 'Gestión']] : []);
 }
 
 function nav_admin(): array
 {
     return [
-        ['/admin', 'bi-speedometer2', 'Resumen'],
-        ['/admin/equipo', 'bi-person-lines-fill', 'Equipo'],
-        ['/admin/fotos', 'bi-images', 'Fotos'],
         ['/admin/locales', 'bi-shop', 'Locales'],
         ['/admin/productos', 'bi-box-seam', 'Productos'],
-        ['/admin/categorias', 'bi-tags', 'Categorías'],
-        ['/admin/promociones', 'bi-megaphone', 'Promociones'],
         ['/admin/usuarios', 'bi-people', 'Usuarios'],
         ['/admin/configuracion', 'bi-gear', 'Configuración'],
     ];

@@ -1,104 +1,73 @@
-<?php
-use App\Models\Local;
+<?php $localId = $local ? (int) $local['id'] : 0; ?>
+<div id="anotador" data-local="<?= $localId ?>" data-auto-detectar="<?= $autoDetectar ? '1' : '0' ?>"
+     data-detectar-url="<?= url('/locales/detectar') ?>" data-buscar-url="<?= url('/fechas/productos') ?>"
+     data-codigo-url="<?= url('/productos/codigo') ?>" data-asociar-url="<?= url('/productos/{id}/codigo') ?>"
+     data-guardar-url="<?= url('/fechas') ?>" data-inicio-url="<?= url('/') ?>">
 
-$abiertaHoy = $abierta && $abierta['fecha'] === date('Y-m-d');
-?>
-
-<section class="hero">
-    <p class="hero-date"><?= e(dia_semana()) ?> <?= date('d/m') ?></p>
-    <h1>Hola, <?= e($user['nombre']) ?> 👋</h1>
-</section>
-
-<?php if ($abierta): ?>
-    <a class="card-soft visita-activa mb-4 d-flex align-items-center gap-3 text-reset text-decoration-none" id="visita-activa"
-       href="<?= url('/visitas/' . $abierta['id']) ?>">
-        <div class="item-icon"><i class="bi <?= Local::ICONOS[$abierta['tipo']] ?>"></i></div>
-        <div class="min-w-0 flex-grow-1">
-            <div class="small text-body-secondary">Estás en</div>
-            <div class="fw-bold fs-5 text-truncate"><?= e($abierta['local']) ?></div>
+    <section class="anot-locales">
+        <div class="anot-locales-head">
+            <h2 class="section-title m-0">¿Dónde estás?</h2>
+            <button type="button" class="btn btn-sm btn-link text-decoration-none" data-detectar><i class="bi bi-crosshair"></i> Detectar</button>
         </div>
-        <i class="bi bi-chevron-right text-body-secondary"></i>
-    </a>
-<?php endif; ?>
+        <p class="anot-gps" data-detectar-estado role="status" hidden></p>
+        <div class="anot-chips">
+            <?php foreach ($locales as $l): ?>
+                <?php $c = $cuenta[(int) $l['id']] ?? null; ?>
+                <a class="anot-chip<?= (int) $l['id'] === $localId ? ' active' : '' ?>" href="<?= url('/?local=' . (int) $l['id']) ?>">
+                    <?= e($l['nombre']) ?>
+                    <?php if ($c): ?><span class="anot-chip-n<?= $c['urgentes'] ? ' urgente' : '' ?>" data-chip-n><?= $c['total'] ?></span><?php endif; ?>
+                </a>
+            <?php endforeach; ?>
+            <a class="anot-chip anot-chip-nuevo" href="<?= url('/locales/crear') ?>"><i class="bi bi-plus-lg"></i> Local</a>
+        </div>
+    </section>
 
-<section id="deteccion" class="card-soft deteccion mb-4"
-         data-endpoint="<?= url('/locales/detectar') ?>"
-         data-visitas="<?= url('/visitas') ?>"
-         data-abierta-local="<?= $abierta ? (int) $abierta['local_id'] : '' ?>"
-         data-abierta-hoy="<?= $abiertaHoy ? '1' : '' ?>"
-         data-abierta-nombre="<?= $abierta ? e($abierta['local']) : '' ?>"
-         data-abierta-url="<?= $abierta ? url('/visitas/' . $abierta['id']) : '' ?>"
-         data-abierta-cerrar="<?= $abierta ? url('/visitas/' . $abierta['id'] . '/finalizar') : '' ?>"
-         aria-live="polite">
-    <div class="deteccion-cargando">
-        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
-        <span>Buscando el local…</span>
-    </div>
-</section>
+    <?php if ($local === null): ?>
+        <div class="empty-state card-soft mt-3">
+            <i class="bi bi-geo-alt"></i>
+            <p class="mb-0">Tocá el local donde estás (o <strong>Detectar</strong>) para anotar las fechas.</p>
+        </div>
+    <?php else: ?>
+        <form class="card-soft anot-form" data-anotar novalidate>
+            <div class="anot-titulo"><i class="bi bi-geo-alt-fill"></i> <?= e($local['nombre']) ?></div>
+            <input type="hidden" name="local_id" value="<?= $localId ?>">
+            <input type="hidden" name="producto_id" data-producto-id>
 
-<?php if ($hoy !== []): ?>
-    <h2 class="section-title">Hoy</h2>
-    <div class="card-soft mb-2">
-        <?php foreach ($hoy as $v): ?>
-            <a class="historial-row text-reset text-decoration-none" href="<?= url('/visitas/' . $v['id']) ?>">
-                <div class="min-w-0">
-                    <div class="fw-semibold text-truncate"><i class="bi bi-check-circle-fill text-success"></i> <?= e($v['local']) ?></div>
-                    <div class="small text-body-secondary"><?= (int) $v['productos'] ?> productos</div>
+            <div class="search-bar">
+                <div class="search-input">
+                    <i class="bi bi-search"></i>
+                    <input type="search" name="producto_texto" placeholder="Buscá o escribí el producto" autocomplete="off"
+                           autocapitalize="off" enterkeyhint="next" aria-label="Producto" data-producto>
                 </div>
-                <i class="bi bi-chevron-right text-body-secondary"></i>
-            </a>
-        <?php endforeach; ?>
-    </div>
-    <a class="btn btn-outline-primary w-100 mb-2" href="<?= url('/mensaje') ?>"><i class="bi bi-chat-square-text"></i> Generar mensaje del día</a>
-<?php endif; ?>
-
-<h2 class="section-title section-title-accion" id="locales">
-    <span>Locales</span>
-    <a href="<?= url('/locales/crear') ?>"><i class="bi bi-plus-lg"></i> Nuevo</a>
-</h2>
-
-<?php if ($locales === []): ?>
-    <div class="empty-state card-soft">
-        <i class="bi bi-shop"></i>
-        <p>Todavía no hay locales cargados.</p>
-        <a class="btn btn-primary btn-xl" href="<?= url('/locales/crear') ?>"><i class="bi bi-plus-lg me-1"></i> Crear local</a>
-    </div>
-<?php else: ?>
-    <div class="item-list">
-        <?php foreach ($locales as $local): ?>
-            <div class="item-card">
-                <div class="item-icon"><i class="bi <?= Local::ICONOS[$local['tipo']] ?>"></i></div>
-                <div class="item-body">
-                    <div class="item-title"><?= e($local['nombre']) ?></div>
-                    <div class="item-sub"><?= e($local['direccion'] ?: Local::TIPOS[$local['tipo']]) ?></div>
-                </div>
-                <?php if ($abiertaHoy && (int) $abierta['local_id'] === (int) $local['id']): ?>
-                    <a class="btn btn-primary btn-sm" href="<?= url('/visitas/' . $abierta['id']) ?>">Continuar</a>
-                <?php else: ?>
-                    <?= partial('form-ingresar', ['localId' => (int) $local['id'], 'abierta' => $abierta, 'clase' => 'btn btn-outline-primary btn-sm', 'texto' => 'Ingresar']) ?>
-                <?php endif; ?>
+                <button class="btn btn-primary btn-scan" type="button" data-escanear><i class="bi bi-upc-scan"></i><span>Escanear</span></button>
             </div>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+            <div class="anot-sugerencias" data-sugerencias hidden></div>
+            <p class="anot-prod-estado" data-producto-estado hidden></p>
 
-<h2 class="section-title" id="fechas-cortas">Fechas cortas <span class="text-lowercase">(próximos <?= (int) $diasCortas ?> días)</span></h2>
-<?php if ($cortas === []): ?>
-    <p class="small text-body-secondary"><i class="bi bi-check-circle text-success"></i> No hay nada por vencer. Se cargan con el botón «Vencimientos» en la visita.</p>
-<?php else: ?>
-    <?php
-    $fila = fn (array $v): string => partial('fecha-corta', ['v' => $v]);
-    $primeras = array_slice($cortas, 0, 6);
-    $resto = array_slice($cortas, 6);
-    ?>
-    <div class="card-soft">
-        <?php foreach ($primeras as $v): ?><?= $fila($v) ?><?php endforeach; ?>
-        <?php if ($resto !== []): ?>
-            <details class="corta-mas">
-                <summary>Ver <?= count($resto) ?> más</summary>
-                <?php foreach ($resto as $v): ?><?= $fila($v) ?><?php endforeach; ?>
-            </details>
-        <?php endif; ?>
-    </div>
-<?php endif; ?>
+            <div class="row g-2 mt-1">
+                <div class="col-7">
+                    <label class="form-label small mb-1" for="anot-fecha">Vence</label>
+                    <div class="input-group">
+                        <input class="form-control anot-fecha" id="anot-fecha" name="fecha" placeholder="dd/mm/aa" inputmode="numeric"
+                               autocomplete="off" maxlength="10" enterkeyhint="done" data-fecha required>
+                        <button class="btn btn-outline-secondary" type="button" data-calendario aria-label="Elegir en el calendario"><i class="bi bi-calendar3"></i></button>
+                    </div>
+                    <input type="date" class="anot-picker" tabindex="-1" aria-hidden="true" data-fecha-picker>
+                </div>
+                <div class="col-5">
+                    <label class="form-label small mb-1" for="anot-cant">Cantidad</label>
+                    <input class="form-control" id="anot-cant" name="cantidad" type="number" min="0" max="99999" inputmode="numeric" placeholder="—">
+                </div>
+                <div class="col-12">
+                    <input class="form-control" name="nota" maxlength="120" placeholder="Nota (opcional): depósito, heladera 2…" aria-label="Nota">
+                </div>
+            </div>
 
+            <button class="btn btn-primary btn-xl w-100 mt-3" type="submit" data-guardar><i class="bi bi-check-lg me-1"></i> Anotar</button>
+            <p class="anot-form-estado" data-form-estado role="status"></p>
+        </form>
+
+        <h2 class="section-title">Fechas en <?= e($local['nombre']) ?></h2>
+        <div data-lista><?= partial('fechas-lista', ['fechas' => $fechas, 'conLocal' => false]) ?></div>
+    <?php endif; ?>
+</div>

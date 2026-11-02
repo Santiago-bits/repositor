@@ -16,7 +16,7 @@ final class PerfilController extends Controller
 {
     public function show(): void
     {
-        $this->view('app/perfil', ['title' => 'Mi cuenta', 'user' => auth()]);
+        $this->view('app/perfil', ['title' => 'Mi cuenta', 'user' => auth(), 'scripts' => ['assets/js/avisos.js']]);
     }
 
     /** Gestión en el celular (en la PC está en el menú lateral). */
@@ -126,6 +126,18 @@ final class PerfilController extends Controller
         Auth::cerrarOtrasSesiones($id);
         flash('success', 'Contraseña cambiada. Si tenías la app abierta en otro celular, ahí vas a tener que volver a entrar.');
         redirect('/perfil');
+    }
+
+    /** Cuántos días antes de que venza algo te avisa. */
+    public function avisos(): void
+    {
+        $dias = (int) Request::input('dias_aviso', 7);
+        if (!in_array($dias, [1, 2, 3, 5, 7, 10, 15, 30], true)) {
+            $dias = 7;
+        }
+        User::setDiasAviso((int) Auth::id(), $dias);
+        flash('success', $dias === 1 ? 'Te avisamos 1 día antes.' : "Te avisamos {$dias} días antes.");
+        redirect('/perfil#avisos');
     }
 
     public function cerrarSesiones(): void

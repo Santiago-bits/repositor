@@ -20,10 +20,10 @@ final class PwaController extends Controller
         'assets/vendor/bootstrap-icons/fonts/bootstrap-icons.woff2',
         'assets/css/jacob.css',
         'assets/js/app.js',
-        'assets/js/inicio.js',
+        'assets/js/anotador.js',
+        'assets/js/avisos.js',
         'assets/js/productos.js',
         'assets/js/escaner.js',
-        'assets/js/visita.js',
         'assets/img/logo.svg',
         'assets/icons/icon-192.png',
     ];
@@ -49,8 +49,8 @@ final class PwaController extends Controller
                 ['src' => url('assets/icons/icon-maskable-512.png'), 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'maskable'],
             ],
             'shortcuts'        => [
-                ['name' => 'Productos', 'url' => url('/productos')],
-                ['name' => 'Mensaje del día', 'url' => url('/mensaje')],
+                ['name' => 'Anotar', 'url' => url('/')],
+                ['name' => 'Fechas', 'url' => url('/fechas')],
             ],
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         exit;
@@ -76,6 +76,9 @@ final class PwaController extends Controller
         echo "const CACHE = " . json_encode($cache) . ";\n"
             . "const PRECACHE = " . json_encode($precache, JSON_UNESCAPED_SLASHES) . ";\n"
             . "const OFFLINE = " . json_encode(url('/offline'), JSON_UNESCAPED_SLASHES) . ";\n"
+            . "const RESUMEN = " . json_encode(url('/avisos/resumen'), JSON_UNESCAPED_SLASHES) . ";\n"
+            . "const FECHAS = " . json_encode(url('/fechas'), JSON_UNESCAPED_SLASHES) . ";\n"
+            . "const ICONO = " . json_encode(url('assets/icons/icon-192.png'), JSON_UNESCAPED_SLASHES) . ";\n"
             . <<<'JS'
 
 self.addEventListener('install', (e) => {
@@ -87,6 +90,34 @@ self.addEventListener('activate', (e) => {
         caches.keys()
             .then((claves) => Promise.all(claves.filter((k) => k.startsWith('jacob-') && k !== CACHE).map((k) => caches.delete(k))))
             .then(() => self.clients.claim())
+    );
+});
+
+// Aviso de fechas por vencer: llega un "toque" vacío y se pregunta a la app qué mostrar.
+self.addEventListener('push', (e) => {
+    e.waitUntil(
+        fetch(RESUMEN, { credentials: 'include', headers: { Accept: 'application/json' } })
+            .then((r) => (r.ok ? r.json() : null))
+            .catch(() => null)
+            .then((d) => {
+                d = d || { titulo: 'Fechas por vencer', cuerpo: 'Tenés productos que vencen pronto.', url: FECHAS };
+                return self.registration.showNotification(d.titulo, {
+                    body: d.cuerpo, icon: ICONO, badge: ICONO, tag: 'fechas', renotify: true, data: { url: d.url || FECHAS },
+                });
+            })
+    );
+});
+
+self.addEventListener('notificationclick', (e) => {
+    e.notification.close();
+    const destino = (e.notification.data && e.notification.data.url) || FECHAS;
+    e.waitUntil(
+        self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((ventanas) => {
+            for (const v of ventanas) {
+                if ('focus' in v) return v.navigate(destino).then((w) => (w || v).focus());
+            }
+            return self.clients.openWindow(destino);
+        })
     );
 });
 

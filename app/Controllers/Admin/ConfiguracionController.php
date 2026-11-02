@@ -10,9 +10,8 @@ final class ConfiguracionController extends Controller
 {
     /** clave => [etiqueta, mínimo, máximo, ayuda] */
     private const CAMPOS = [
-        'vencimiento_dias_critico'  => ['Vence en pocos días', 1, 60, 'Hasta cuántos días antes se marca en naranja.'],
+        'vencimiento_dias_critico'  => ['Vence en pocos días', 1, 60, 'Hasta cuántos días antes una fecha se ve en naranja (urgente).'],
         'vencimiento_dias_proximo'  => ['Vence próximamente', 1, 365, 'Hasta cuántos días antes se marca en amarillo. Más allá: "sin riesgo".'],
-        'conteo_promos_dias_gracia' => ['Días para contar una promo', 0, 14, 'Cuántos días después de terminada una promo sigue apareciendo en el conteo.'],
     ];
 
     public function index(): void

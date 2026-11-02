@@ -39,24 +39,8 @@ $estados = [
     <a class="btn btn-outline-primary w-100" href="<?= url('/admin/productos/' . $producto['id'] . '/editar') ?>"><i class="bi bi-pencil"></i> Editar producto</a>
 <?php endif; ?>
 
-<h2 class="section-title">Historial de stock</h2>
-<?php if ($historial === []): ?>
-    <div class="empty-state card-soft">
-        <i class="bi bi-graph-up"></i>
-        <p class="mb-0">Todavía no hay registros. Se completa solo cuando cargues stock en una visita.</p>
-    </div>
-<?php else: ?>
-    <div class="card-soft">
-        <?php foreach ($historial as $h): ?>
-            <div class="historial-row">
-                <div>
-                    <div class="fw-semibold"><?= fecha($h['fecha'], 'd/m') ?> · <?= e($h['local']) ?></div>
-                    <?php if ($h['estado_stock']): ?>
-                        <span class="badge <?= $estados[$h['estado_stock']][1] ?>"><?= $estados[$h['estado_stock']][0] ?></span>
-                    <?php endif; ?>
-                </div>
-                <div class="historial-stock"><?= $h['stock'] !== null ? (int) $h['stock'] : '—' ?></div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+<h2 class="section-title section-title-accion">
+    <span>Fechas anotadas</span>
+    <a href="<?= url('/') ?>"><i class="bi bi-plus-lg"></i> Anotar</a>
+</h2>
+<?= partial('fechas-lista', ['fechas' => $fechas, 'conLocal' => true]) ?>

@@ -5,7 +5,7 @@ namespace App\Models;
 
 final class User extends Model
 {
-    private const SELECT = 'SELECT u.id, u.role_id, u.nombre, u.apellido, u.foto_path, u.email, u.telefono, u.google_email, u.activo, u.sesion_version, u.last_login_at, u.last_seen_at, u.created_at,
+    private const SELECT = 'SELECT u.id, u.role_id, u.nombre, u.apellido, u.foto_path, u.email, u.telefono, u.google_email, u.activo, u.sesion_version, u.dias_aviso, u.last_login_at, u.last_seen_at, u.created_at,
                                    r.slug AS role_slug, r.nombre AS role_nombre
                             FROM users u
                             JOIN roles r ON r.id = u.role_id';
@@ -103,6 +103,11 @@ final class User extends Model
     public static function cambiarEmail(int $id, string $email): void
     {
         self::execute('UPDATE users SET email = ?, google_email = IF(google_email = ?, NULL, google_email) WHERE id = ?', [$email, $email, $id]);
+    }
+
+    public static function setDiasAviso(int $id, int $dias): void
+    {
+        self::execute('UPDATE users SET dias_aviso = ? WHERE id = ?', [$dias, $id]);
     }
 
     public static function setFoto(int $id, ?string $path): void

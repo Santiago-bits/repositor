@@ -1701,3 +1701,98 @@ img.item-avatar { flex-shrink: 0; }
 .btn-check:checked + .rol-opcion { border-color: var(--bs-primary); background: var(--bs-primary-bg-subtle); box-shadow: 0 0 0 1px var(--bs-primary); }
 .btn-check:checked + .rol-opcion .rol-check { visibility: visible; }
 .btn-check:focus-visible + .rol-opcion { outline: 2px solid var(--bs-primary); outline-offset: 2px; }
+
+/* ---------- Anotador de fechas ---------- */
+
+.anot-locales { margin-bottom: 12px; }
+.anot-locales-head { display: flex; align-items: center; justify-content: center; gap: 4px; }
+.anot-gps { margin: 4px 0 0; font-size: .85rem; text-align: center; color: var(--bs-primary-text-emphasis); }
+
+/* Locales como fichas que se deslizan de costado */
+.anot-chips {
+    display: flex;
+    gap: 8px;
+    margin: 8px -16px 0;
+    padding: 2px 16px 6px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+}
+.anot-chips::-webkit-scrollbar { display: none; }
+.anot-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--app-border);
+    border-radius: 999px;
+    background: var(--app-surface);
+    color: var(--bs-body-color);
+    font-weight: 600;
+    font-size: .9rem;
+    white-space: nowrap;
+    text-decoration: none;
+    scroll-snap-align: start;
+}
+.anot-chip.active { background: var(--bs-primary); border-color: var(--bs-primary); color: #fff; }
+.anot-chip-nuevo { border-style: dashed; color: var(--bs-primary); }
+.anot-chip-n {
+    min-width: 22px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--bs-primary-bg-subtle);
+    color: var(--bs-primary-text-emphasis);
+    font-size: .75rem;
+    line-height: 20px;
+    text-align: center;
+}
+.anot-chip-n.urgente { background: var(--jacob-danger); color: #fff; }
+.anot-chip.active .anot-chip-n:not(.urgente) { background: rgba(255, 255, 255, .25); color: #fff; }
+
+.anot-form { position: relative; padding: 14px; }
+.anot-titulo { margin-bottom: 10px; font-weight: 700; text-align: center; color: var(--bs-primary-text-emphasis); }
+.anot-sugerencias {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    z-index: 20;
+    max-height: 320px;
+    margin-top: 4px;
+    overflow-y: auto;
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(11, 45, 77, .18);
+}
+.anot-sug {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px 14px;
+    border: 0;
+    background: none;
+    color: inherit;
+    text-align: left;
+}
+.anot-sug + .anot-sug { border-top: 1px solid var(--app-border); }
+.anot-sug span { font-weight: 600; }
+.anot-sug small { color: var(--app-muted); }
+.anot-sug:hover, .anot-sug:focus-visible { background: var(--bs-primary-bg-subtle); }
+.anot-sug-libre { color: var(--bs-primary); font-weight: 600; }
+.anot-prod-estado { margin: 6px 0 0; font-size: .82rem; color: var(--bs-primary-text-emphasis); text-align: center; }
+.anot-fecha { font-size: 1.15rem; font-weight: 700; letter-spacing: .04em; }
+.anot-picker { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.anot-form-estado { min-height: 1.2em; margin: 6px 0 0; font-size: .85rem; text-align: center; }
+
+/* Cada fecha anotada */
+.fechas-lista { overflow: hidden; }
+.fecha-fila { display: flex; align-items: center; gap: 12px; padding: 10px 12px; transition: opacity .2s, transform .2s; }
+.fecha-fila + .fecha-fila { border-top: 1px solid var(--app-border); }
+.fecha-fila .corta-fecha small { display: block; font-size: .65rem; font-weight: 600; opacity: .75; }
+.fecha-fila.is-nueva { animation: fecha-nueva 1.6s ease-out; }
+.fecha-fila.is-saliendo { opacity: 0; transform: translateX(24px); }
+.fecha-acciones { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.fecha-acciones .btn-outline-success { width: 40px; height: 40px; padding: 0; border-radius: 50%; font-size: 1.1rem; }
+@keyframes fecha-nueva { from { background: var(--bs-primary-bg-subtle); } to { background: transparent; } }

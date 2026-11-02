@@ -9,7 +9,7 @@ use App\Core\Request;
 use App\Core\View;
 use App\Models\Categoria;
 use App\Models\Producto;
-use App\Models\Relevamiento;
+use App\Models\Fecha;
 use App\Requests\ProductoRequest;
 use App\Services\ImageService;
 use App\Services\ProductoService;
@@ -112,7 +112,7 @@ final class ProductoController extends Controller
         $this->view('app/productos/show', [
             'title'     => Producto::nombreCompleto($producto),
             'producto'  => $producto,
-            'historial' => Producto::historial($id, $user),
+            'fechas'    => Fecha::delProducto($id, is_admin() ? null : (int) $user['id']),
         ]);
     }
 
@@ -126,7 +126,6 @@ final class ProductoController extends Controller
             'title'      => 'Nuevo producto',
             'producto'   => ['codigo_barras' => $codigo, 'nombre' => $nombre],
             'escaneado'  => $codigo,
-            'visitaId'   => $this->visitaAbiertaPropia((int) Request::input('visita', 0)),
             'categorias' => Categoria::opciones(),
             'scripts'    => ['assets/js/escaner.js'],
         ]);
@@ -141,20 +140,7 @@ final class ProductoController extends Controller
 
         $id = ProductoService::guardar($data);
         flash('success', 'Producto «' . Producto::nombreCompleto($data) . '» registrado.');
-
-        // Creado desde una visita: seguir directo a cargarle el stock.
-        $visitaId = $this->visitaAbiertaPropia((int) Request::input('visita', 0));
-        redirect($visitaId ? "/visitas/{$visitaId}/productos/{$id}" : '/productos/' . $id);
-    }
-
-    /** Devuelve el id si es una visita en proceso del usuario actual (o null). */
-    private function visitaAbiertaPropia(int $visitaId): ?int
-    {
-        if ($visitaId <= 0) {
-            return null;
-        }
-        $visita = Relevamiento::find($visitaId);
-        return $visita && (int) $visita['user_id'] === Auth::id() && $visita['estado'] === 'en_proceso' ? $visitaId : null;
+        redirect('/productos/' . $id);
     }
 
     public function imagen(int $id): never

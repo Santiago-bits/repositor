@@ -1,6 +1,6 @@
 # repositores.rv · Reposición RAVSA
 
-App web mobile-first para repositores: detección del local por GPS, registro de stock, vencimientos, fotos y observaciones, conteo de promociones, tareas programadas, historial, reportes CSV y mensaje para el supervisor. Se instala en el celular como app (PWA).
+Anotador rápido de **fechas de vencimiento** para repositores: el GPS detecta en qué local estás, buscás o escaneás el producto, ponés la fecha y listo. Te avisa con una notificación en el celular unos días antes de que venza. Se instala en el celular como app (PWA).
 
 **Stack:** PHP 8.2+ sin framework (MVC propio) · MySQL / MariaDB · Bootstrap 5.3 · JavaScript sin dependencias (ZXing para el escáner en iPhone).
 
@@ -28,32 +28,34 @@ App web mobile-first para repositores: detección del local por GPS, registro de
 
 Cada cambio se sube a `main` en GitHub. Si en hPanel está activado **GIT → Auto Deployment** (con el webhook de GitHub), la web se actualiza sola. Si el cambio trae un archivo nuevo en `database/migrations/`, se aplica solo en la primera visita a la web (también se puede correr `php database/migrate.php` por SSH).
 
+### Avisos (notificaciones)
+
+Funcionan solos: la app revisa como mucho una vez por hora (de 8 a 21) cuando alguien la abre. Para que salgan aunque nadie la abra, en hPanel → **Avanzado → Cron Jobs** agregar una tarea **cada hora**:
+
+```
+php /home/USUARIO/domains/DOMINIO/public_html/database/enviar-avisos.php
+```
+
+(La ruta exacta la muestra hPanel en el Administrador de archivos.) Las claves de los avisos se crean solas la primera vez.
+
 ## Cómo se usa
 
-- **Mi cuenta:** tocando tu círculo (arriba a la derecha). Tocá la foto para cambiarla (sale en el círculo, en Equipo y en Usuarios); cambiá nombre y apellido; cambiá tu Gmail (con el que entrás; pide tu contraseña); cambiá la contraseña (pide la actual); apariencia; instalar la app; y «Cerrar sesión en los otros dispositivos» si entraste desde otro celular o lo perdiste. **Gestión** (solo admin): pestaña de abajo en el celular, menú de la izquierda en la PC.
-- **Usuarios:** Gestión → Usuarios → Nuevo. Nombre, email, contraseña (mínimo 8) y rol (Administrador, Repositor o Vendedor). Se pueden editar, desactivar o borrar (sus visitas quedan).
-- **Cada uno lo suyo:** cada repositor ve solo sus fechas cortas, sus promos y su historial; solo puede retirar los lotes que cargó él. Las promos que carga el admin en Gestión → Promociones las ven todos. El admin ve todo.
-- **Supervisar (admin):** Gestión → **Equipo**. Cada persona con la última vez que abrió la app (punto verde = hoy) y lo que hizo en el período (Hoy / 7 / 30 días): visitas, faltantes, vencimientos y fotos. Tocando a alguien ves sus visitas día por día (con horario) y «Sus fotos». En **Fotos** se puede filtrar por persona y cada foto dice quién la sacó.
-- **Vendedor:** al entrar ve **Faltantes**: por cada local, lo que faltaba en la última visita del repositor (sin stock o poco), agrupado por categoría, para ir a venderlo. También ve las fechas cortas y los productos con precios. No hace visitas ni carga nada.
-- **Entrar con Google:** (una sola vez) el admin pega el *ID de cliente* en Gestión → Configuración → Entrar con Google. Después cada uno toca «Iniciar sesión con Google» en el login: entra si su Gmail es el email de su usuario, o el «Gmail para entrar con Google» que le cargó el admin en Gestión → Usuarios. Solo entran usuarios que ya existen.
-- **Productos:** el catálogo es único y vale para todos los locales (una Quilmes es la misma en cualquier súper o chino). Se cargan de a uno, escaneando, o todos juntos desde un Excel.
-- **Códigos de barras:** el JSON de Chess no los trae. En Productos → Escanear, si el código es nuevo, buscás el producto (ej. "andes oro") y lo tocás: queda asociado para siempre. Volver a subir el JSON no lo borra.
-- **Productos de Chess:** Gestión → Productos → Excel y subí el JSON del maestro de artículos (ej. `bebidas_ravsa.json`). Volvé a subirlo cuando cambien los precios: actualiza sin duplicar y desactiva lo anulado.
-- **Subir Excel:** Gestión → Productos → **Excel** (o el botón Excel en Productos). Acepta `.xlsx` o `.csv` con los títulos *Nombre, Marca, Presentación, Código, Categoría, Subcategoría* (solo Nombre es obligatorio). Si el producto ya existe se actualiza, no se duplica; las celdas vacías no borran nada; las categorías se crean solas y la unidad (ml, cc, L) se saca de la presentación. Hay una plantilla para descargar.
-- **En el local:** arriba ves lo que vence primero (ponelo adelante en la heladera; si ya lo sacaste, Retirar). Después: Vencimientos, Promos del finde y Faltantes.
-- **En el local:** abajo tenés siempre Vencimientos, Promos, Faltantes y Fotos.
-- **Fotos:** elegí de qué es (Góndola, Heladera, Exhibición externa u Otra), escribí qué se ve si querés, y sacala.
-- **Faltantes:** botón «Faltantes» en el local. Buscás el producto, lo tocás y elegís «Sin stock» o «Poco». Con «Guardar y armar lista para el vendedor» sale la lista agrupada por categoría (Cervezas, Gaseosas, Agua…) para copiar o mandar por WhatsApp. También desde la visita: «Lista vendedor».
-- **Conteo de promos:** cuando quieras, desde «Promos del finde» → «Anotar cuánto quedó de las promos que terminaron».
-- **Visitas:** no hay que finalizarlas. Entrás al local, cargás lo que quieras y listo: se cierra sola cuando el GPS ve que te fuiste, cuando entrás a otro local o al día siguiente. Si volvés el mismo día, seguís en la misma visita.
-- **Locales:** son de todos (como los productos). Cualquier repositor crea uno desde Inicio → Locales → **+ Nuevo**, y le aparece a todo el equipo. Lo que cada uno carga adentro (fechas, promos, faltantes) es suyo. Editar, desactivar y borrar locales: solo el admin.
-- **Ubicación de un local:** en Gestión → Locales, pegá el link de Google Maps (Compartir → copiar link), un Plus Code (ej: JX3M+PF) o las coordenadas. Se completa al tocar «Buscar» o al guardar.
-- **Vencimientos:** en la visita, botón «Vencimientos». Tocás **Escanear** y el producto aparece con la fecha lista para poner (si el código es nuevo, lo buscás por nombre una vez y queda asociado). También podés buscarlo escribiendo, lo tocás y le ponés la fecha, la cantidad (opcional) y una nota con la ubicación (ej: depósito). Podés agregar varios (también el mismo producto con otro lote) y guardar todo junto.
-- **Fechas cortas:** en Inicio, debajo de tus locales, ves lo que vence en los próximos días (según Configuración, 15 por defecto) y lo vencido en la última semana, con local, cantidad y nota. Se toma el último relevamiento de cada producto en cada local. Con **Retirar** marcás que ya lo sacaste y deja de aparecer.
-- **Promos del finde:** en la visita, escribís en el buscador, tocás el producto y queda abajo en "En promo". Sin buscar no se muestra la lista completa. El stock es opcional. Después, "Guardar y armar mensaje".
-
+- **Anotar (pantalla principal):** al abrir la app, el GPS busca en qué local estás y lo elige solo (también podés tocar el local arriba, o **Detectar**). Después:
+  1. Escribí 2-3 letras del producto (ej: «quil») y tocalo, o tocá **Escanear**. Si no está en el catálogo, tocá «Anotar … así, escrito».
+  2. La fecha se escribe solo con números: `2011` = 20/11 (de este año o del que viene), `201126` o `20112026`. Las barras se ponen solas. También está el calendario.
+  3. Cantidad y nota son opcionales. **Anotar** y ya queda listo para el siguiente producto.
+- **Código nuevo:** si escaneás un código que no está asociado, escribí el producto y elegilo: el código queda guardado y la próxima vez lo reconoce solo.
+- **Fechas:** todas tus fechas pendientes, por local, de la más próxima a la más lejana. Con **✓** marcás que ya no está (se vendió o lo retiraste) y deja de aparecer. El tacho la borra.
+- **Colores:** rojo vencido, naranja pocos días, amarillo próximamente, verde sin apuro (se ajusta en Gestión → Configuración).
+- **Avisos:** Mi cuenta → **Avisos** → «Activar avisos en este celular» y elegí cuántos días antes (7 por defecto). Te llega una notificación cuando algo entra en ese plazo, con el producto y el local. «Probar aviso» manda uno de prueba. En iPhone: primero instalá la app (Compartir → Agregar a inicio) y activá los avisos desde ahí.
+- **Cada uno lo suyo:** cada repositor ve solo sus fechas. El admin ve las de todos (con el nombre de quién la anotó).
+- **Locales:** son de todos. Cualquiera crea uno con **+ Local** (link de Google Maps, Plus Code o coordenadas para que el GPS lo detecte). Editar o borrar: Gestión → Locales (admin).
+- **Productos:** el catálogo de Chess (Gestión → Productos → subir el JSON) más los que se cargan a mano. En la ficha de cada producto se ven sus fechas anotadas.
+- **Mi cuenta:** el círculo de arriba a la derecha: foto, nombre, Gmail, contraseña, avisos, apariencia y cerrar sesión.
+- **Usuarios y entrar con Google:** Gestión → Usuarios (admin). Para el botón de Google, el admin pega el ID de cliente en Gestión → Configuración.
 ## Cambios
 
+- **2026-11-02** · **Nuevo enfoque: anotador de fechas.** La app pasa a ser un anotador rápido de fechas de vencimiento: el GPS elige el local al abrir, buscás o escaneás el producto, escribís la fecha solo con números y queda anotado. Pestaña **Fechas** con todo lo pendiente por local (✓ cuando ya no está). **Avisos** con notificación en el celular unos días antes (cada uno elige cuántos). Se sacaron visitas, faltantes, promos, fotos, historial, equipo y resumen; las tablas viejas quedan en la base. Las fechas que ya estaban cargadas pasaron al anotador (migraciones 016 y 017).
 - **2026-10-14** · Diseño: **Promociones** con pestañas parejas y contador, tarjetas con foto, fechas, «quedan X días» y precio promo vs normal · **Usuarios** ordenado en Datos, Acceso y Rol (cada rol explica qué puede hacer) · La barra de Guardar fija ahora tiene fondo y no tapa lo de abajo.
 - **2026-10-14** · Mi cuenta: se sacó el teléfono y se puede **cambiar el Gmail** con el que se entra (pide la contraseña).
 - **2026-10-14** · Mi cuenta: **foto de perfil**, nombre, apellido y teléfono, **cambiar contraseña** y **cerrar sesión en los otros dispositivos** (también pasa al cambiar la contraseña). Migración 015.
