@@ -36,7 +36,7 @@
             <div class="search-bar">
                 <div class="search-input">
                     <i class="bi bi-search"></i>
-                    <input type="search" name="producto_texto" placeholder="Buscá o escribí el producto" autocomplete="off"
+                    <input type="search" name="producto_texto" placeholder="Buscá o escribí" autocomplete="off"
                            autocapitalize="off" enterkeyhint="next" aria-label="Producto" data-producto>
                 </div>
                 <button class="btn btn-primary btn-scan" type="button" data-escanear><i class="bi bi-upc-scan"></i><span>Escanear</span></button>

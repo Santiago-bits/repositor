@@ -18,8 +18,8 @@ $detalle = array_filter([
      data-cantidad="<?= e((string) $f['cantidad']) ?>" data-nota="<?= e((string) $f['nota']) ?>">
     <div class="corta-fecha <?= $estado['clase'] ?>"><?= fecha($f['fecha_vencimiento'], 'd/m') ?><small><?= fecha($f['fecha_vencimiento'], 'Y') ?></small></div>
     <div class="min-w-0 flex-grow-1 fecha-cuerpo" data-fecha-editar>
-        <div class="fw-semibold text-truncate"><?= e($nombre) ?></div>
-        <?php if ($detalle): ?><div class="small text-body-secondary text-truncate"><?= e(implode(' · ', $detalle)) ?></div><?php endif; ?>
+        <div class="fw-semibold fecha-texto"><?= e($nombre) ?></div>
+        <?php if ($detalle): ?><div class="small text-body-secondary fecha-texto"><?= e(implode(' · ', $detalle)) ?></div><?php endif; ?>
         <span class="venc-badge <?= $estado['clase'] ?>"><?= e($estado['etiqueta']) ?></span>
     </div>
     <div class="fecha-acciones">

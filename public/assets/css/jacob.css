@@ -1805,3 +1805,6 @@ img.item-avatar { flex-shrink: 0; }
 .fecha-editor-botones { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
 
 .fecha-editor .anot-sugerencias { position: static; max-height: 240px; }
+
+/* Nombre y nota completos: si no entran, siguen abajo */
+.fecha-texto { overflow-wrap: anywhere; line-height: 1.25; }

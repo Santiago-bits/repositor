@@ -57,6 +57,7 @@ php /home/USUARIO/domains/DOMINIO/public_html/database/enviar-avisos.php
 - **Usuarios y entrar con Google:** Gestión → Usuarios (admin). Para el botón de Google, el admin pega el ID de cliente en Gestión → Configuración.
 ## Cambios
 
+- **2026-11-04** · En las listas de fechas, el nombre del producto y la nota se ven completos (ya no se cortan con «…»).
 - **2026-11-04** · Al corregir una fecha, el producto se busca en el catálogo igual que al anotar.
 - **2026-11-04** · **Editar lo anotado** (producto, fecha, cantidad y nota) sin borrar y volver a crear · El Enter del celular pasa al campo siguiente y en el último guarda · Los botones de las fechas ahora también funcionan en la ficha del producto.
 - **2026-11-02** · **Nuevo enfoque: anotador de fechas.** La app pasa a ser un anotador rápido de fechas de vencimiento: el GPS elige el local al abrir, buscás o escaneás el producto, escribís la fecha solo con números y queda anotado. Pestaña **Fechas** con todo lo pendiente por local (✓ cuando ya no está). **Avisos** con notificación en el celular unos días antes (cada uno elige cuántos). Se sacaron visitas, faltantes, promos, fotos, historial, equipo y resumen; las tablas viejas quedan en la base. Las fechas que ya estaban cargadas pasaron al anotador (migraciones 016 y 017).
