@@ -99,19 +99,23 @@ final class InicioController extends Controller
         ]);
     }
 
-    /** Corregir lo anotado (JSON). Si se cambia el nombre de un producto del catálogo, queda escrito a mano. */
+    /** Corregir lo anotado (JSON). El producto se elige del catálogo o queda escrito a mano. */
     public function actualizar(int $id): never
     {
         $actual = $this->propia($id);
+        $elegido = (int) Request::input('producto_id', 0);
+        $productoId = $elegido > 0 && Producto::find($elegido) !== null ? $elegido : null;
         $texto = trim((string) Request::input('producto_texto', ''));
-        if ($texto === '' || mb_strlen($texto) > 150 || !mb_check_encoding($texto, 'UTF-8')) {
+        if ($productoId === null && $actual['producto_id'] !== null && $texto === Fecha::nombre($actual)) {
+            $productoId = (int) $actual['producto_id']; // no lo cambió
+        }
+        if ($productoId === null && ($texto === '' || mb_strlen($texto) > 150 || !mb_check_encoding($texto, 'UTF-8'))) {
             $this->json(['ok' => false, 'message' => 'Escribí el producto.'], 422);
         }
-        $mismo = $actual['producto_id'] !== null && $texto === Fecha::nombre($actual);
 
         Fecha::actualizar($id, $this->camposFecha() + [
-            'producto_id'    => $mismo ? (int) $actual['producto_id'] : null,
-            'producto_texto' => $mismo ? null : $texto,
+            'producto_id'    => $productoId,
+            'producto_texto' => $productoId === null ? $texto : null,
         ]);
 
         $this->json([

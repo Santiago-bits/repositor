@@ -27,6 +27,33 @@
         setTimeout(function () { t.classList.remove('is-visible'); setTimeout(function () { t.remove(); }, 300); }, 2600);
     }
 
+    /** Lista de productos para tocar, más la opción de dejarlo escrito (al anotar y al corregir). */
+    function pintarSugerencias(caja, productos, q, alElegir, alEscribir) {
+        caja.innerHTML = '';
+        productos.forEach(function (p) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'anot-sug';
+            var n = document.createElement('span');
+            n.textContent = p.nombre;
+            b.appendChild(n);
+            if (p.marca) {
+                var m = document.createElement('small');
+                m.textContent = p.marca;
+                b.appendChild(m);
+            }
+            b.addEventListener('click', function () { alElegir(p); });
+            caja.appendChild(b);
+        });
+        var libre = document.createElement('button');
+        libre.type = 'button';
+        libre.className = 'anot-sug anot-sug-libre';
+        libre.textContent = '✎ Anotar «' + q + '» así, escrito';
+        libre.addEventListener('click', alEscribir);
+        caja.appendChild(libre);
+        caja.hidden = false;
+    }
+
     // ---------- Enter del celular: pasa al campo siguiente; en el último, guarda ----------
     document.addEventListener('keydown', function (e) {
         if (e.key !== 'Enter' || e.defaultPrevented) return;
@@ -80,10 +107,17 @@
         form.noValidate = true;
         form.setAttribute('data-enter-sigue', '');
 
+        var inId = document.createElement('input');
+        inId.type = 'hidden';
+        inId.name = 'producto_id';
+        var sugerencias = document.createElement('div');
+        sugerencias.className = 'anot-sugerencias';
+        sugerencias.hidden = true;
+
         var filaCampos = document.createElement('div');
         filaCampos.className = 'row g-2';
         filaCampos.append(
-            campo('Producto', { name: 'producto_texto', maxlength: '150', enterkeyhint: 'next', autocomplete: 'off' }, d.nombre, 'col-12'),
+            campo('Producto', { name: 'producto_texto', maxlength: '150', enterkeyhint: 'next', autocomplete: 'off', autocapitalize: 'off' }, d.nombre, 'col-12'),
             campo('Vence', { name: 'fecha', inputmode: 'numeric', maxlength: '10', enterkeyhint: 'next', autocomplete: 'off', 'data-mascara-fecha': '' }, d.fecha, 'col-7'),
             campo('Cantidad', { name: 'cantidad', type: 'number', min: '0', max: '99999', inputmode: 'numeric', enterkeyhint: 'next' }, d.cantidad, 'col-5'),
             campo('Nota', { name: 'nota', maxlength: '120', enterkeyhint: 'done', placeholder: 'Depósito, heladera 2…' }, d.nota, 'col-12')
@@ -112,7 +146,41 @@
         var aviso = document.createElement('p');
         aviso.className = 'anot-form-estado';
         aviso.setAttribute('role', 'status');
-        form.append(filaCampos, botones, aviso);
+        form.append(inId, filaCampos, botones, aviso);
+        filaCampos.firstElementChild.appendChild(sugerencias);
+
+        // Producto: al escribir aparece el catálogo, igual que al anotar.
+        var inNombre = form.elements.producto_texto;
+        var espera = null;
+        function cerrar() { sugerencias.hidden = true; sugerencias.innerHTML = ''; }
+        inNombre.addEventListener('focus', function () { inNombre.select(); });
+        inNombre.addEventListener('input', function () {
+            inId.value = '';
+            var q = inNombre.value.trim();
+            clearTimeout(espera);
+            if (q.length < 2) { cerrar(); return; }
+            espera = setTimeout(function () {
+                fetch(d.buscarUrl + '?q=' + encodeURIComponent(q), { headers: { Accept: 'application/json' } })
+                    .then(function (r) { return r.json(); })
+                    .then(function (res) {
+                        if (inNombre.value.trim() !== q) return;
+                        pintarSugerencias(sugerencias, res.productos || [], q, function (p) {
+                            inId.value = p.id;
+                            inNombre.value = p.nombre;
+                            cerrar();
+                            form.elements.fecha.focus();
+                        }, function () { cerrar(); form.elements.fecha.focus(); });
+                    })
+                    .catch(function () { /* sin señal: queda escrito a mano */ });
+            }, 150);
+        });
+        inNombre.addEventListener('keydown', function (e) {
+            if (e.key !== 'Enter') return;
+            var primero = sugerencias.hidden ? null : sugerencias.querySelector('.anot-sug:not(.anot-sug-libre)');
+            if (!primero) { cerrar(); return; } // sigue al campo de la fecha
+            e.preventDefault();
+            primero.click();
+        });
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -283,33 +351,11 @@
     }
 
     function pintar(productos, q) {
-        sug.innerHTML = '';
-        productos.forEach(function (p) {
-            var b = document.createElement('button');
-            b.type = 'button';
-            b.className = 'anot-sug';
-            var n = document.createElement('span');
-            n.textContent = p.nombre;
-            b.appendChild(n);
-            if (p.marca) {
-                var m = document.createElement('small');
-                m.textContent = p.marca;
-                b.appendChild(m);
-            }
-            b.addEventListener('click', function () { elegir(p); });
-            sug.appendChild(b);
-        });
-        var libre = document.createElement('button');
-        libre.type = 'button';
-        libre.className = 'anot-sug anot-sug-libre';
-        libre.textContent = '✎ Anotar «' + q + '» así, escrito';
-        libre.addEventListener('click', function () {
+        pintarSugerencias(sug, productos, q, elegir, function () {
             cerrarSugerencias();
             estadoProducto('Se guarda escrito así (no está en el catálogo).');
             inFecha.focus();
         });
-        sug.appendChild(libre);
-        sug.hidden = false;
     }
 
     inProd.addEventListener('input', function () {

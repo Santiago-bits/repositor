@@ -13,7 +13,7 @@ $detalle = array_filter([
 ]);
 ?>
 <div class="fecha-fila<?= (int) $f['id'] === (int) ($nueva ?? 0) ? ' is-nueva' : '' ?>" data-fecha-fila
-     data-url="<?= url('/fechas/' . (int) $f['id']) ?>" data-con-local="<?= ($conLocal ?? true) ? '1' : '0' ?>"
+     data-url="<?= url('/fechas/' . (int) $f['id']) ?>" data-buscar-url="<?= url('/fechas/productos') ?>" data-con-local="<?= ($conLocal ?? true) ? '1' : '0' ?>"
      data-nombre="<?= e($nombre) ?>" data-fecha="<?= fecha($f['fecha_vencimiento'], 'd/m/Y') ?>"
      data-cantidad="<?= e((string) $f['cantidad']) ?>" data-nota="<?= e((string) $f['nota']) ?>">
     <div class="corta-fecha <?= $estado['clase'] ?>"><?= fecha($f['fecha_vencimiento'], 'd/m') ?><small><?= fecha($f['fecha_vencimiento'], 'Y') ?></small></div>

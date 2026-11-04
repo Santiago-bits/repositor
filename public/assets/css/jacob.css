@@ -1803,3 +1803,5 @@ img.item-avatar { flex-shrink: 0; }
 .fecha-acciones .btn-sm { width: 40px; height: 40px; padding: 0; border-radius: 50%; font-size: 1rem; }
 .fecha-editor { flex: 0 0 100%; padding-top: 10px; border-top: 1px dashed var(--app-border); }
 .fecha-editor-botones { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+
+.fecha-editor .anot-sugerencias { position: static; max-height: 240px; }
