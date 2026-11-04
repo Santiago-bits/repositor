@@ -79,23 +79,14 @@ final class InicioController extends Controller
             $this->json(['ok' => false, 'message' => 'Escribí o escaneá el producto.'], 422);
         }
 
-        $fecha = self::leerFecha((string) Request::input('fecha', ''));
-        if ($fecha === null) {
-            $this->json(['ok' => false, 'message' => 'La fecha no es válida. Escribila así: 15/11 o 15/11/26.'], 422);
-        }
+        $campos = $this->camposFecha();
+        $fecha = $campos['fecha_vencimiento'];
 
-        $cantidad = filter_var(Request::input('cantidad', ''), FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 99999]]);
-        $nota = trim((string) Request::input('nota', ''));
-        $nota = $nota === '' || !mb_check_encoding($nota, 'UTF-8') ? null : mb_substr($nota, 0, 120);
-
-        $id = Fecha::crear([
-            'user_id'           => (int) $user['id'],
-            'local_id'          => (int) $local['id'],
-            'producto_id'       => $productoId,
-            'producto_texto'    => $productoId === null ? $texto : null,
-            'fecha_vencimiento' => $fecha,
-            'cantidad'          => $cantidad === false ? null : $cantidad,
-            'nota'              => $nota,
+        $id = Fecha::crear($campos + [
+            'user_id'        => (int) $user['id'],
+            'local_id'       => (int) $local['id'],
+            'producto_id'    => $productoId,
+            'producto_texto' => $productoId === null ? $texto : null,
         ]);
 
         $fechas = Fecha::pendientes((int) $user['id'], (int) $local['id']);
@@ -105,6 +96,31 @@ final class InicioController extends Controller
             'mensaje' => 'Anotado: ' . Fecha::nombre(Fecha::find($id)) . ' · ' . fecha($fecha, 'd/m/Y'),
             'lista'   => partial('fechas-lista', ['fechas' => $fechas, 'conLocal' => false, 'nueva' => $id]),
             'total'   => count($fechas),
+        ]);
+    }
+
+    /** Corregir lo anotado (JSON). Si se cambia el nombre de un producto del catálogo, queda escrito a mano. */
+    public function actualizar(int $id): never
+    {
+        $actual = $this->propia($id);
+        $texto = trim((string) Request::input('producto_texto', ''));
+        if ($texto === '' || mb_strlen($texto) > 150 || !mb_check_encoding($texto, 'UTF-8')) {
+            $this->json(['ok' => false, 'message' => 'Escribí el producto.'], 422);
+        }
+        $mismo = $actual['producto_id'] !== null && $texto === Fecha::nombre($actual);
+
+        Fecha::actualizar($id, $this->camposFecha() + [
+            'producto_id'    => $mismo ? (int) $actual['producto_id'] : null,
+            'producto_texto' => $mismo ? null : $texto,
+        ]);
+
+        $this->json([
+            'ok'   => true,
+            'fila' => partial('fecha-fila', [
+                'f'        => Fecha::find($id),
+                'conLocal' => Request::input('con_local') === '1',
+                'nueva'    => $id,
+            ]),
         ]);
     }
 
@@ -171,6 +187,23 @@ final class InicioController extends Controller
         }
         $fecha = sprintf('%04d-%02d-%02d', $anio, $mes, $dia);
         return $fecha < date('Y-m-d', strtotime('-1 year')) || $fecha > date('Y-m-d', strtotime('+15 years')) ? null : $fecha;
+    }
+
+    /** Fecha, cantidad y nota del formulario (al anotar y al corregir). */
+    private function camposFecha(): array
+    {
+        $fecha = self::leerFecha((string) Request::input('fecha', ''));
+        if ($fecha === null) {
+            $this->json(['ok' => false, 'message' => 'La fecha no es válida. Escribila así: 15/11 o 15/11/26.'], 422);
+        }
+        $cantidad = filter_var(Request::input('cantidad', ''), FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 99999]]);
+        $nota = trim((string) Request::input('nota', ''));
+
+        return [
+            'fecha_vencimiento' => $fecha,
+            'cantidad'          => $cantidad === false ? null : $cantidad,
+            'nota'              => $nota === '' || !mb_check_encoding($nota, 'UTF-8') ? null : mb_substr($nota, 0, 120),
+        ];
     }
 
     private function propia(int $id): array

@@ -27,6 +27,119 @@
         setTimeout(function () { t.classList.remove('is-visible'); setTimeout(function () { t.remove(); }, 300); }, 2600);
     }
 
+    // ---------- Enter del celular: pasa al campo siguiente; en el último, guarda ----------
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' || e.defaultPrevented) return;
+        var form = e.target.closest('[data-enter-sigue]');
+        if (!form || e.target.tagName !== 'INPUT') return;
+        e.preventDefault();
+        var campos = Array.prototype.filter.call(form.querySelectorAll('input'), function (c) {
+            return c.type !== 'hidden' && c.type !== 'date' && !c.disabled;
+        });
+        var siguiente = campos[campos.indexOf(e.target) + 1];
+        if (siguiente) siguiente.focus();
+        else form.requestSubmit();
+    });
+
+    // Fecha: se escriben solo los números (15112026) y las barras se ponen solas.
+    document.addEventListener('input', function (e) {
+        if (!e.target.matches('[data-mascara-fecha]')) return;
+        var v = e.target.value.replace(/\D/g, '').slice(0, 8);
+        var out = v.slice(0, 2);
+        if (v.length > 2) out += '/' + v.slice(2, 4);
+        if (v.length > 4) out += '/' + v.slice(4);
+        e.target.value = out;
+    });
+
+    // ---------- Editar una fecha ya anotada ----------
+    function campo(etiqueta, atributos, valor, clase) {
+        var col = document.createElement('div');
+        col.className = clase;
+        var label = document.createElement('label');
+        label.className = 'form-label small mb-1 d-block';
+        label.textContent = etiqueta;
+        var input = document.createElement('input');
+        input.className = 'form-control';
+        Object.keys(atributos).forEach(function (k) { input.setAttribute(k, atributos[k]); });
+        input.value = valor;
+        label.appendChild(input);
+        col.appendChild(label);
+        return col;
+    }
+
+    function abrirEditor(fila) {
+        var abierto = document.querySelector('.fecha-editor');
+        if (abierto) {
+            var mismo = abierto.parentElement === fila;
+            abierto.remove();
+            if (mismo) return;
+        }
+        var d = fila.dataset;
+        var form = document.createElement('form');
+        form.className = 'fecha-editor';
+        form.noValidate = true;
+        form.setAttribute('data-enter-sigue', '');
+
+        var filaCampos = document.createElement('div');
+        filaCampos.className = 'row g-2';
+        filaCampos.append(
+            campo('Producto', { name: 'producto_texto', maxlength: '150', enterkeyhint: 'next', autocomplete: 'off' }, d.nombre, 'col-12'),
+            campo('Vence', { name: 'fecha', inputmode: 'numeric', maxlength: '10', enterkeyhint: 'next', autocomplete: 'off', 'data-mascara-fecha': '' }, d.fecha, 'col-7'),
+            campo('Cantidad', { name: 'cantidad', type: 'number', min: '0', max: '99999', inputmode: 'numeric', enterkeyhint: 'next' }, d.cantidad, 'col-5'),
+            campo('Nota', { name: 'nota', maxlength: '120', enterkeyhint: 'done', placeholder: 'Depósito, heladera 2…' }, d.nota, 'col-12')
+        );
+
+        var botones = document.createElement('div');
+        botones.className = 'fecha-editor-botones';
+        var borrar = document.createElement('button');
+        borrar.type = 'button';
+        borrar.className = 'btn-icon';
+        borrar.setAttribute('aria-label', 'Borrar');
+        borrar.setAttribute('data-fecha-accion', 'borrar');
+        borrar.dataset.url = d.url + '/eliminar';
+        borrar.innerHTML = '<i class="bi bi-trash3"></i>';
+        var cancelar = document.createElement('button');
+        cancelar.type = 'button';
+        cancelar.className = 'btn btn-outline-secondary';
+        cancelar.textContent = 'Cancelar';
+        cancelar.addEventListener('click', function () { form.remove(); });
+        var guardar = document.createElement('button');
+        guardar.type = 'submit';
+        guardar.className = 'btn btn-primary flex-grow-1';
+        guardar.textContent = 'Guardar';
+        botones.append(borrar, cancelar, guardar);
+
+        var aviso = document.createElement('p');
+        aviso.className = 'anot-form-estado';
+        aviso.setAttribute('role', 'status');
+        form.append(filaCampos, botones, aviso);
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var datos = { con_local: d.conLocal };
+            new FormData(form).forEach(function (valor, clave) { datos[clave] = valor; });
+            guardar.disabled = true;
+            aviso.textContent = 'Guardando…';
+            post(d.url, datos).then(function (r) {
+                guardar.disabled = false;
+                if (!r.ok) { aviso.textContent = '⚠️ ' + (r.message || 'No se pudo guardar.'); return; }
+                fila.outerHTML = r.fila;
+                toast('✓ Cambios guardados');
+            }).catch(function (err) {
+                guardar.disabled = false;
+                if (err.message !== 'sesion') aviso.textContent = '⚠️ Sin conexión. Probá de nuevo.';
+            });
+        });
+
+        fila.appendChild(form);
+        form.elements.nota.focus();
+    }
+
+    document.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-fecha-editar]');
+        if (b) abrirEditor(b.closest('[data-fecha-fila]'));
+    });
+
     // ---------- Botones de cada fecha: ya no está (✓) y borrar ----------
     document.addEventListener('click', function (e) {
         var b = e.target.closest('[data-fecha-accion]');
@@ -250,14 +363,6 @@
         });
     });
 
-    // Fecha: se escriben solo los números (15112026) y las barras se ponen solas.
-    inFecha.addEventListener('input', function () {
-        var v = inFecha.value.replace(/\D/g, '').slice(0, 8);
-        var out = v.slice(0, 2);
-        if (v.length > 2) out += '/' + v.slice(2, 4);
-        if (v.length > 4) out += '/' + v.slice(4);
-        inFecha.value = out;
-    });
 
     form.querySelector('[data-calendario]').addEventListener('click', function () {
         try { picker.showPicker(); } catch (err) { picker.focus(); picker.click(); }

@@ -80,6 +80,17 @@ final class Fecha extends Model
         return self::fetchAll($sql . ' ORDER BY f.fecha_vencimiento LIMIT 50', $params);
     }
 
+    /** Corregir lo anotado. Si cambia la fecha, se vuelve a avisar cuando corresponda. */
+    public static function actualizar(int $id, array $d): void
+    {
+        self::execute(
+            'UPDATE fechas SET avisado_at = IF(fecha_vencimiento = ?, avisado_at, NULL), fecha_vencimiento = ?,
+                    producto_id = ?, producto_texto = ?, cantidad = ?, nota = ?
+             WHERE id = ?',
+            [$d['fecha_vencimiento'], $d['fecha_vencimiento'], $d['producto_id'], $d['producto_texto'], $d['cantidad'], $d['nota'], $id]
+        );
+    }
+
     /** "Ya lo saqué / se vendió": deja de aparecer, pero queda guardado. */
     public static function retirar(int $id): void
     {

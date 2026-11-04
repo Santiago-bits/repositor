@@ -1796,3 +1796,10 @@ img.item-avatar { flex-shrink: 0; }
 .fecha-acciones { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
 .fecha-acciones .btn-outline-success { width: 40px; height: 40px; padding: 0; border-radius: 50%; font-size: 1.1rem; }
 @keyframes fecha-nueva { from { background: var(--bs-primary-bg-subtle); } to { background: transparent; } }
+
+/* Editar una fecha: se abre debajo de la fila */
+.fecha-fila { flex-wrap: wrap; }
+.fecha-cuerpo { flex-basis: 0; cursor: pointer; }
+.fecha-acciones .btn-sm { width: 40px; height: 40px; padding: 0; border-radius: 50%; font-size: 1rem; }
+.fecha-editor { flex: 0 0 100%; padding-top: 10px; border-top: 1px dashed var(--app-border); }
+.fecha-editor-botones { display: flex; align-items: center; gap: 8px; margin-top: 10px; }

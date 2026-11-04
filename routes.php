@@ -28,6 +28,7 @@ $router->get('/', [InicioController::class, 'index'], ['auth']);
 $router->get('/fechas', [InicioController::class, 'fechas'], ['auth']);
 $router->get('/fechas/productos', [InicioController::class, 'productos'], ['auth']);
 $router->post('/fechas', [InicioController::class, 'guardar'], ['auth']);
+$router->post('/fechas/{id}', [InicioController::class, 'actualizar'], ['auth']);
 $router->post('/fechas/{id}/retirar', [InicioController::class, 'retirar'], ['auth']);
 $router->post('/fechas/{id}/eliminar', [InicioController::class, 'eliminar'], ['auth']);
 $router->post('/locales/detectar', [InicioController::class, 'detectar'], ['auth']);

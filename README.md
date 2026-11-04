@@ -44,8 +44,10 @@ php /home/USUARIO/domains/DOMINIO/public_html/database/enviar-avisos.php
   1. Escribí 2-3 letras del producto (ej: «quil») y tocalo, o tocá **Escanear**. Si no está en el catálogo, tocá «Anotar … así, escrito».
   2. La fecha se escribe solo con números: `2011` = 20/11 (de este año o del que viene), `201126` o `20112026`. Las barras se ponen solas. También está el calendario.
   3. Cantidad y nota son opcionales. **Anotar** y ya queda listo para el siguiente producto.
+- **Corregir:** tocá la fecha o el lápiz: cambiás producto, fecha, cantidad o nota sin borrarla (el tacho está adentro). Si cambiás la fecha, vuelve a avisar cuando corresponda.
+- **Enter del celular:** pasa al campo siguiente (producto → fecha → cantidad → nota) y en el último guarda.
 - **Código nuevo:** si escaneás un código que no está asociado, escribí el producto y elegilo: el código queda guardado y la próxima vez lo reconoce solo.
-- **Fechas:** todas tus fechas pendientes, por local, de la más próxima a la más lejana. Con **✓** marcás que ya no está (se vendió o lo retiraste) y deja de aparecer. El tacho la borra.
+- **Fechas:** todas tus fechas pendientes, por local, de la más próxima a la más lejana. Con **✓** marcás que ya no está (se vendió o lo retiraste) y deja de aparecer.
 - **Colores:** rojo vencido, naranja pocos días, amarillo próximamente, verde sin apuro (se ajusta en Gestión → Configuración).
 - **Avisos:** Mi cuenta → **Avisos** → «Activar avisos en este celular» y elegí cuántos días antes (7 por defecto). Te llega una notificación cuando algo entra en ese plazo, con el producto y el local. «Probar aviso» manda uno de prueba. En iPhone: primero instalá la app (Compartir → Agregar a inicio) y activá los avisos desde ahí.
 - **Cada uno lo suyo:** cada repositor ve solo sus fechas. El admin ve las de todos (con el nombre de quién la anotó).
@@ -55,6 +57,7 @@ php /home/USUARIO/domains/DOMINIO/public_html/database/enviar-avisos.php
 - **Usuarios y entrar con Google:** Gestión → Usuarios (admin). Para el botón de Google, el admin pega el ID de cliente en Gestión → Configuración.
 ## Cambios
 
+- **2026-11-04** · **Editar lo anotado** (producto, fecha, cantidad y nota) sin borrar y volver a crear · El Enter del celular pasa al campo siguiente y en el último guarda · Los botones de las fechas ahora también funcionan en la ficha del producto.
 - **2026-11-02** · **Nuevo enfoque: anotador de fechas.** La app pasa a ser un anotador rápido de fechas de vencimiento: el GPS elige el local al abrir, buscás o escaneás el producto, escribís la fecha solo con números y queda anotado. Pestaña **Fechas** con todo lo pendiente por local (✓ cuando ya no está). **Avisos** con notificación en el celular unos días antes (cada uno elige cuántos). Se sacaron visitas, faltantes, promos, fotos, historial, equipo y resumen; las tablas viejas quedan en la base. Las fechas que ya estaban cargadas pasaron al anotador (migraciones 016 y 017).
 - **2026-10-14** · Diseño: **Promociones** con pestañas parejas y contador, tarjetas con foto, fechas, «quedan X días» y precio promo vs normal · **Usuarios** ordenado en Datos, Acceso y Rol (cada rol explica qué puede hacer) · La barra de Guardar fija ahora tiene fondo y no tapa lo de abajo.
 - **2026-10-14** · Mi cuenta: se sacó el teléfono y se puede **cambiar el Gmail** con el que se entra (pide la contraseña).

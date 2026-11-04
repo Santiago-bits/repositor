@@ -113,6 +113,7 @@ final class ProductoController extends Controller
             'title'     => Producto::nombreCompleto($producto),
             'producto'  => $producto,
             'fechas'    => Fecha::delProducto($id, is_admin() ? null : (int) $user['id']),
+            'scripts'   => ['assets/js/anotador.js'],
         ]);
     }
 

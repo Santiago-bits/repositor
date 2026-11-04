@@ -28,7 +28,7 @@
             <p class="mb-0">Tocá el local donde estás (o <strong>Detectar</strong>) para anotar las fechas.</p>
         </div>
     <?php else: ?>
-        <form class="card-soft anot-form" data-anotar novalidate>
+        <form class="card-soft anot-form" data-anotar data-enter-sigue novalidate>
             <div class="anot-titulo"><i class="bi bi-geo-alt-fill"></i> <?= e($local['nombre']) ?></div>
             <input type="hidden" name="local_id" value="<?= $localId ?>">
             <input type="hidden" name="producto_id" data-producto-id>
@@ -49,17 +49,17 @@
                     <label class="form-label small mb-1" for="anot-fecha">Vence</label>
                     <div class="input-group">
                         <input class="form-control anot-fecha" id="anot-fecha" name="fecha" placeholder="dd/mm/aa" inputmode="numeric"
-                               autocomplete="off" maxlength="10" enterkeyhint="done" data-fecha required>
+                               autocomplete="off" maxlength="10" enterkeyhint="next" data-fecha data-mascara-fecha required>
                         <button class="btn btn-outline-secondary" type="button" data-calendario aria-label="Elegir en el calendario"><i class="bi bi-calendar3"></i></button>
                     </div>
                     <input type="date" class="anot-picker" tabindex="-1" aria-hidden="true" data-fecha-picker>
                 </div>
                 <div class="col-5">
                     <label class="form-label small mb-1" for="anot-cant">Cantidad</label>
-                    <input class="form-control" id="anot-cant" name="cantidad" type="number" min="0" max="99999" inputmode="numeric" placeholder="—">
+                    <input class="form-control" id="anot-cant" name="cantidad" type="number" min="0" max="99999" inputmode="numeric" enterkeyhint="next" placeholder="—">
                 </div>
                 <div class="col-12">
-                    <input class="form-control" name="nota" maxlength="120" placeholder="Nota (opcional): depósito, heladera 2…" aria-label="Nota">
+                    <input class="form-control" name="nota" maxlength="120" enterkeyhint="done" placeholder="Nota (opcional): depósito, heladera 2…" aria-label="Nota">
                 </div>
             </div>
 
